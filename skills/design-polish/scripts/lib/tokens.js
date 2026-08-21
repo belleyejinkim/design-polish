@@ -326,7 +326,7 @@ function inventory(input) {
   const scores = {
     color: score(axes.color.onToken + axes.color.palette + axes.color.hardcodedVendored, axes.color.hardcodedOwn), // palette use is the Tailwind scale: legal, reported separately
     typography: score(axes.typography.onToken + axes.typography.hardcodedVendored, axes.typography.hardcodedOwn),
-    spacing: score(axes.spacing.onScale, axes.spacing.offScale),
+    spacing: scaleBasis ? score(axes.spacing.onScale, axes.spacing.offScale) : null, // no scale at all: nothing to be consistent with
     radius: score(axes.radius.onToken + axes.radius.hardcodedVendored, axes.radius.hardcodedOwn),
     shadow: score(axes.shadow.onToken + axes.shadow.hardcodedVendored, axes.shadow.hardcodedOwn),
   };

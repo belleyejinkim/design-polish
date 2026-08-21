@@ -258,17 +258,20 @@ async function scan(rootArg, opts = {}) {
   const vendored = detectVendored(root, codeFiles.map((f) => f.rel));
   // Server-rendered templates (.ftl, .html, .erb …) contribute the CSS inside their <style> blocks when they ARE the
   // product (no React code). In a React project, stray .html files (email templates, static exports) are not the UI.
-  const templateCss = codeFiles.length ? [] : collected.files.filter((f) => f.kind === 'template').map((f) => ({ ...f, kind: 'css', text: styleBlocksOf(f.text) })).filter((f) => f.text.trim());
+  // "React code" = tsx/jsx, or ts/js that renders JSX or imports react; a jQuery script next to Freemarker templates is not.
+  const reactCode = codeFiles.filter((f) => f.kind === 'tsx' || f.kind === 'jsx' || /from\s+['"]react(-dom)?['"]|require\(['"]react['"]\)|className=|<[A-Z][\w.]*[\s/>]/.test(f.text));
+  const cssOnly = reactCode.length === 0;
+  const templateCss = cssOnly ? collected.files.filter((f) => f.kind === 'template').map((f) => ({ ...f, kind: 'css', text: styleBlocksOf(f.text) })).filter((f) => f.text.trim()) : [];
   const cssFiles = collected.files.filter((f) => f.kind.includes('css') || f.kind.includes('scss')).concat(templateCss);
   log(`files: ${collected.listed} listed (${collected.listSource}), ${codeFiles.length} code + ${cssFiles.length} css scanned${templateCss.length ? ` (${templateCss.length} templates with <style>)` : ''}`);
 
-  // 2. parser — optional when there is no React/JS code: the CSS-only inventory still runs
+  // 2. parser — optional when there is no React code: the CSS-only inventory still runs
   const tsInfo = opts.mode === 'regex' ? null : tsLoader.load(root);
-  if (!tsInfo && codeFiles.length) {
+  if (!tsInfo && !cssOnly) {
     return { error: 'no-typescript', message: 'TypeScript not found in the project; regex mode is not implemented in this build yet', meta: { mode: 'regex' } };
   }
   const ts = tsInfo ? tsInfo.ts : null;
-  const cssOnly = codeFiles.length === 0;
+  if (!ts) codeFiles.length = 0; // nothing to parse without a parser; CSS-only mode does not need one
 
   // 3. indexes
   const indexes = new Map();
