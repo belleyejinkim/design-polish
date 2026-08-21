@@ -2,25 +2,346 @@
   "lang": "en",
   "title": "{project} — design inventory",
   "subtitle": "Every color, size, spacing, radius, shadow and form control in the code, at real size.",
-  "nav": { "summary": "Summary", "screens": "Screens", "color": "Color", "typography": "Type", "spacing": "Spacing", "radius": "Corners", "shadow": "Shadows", "components": "Components", "relations": "Side by side", "proposal": "Proposed system", "cards": "Cards", "delta": "Before / after", "method": "Method" },
-  "cover": { "scanned": "{files} code files · {routes} screens · {classes} distinct classes", "mode_ast": "read with the project's TypeScript", "mode_regex": "regex mode — element attribution unavailable", "css_engine": "values from the project's {engine}", "no_model": "Inventory only — diagnosis and proposals need an agent: run /design-polish", "generated": "Generated {date} · run {run}", "dark": "dark theme: {strategy}" },
-  "summary": { "h": "01 · Summary", "score": "Consistency score", "score_help": "Share of style occurrences that go through a token or the scale, weighted by count. Not an aesthetic score.", "axes": { "color": "Color", "typography": "Type", "spacing": "Spacing", "radius": "Corners", "shadow": "Shadows", "component": "Components" }, "tiles": { "colors": "distinct colors", "hardcoded": "raw colors", "looks": "component looks", "adhoc": "one-off looks", "findings": "findings", "cards": "cards" }, "top_findings": "What stands out", "good": "What is already consistent", "good_axis": "{axis}: {score}% of {n} occurrences use tokens or the scale — no change proposed.", "good_none": "No axis is fully consistent yet.", "glossary_h": "Four words used in this report", "glossary": [["token", "a named value defined once (a CSS variable like --color-brand) that the code refers to instead of typing the value"], ["raw value", "a value typed directly where it is used (#1AA44D, 18px); it cannot be changed in one place"], ["look", "one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows here"], ["screen", "a page of the app; every item lists the screens it appears on, so you can check it by eye"]], "headline_default": "{project}: {looks} component looks across {types} types, {hardcoded} raw colors, {findings} findings." },
-  "screens": { "h": "02 · Screens", "help": "Screens found from the router. Every value and look below lists the screens it appears on.", "cols": ["Screen", "Path", "Controls", "Distinct looks"], "layout": "layout", "catalog": "catalog page — counted separately", "none": "No router detected. Items are attributed to files instead of screens." },
-  "chapter": { "declared": "Declared", "used": "In use", "findings": "Findings", "proposal": "Proposal", "decisions": "Your decisions", "no_change": "No change proposed: {reason}", "undecided": "{n} undecided", "decided": "{keep} keep · {merge} merge · {leave} leave" },
-  "color": { "h": "03 · Color", "declared_help": "Tokens the project defines. Uses counts every class or rule that refers to the token.", "cols_declared": ["", "Token", "Light", "Dark", "Uses", "Role"], "groups": { "brand": "Brand", "semantic": "Semantic", "neutral": "Neutral", "unclassified": "Other", "hardcoded": "Raw values (not a token)", "palette": "Tailwind palette (not a project token)", "via": "Via tokens" }, "dead": "never used", "dark_missing": "no dark value", "clusters_h": "Look-alikes", "cluster_help": "Colors a viewer cannot tell apart, shown edge to edge. ΔE is the perceptual distance (CIEDE2000); below 1 is invisible, below 2 needs a side-by-side.", "twin": "same as {token}", "palette_note": "{n} Tailwind palette colors used directly" },
-  "typography": { "h": "04 · Typography", "sizes": "Font sizes in use", "weights": "Weights", "line_heights": "Line heights", "families": "Families", "sample": "The quick brown fox jumps over the lazy dog", "arbitrary": "Sizes typed as raw values" },
-  "spacing": { "h": "05 · Spacing", "ruler": "Padding and gaps in use", "base": "Scale base {px}px ({basis})", "off": "off the scale", "padding_h": "Component padding", "padding_cols": ["Control", "Look", "Height", "Padding x", "Padding y"] },
-  "radius": { "h": "06 · Corners and borders", "shapes": "Corner radii in use", "borders": "Border widths", "full": "full", "krds": "KRDS reference: height × 0.125, even, max 12px" },
-  "shadow": { "h": "07 · Shadows", "stack": "Shadows in use" },
-  "components": { "h": "08 · Components", "none": "Not detected in this codebase.", "impl": "{n} implementation(s)", "impl_native": "raw <{tag}>", "looks": "{looks} looks · {uses} uses", "catalog_only": "{n} looks appear only on catalog pages", "adhoc": "one-off", "base": "base", "uses": "{n} uses", "screens": "{n} screens", "states": { "hover": "hover", "focusVisible": "focus", "disabled": "disabled", "checked": "checked", "dark": "dark" }, "state_yes": "styled", "state_no": "not styled", "state_ua": "browser default", "state_removed": "removed", "diff_h": "Differences between looks", "unresolved": "{n} class(es) could not be resolved", "render_failed": "Real rendering unavailable ({reason}) — classes shown instead", "dynamic": "dynamic classes — look unknown", "tabs": { "default": "Default", "hover": "Hover", "focus-visible": "Focus", "disabled": "Disabled", "checked": "Checked", "dark": "Dark" } },
-  "relations": { "h": "09 · Side by side", "help": "Controls that sit in one row or grid. Values are legal on their own; they should still match their neighbours.", "none": "No rows with mismatched neighbours.", "radius": "corner radius", "height": "height", "mismatch": "{what}: {values}", "ok": "matching" },
-  "proposal": { "h": "10 · Proposed system", "help": "Derived from what the code already uses. Nothing here is applied until you choose it.", "cols": ["", "Token", "Value", "Absorbs", "Uses", "Status"], "new": "new", "existing": "existing", "layers": "{n}-layer token architecture", "none": "No proposal yet — run /design-polish in your agent." },
-  "cards": { "h": "11 · Cards", "help": "Each card is one safe-to-review change. Choose rows above or add a card's recommendation here. Nothing is pre-selected.", "visual": { "none": "invisible", "subtle": "barely visible", "visible": "visible" }, "safety": { "none": "safe", "approve": "approve each", "design": "design decision" }, "impact": "{occ} places · {screens} screens · {files} files", "add": "Add recommendation", "added": "Added", "entries": "{n} changes", "status": { "proposed": "proposed", "accepted": "accepted", "edited": "edited", "partial": "partial", "rejected": "rejected", "untouched": "untouched", "applied": "applied" }, "none": "No cards yet — run /design-polish in your agent." },
-  "delta": { "h": "12 · Before / after", "none": "After you apply cards and re-scan, this chapter shows what changed.", "conditions": "Compared with run {baseline}", "looks": "{type}: {before} → {after} looks", "resolved": "{n} findings resolved", "remaining": "{n} remaining", "new": "{n} new" },
-  "method": { "h": "13 · Method and limits", "coverage": "Coverage", "coverage_text": "{scanned} of {listed} files scanned ({source}); {failed} failed to parse; {dynamic} dynamic class sites; {unresolved} unresolved classes.", "score_formula": "Score per axis = occurrences through tokens or the scale ÷ all occurrences. Composite = count-weighted mean. Components = occurrences that use one of the base component's looks ÷ all.", "verification": "Verification", "fonts": "Specimens use the fonts installed on this machine; the project's web fonts are substituted when they cannot be embedded.", "honesty": ["Numbers come from scripts, not from a language model.", "Specimens are rendered with the project's own compiled CSS; nothing is imitated.", "Unresolved values are listed, never estimated.", "This report was built offline; it makes no network requests."] },
-  "curation": { "keep": "Keep", "merge": "Merge into", "leave": "Leave", "target": "Choose target", "note": "Note", "impact": "{occ} places on {screens} screens", "impact_visual": "visual change: {v}", "sent": "Decisions sent to the agent", "copied": "Decisions copied — paste them into your agent", "saved": "Saved decisions.json — hand it to your agent", "none": "No decisions yet" },
-  "cart": { "summary": "{n} decisions · {cards} cards · {occ} places · {screens} screens", "send": "Send decisions", "copy": "Copy", "save": "Save file", "clear": "Clear", "warn_m": "That is a lot for one pass; splitting across two runs keeps each review careful.", "warn_l": "Too much for one pass. Start with the safe cards; the rest in a second run.", "warn_mixed": "Safe and visible changes are mixed; consider sending the safe ones first." },
-  "dev": { "toggle": "Developer info", "sites": "Code locations", "classes": "Classes", "basis": "Rule" },
-  "severity": { "high": "high", "medium": "medium", "low": "low", "info": "note" },
-  "misc": { "and_more": "and {n} more", "px": "px", "uses": "uses", "screens": "screens", "files": "files", "search": "Find a value, token or screen", "copy": "Copy", "expand": "Show all" }
+  "nav": {
+    "summary": "Summary",
+    "screens": "Screens",
+    "color": "Color",
+    "typography": "Type",
+    "spacing": "Spacing",
+    "radius": "Corners",
+    "shadow": "Shadows",
+    "components": "Components",
+    "relations": "Side by side",
+    "proposal": "Proposed system",
+    "cards": "Cards",
+    "delta": "Before / after",
+    "method": "Method"
+  },
+  "cover": {
+    "scanned": "{files} code files · {routes} screens · {classes} distinct classes",
+    "mode_ast": "read with the project's TypeScript",
+    "mode_regex": "regex mode — element attribution unavailable",
+    "css_engine": "values from the project's {engine}",
+    "no_model": "Inventory only — diagnosis and proposals need an agent: run /design-polish",
+    "generated": "Generated {date} · run {run}",
+    "dark": "dark theme: {strategy}"
+  },
+  "summary": {
+    "h": "01 · Summary",
+    "score": "Consistency score",
+    "score_help": "Share of style occurrences that go through a token or the scale, weighted by count. Not an aesthetic score.",
+    "axes": {
+      "color": "Color",
+      "typography": "Type",
+      "spacing": "Spacing",
+      "radius": "Corners",
+      "shadow": "Shadows",
+      "component": "Components"
+    },
+    "tiles": {
+      "colors": "distinct colors",
+      "hardcoded": "raw colors",
+      "looks": "component looks",
+      "adhoc": "one-off looks",
+      "findings": "findings",
+      "cards": "cards"
+    },
+    "top_findings": "What stands out",
+    "good": "What is already consistent",
+    "good_axis": "{axis}: {score}% of {n} occurrences use tokens or the scale — no change proposed.",
+    "good_none": "No axis is fully consistent yet.",
+    "glossary_h": "Four words used in this report",
+    "glossary": [
+      [
+        "token",
+        "a named value defined once (a CSS variable like --color-brand) that the code refers to instead of typing the value"
+      ],
+      [
+        "raw value",
+        "a value typed directly where it is used (#1AA44D, 18px); it cannot be changed in one place"
+      ],
+      [
+        "look",
+        "one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows here"
+      ],
+      [
+        "screen",
+        "a page of the app; every item lists the screens it appears on, so you can check it by eye"
+      ]
+    ],
+    "headline_default": "{project}: {looks} component looks across {types} types, {hardcoded} raw colors, {findings} findings."
+  },
+  "screens": {
+    "h": "02 · Screens",
+    "help": "Screens found from the router. Every value and look below lists the screens it appears on.",
+    "cols": [
+      "Screen",
+      "Path",
+      "Controls",
+      "Distinct looks"
+    ],
+    "layout": "layout",
+    "catalog": "catalog page — counted separately",
+    "none": "No router detected. Items are attributed to files instead of screens."
+  },
+  "chapter": {
+    "declared": "Declared",
+    "used": "In use",
+    "findings": "Findings",
+    "proposal": "Proposal",
+    "decisions": "Your decisions",
+    "no_change": "No change proposed: {reason}",
+    "undecided": "{n} undecided",
+    "decided": "{keep} keep · {merge} merge · {leave} leave"
+  },
+  "color": {
+    "h": "03 · Color",
+    "declared_help": "Tokens the project defines. Uses counts every class or rule that refers to the token.",
+    "cols_declared": [
+      "",
+      "Token",
+      "Light",
+      "Dark",
+      "Uses",
+      "Role"
+    ],
+    "groups": {
+      "brand": "Brand",
+      "semantic": "Semantic",
+      "neutral": "Neutral",
+      "unclassified": "Other",
+      "hardcoded": "Raw values (not a token)",
+      "palette": "Tailwind palette (not a project token)",
+      "via": "Via tokens"
+    },
+    "dead": "never used",
+    "dark_missing": "no dark value",
+    "clusters_h": "Look-alikes",
+    "cluster_help": "Colors a viewer cannot tell apart, shown edge to edge. ΔE is the perceptual distance (CIEDE2000); below 1 is invisible, below 2 needs a side-by-side.",
+    "twin": "same as {token}",
+    "palette_note": "{n} Tailwind palette colors used directly"
+  },
+  "typography": {
+    "h": "04 · Typography",
+    "sizes": "Font sizes in use",
+    "weights": "Weights",
+    "line_heights": "Line heights",
+    "families": "Families",
+    "sample": "The quick brown fox jumps over the lazy dog",
+    "arbitrary": "Sizes typed as raw values"
+  },
+  "spacing": {
+    "h": "05 · Spacing",
+    "ruler": "Padding and gaps in use",
+    "base": "Scale base {px}px ({basis})",
+    "off": "off the scale",
+    "padding_h": "Component padding",
+    "padding_cols": [
+      "Control",
+      "Look",
+      "Height",
+      "Padding x",
+      "Padding y"
+    ]
+  },
+  "radius": {
+    "h": "06 · Corners and borders",
+    "shapes": "Corner radii in use",
+    "borders": "Border widths",
+    "full": "full",
+    "krds": "KRDS reference: height × 0.125, even, max 12px"
+  },
+  "shadow": {
+    "h": "07 · Shadows",
+    "stack": "Shadows in use"
+  },
+  "components": {
+    "h": "08 · Components",
+    "none": "Not detected in this codebase.",
+    "impl": "{n} implementation(s)",
+    "impl_native": "raw <{tag}>",
+    "looks": "{looks} looks · {uses} uses",
+    "catalog_only": "{n} looks appear only on catalog pages",
+    "adhoc": "one-off",
+    "base": "base",
+    "uses": "{n} uses",
+    "screens": "{n} screens",
+    "states": {
+      "hover": "hover",
+      "focusVisible": "focus",
+      "disabled": "disabled",
+      "checked": "checked",
+      "dark": "dark"
+    },
+    "state_yes": "styled",
+    "state_no": "not styled",
+    "state_ua": "browser default",
+    "state_removed": "removed",
+    "diff_h": "Differences between looks",
+    "unresolved": "{n} class(es) could not be resolved",
+    "render_failed": "Real rendering unavailable ({reason}) — classes shown instead",
+    "dynamic": "dynamic classes — look unknown",
+    "tabs": {
+      "default": "Default",
+      "hover": "Hover",
+      "focus-visible": "Focus",
+      "disabled": "Disabled",
+      "checked": "Checked",
+      "dark": "Dark"
+    }
+  },
+  "relations": {
+    "h": "09 · Side by side",
+    "help": "Controls that sit in one row or grid. Values are legal on their own; they should still match their neighbours.",
+    "none": "No rows with mismatched neighbours.",
+    "radius": "corner radius",
+    "height": "height",
+    "mismatch": "{what}: {values}",
+    "ok": "matching"
+  },
+  "proposal": {
+    "h": "10 · Proposed system",
+    "help": "Derived from what the code already uses. Nothing here is applied until you choose it.",
+    "cols": [
+      "",
+      "Token",
+      "Value",
+      "Absorbs",
+      "Uses",
+      "Status"
+    ],
+    "new": "new",
+    "existing": "existing",
+    "layers": "{n}-layer token architecture",
+    "none": "No proposal yet — run /design-polish in your agent."
+  },
+  "cards": {
+    "h": "11 · Cards",
+    "help": "Each card is one safe-to-review change. Choose rows above or add a card's recommendation here. Nothing is pre-selected.",
+    "visual": {
+      "none": "invisible",
+      "subtle": "barely visible",
+      "visible": "visible"
+    },
+    "safety": {
+      "none": "safe",
+      "approve": "approve each",
+      "design": "design decision"
+    },
+    "impact": "{occ} places · {screens} screens · {files} files",
+    "add": "Add recommendation",
+    "added": "Added",
+    "entries": "{n} changes",
+    "status": {
+      "proposed": "proposed",
+      "accepted": "accepted",
+      "edited": "edited",
+      "partial": "partial",
+      "rejected": "rejected",
+      "untouched": "untouched",
+      "applied": "applied"
+    },
+    "none": "No cards yet — run /design-polish in your agent."
+  },
+  "delta": {
+    "h": "12 · Before / after",
+    "none": "After you apply cards and re-scan (npx design-polish recheck), this chapter shows what changed.",
+    "conditions": "Compared with run {baseline} · same scanner: {same} · {filesBefore} → {filesAfter} code files",
+    "applied_h": "Applied",
+    "applied_row": "{card}: {applied} edits in {files} files",
+    "commit": "commit {sha} · undo: git revert {sha}",
+    "typecheck_ok": "typecheck passed",
+    "typecheck_fail": "typecheck failed",
+    "scores_h": "Scores",
+    "looks_h": "Component looks",
+    "looks": "{type}: {before} → {after} looks",
+    "values_h": "Counts",
+    "values": {
+      "rawColors": "distinct raw colors",
+      "rawColorUses": "raw color uses",
+      "offScaleSpacing": "off-scale spacing values",
+      "rawRadiusUses": "raw radius uses",
+      "deadTokens": "unused tokens",
+      "siblingRadiusMismatches": "rows with mixed corners"
+    },
+    "findings_h": "Findings",
+    "resolved": "{n} findings resolved",
+    "remaining": "{n} remaining",
+    "new": "{n} new",
+    "moved_h": "Occurrences that changed look",
+    "moved_none": "No control changed its look.",
+    "moved_row": "{type} on {file}:{line}",
+    "tokens_h": "Tokens in force after this run",
+    "tokens_cols": [
+      "Token",
+      "Light",
+      "Dark",
+      "Uses",
+      ""
+    ],
+    "token_new": "new",
+    "removed": "Removed: {names}",
+    "skipped_h": "Left alone",
+    "skipped_none": "Nothing was skipped.",
+    "unchanged": "unchanged"
+  },
+  "method": {
+    "h": "13 · Method and limits",
+    "coverage": "Coverage",
+    "coverage_text": "{scanned} of {listed} files scanned ({source}); {failed} failed to parse; {dynamic} dynamic class sites; {unresolved} unresolved classes.",
+    "score_formula": "Score per axis = occurrences through tokens or the scale ÷ all occurrences. Composite = count-weighted mean. Components = occurrences that use one of the base component's looks ÷ all.",
+    "verification": "Verification",
+    "fonts": "Specimens use the fonts installed on this machine; the project's web fonts are substituted when they cannot be embedded.",
+    "honesty": [
+      "Numbers come from scripts, not from a language model.",
+      "Specimens are rendered with the project's own compiled CSS; nothing is imitated.",
+      "Unresolved values are listed, never estimated.",
+      "This report was built offline; it makes no network requests."
+    ]
+  },
+  "curation": {
+    "keep": "Keep",
+    "merge": "Merge into",
+    "leave": "Leave",
+    "target": "Choose target",
+    "note": "Note",
+    "impact": "{occ} places on {screens} screens",
+    "impact_visual": "visual change: {v}",
+    "sent": "Decisions sent to the agent",
+    "copied": "Decisions copied — paste them into your agent",
+    "saved": "Saved decisions.json — hand it to your agent",
+    "none": "No decisions yet"
+  },
+  "cart": {
+    "summary": "{n} decisions · {cards} cards · {occ} places · {screens} screens",
+    "send": "Send decisions",
+    "copy": "Copy",
+    "save": "Save file",
+    "clear": "Clear",
+    "warn_m": "That is a lot for one pass; splitting across two runs keeps each review careful.",
+    "warn_l": "Too much for one pass. Start with the safe cards; the rest in a second run.",
+    "warn_mixed": "Safe and visible changes are mixed; consider sending the safe ones first."
+  },
+  "dev": {
+    "toggle": "Developer info",
+    "sites": "Code locations",
+    "classes": "Classes",
+    "basis": "Rule"
+  },
+  "severity": {
+    "high": "high",
+    "medium": "medium",
+    "low": "low",
+    "info": "note"
+  },
+  "misc": {
+    "and_more": "and {n} more",
+    "px": "px",
+    "uses": "uses",
+    "screens": "screens",
+    "files": "files",
+    "search": "Find a value, token or screen",
+    "copy": "Copy",
+    "expand": "Show all"
+  }
 }

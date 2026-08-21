@@ -41,6 +41,27 @@ function suggestColorName(hex, existing) {
 
 function propose(inv, findings) {
   const tok = inv.tokens;
+  const hasDark = inv.meta.css && inv.meta.css.darkStrategy && inv.meta.css.darkStrategy !== 'none';
+  const vendoredDirs = (inv.meta.vendored && inv.meta.vendored.dirs) || [];
+  const isVendored = (file) => vendoredDirs.some((d) => file === d || file.startsWith(d + '/'));
+  // Occurrences that a card would touch: vendored (copied-library) sites are counted apart and left alone by default.
+  const counted = (v) => {
+    const sites = v.sites || [];
+    if (!sites.length) return { occurrences: v.hardcodedCount || v.count, vendored: 0 };
+    let inDefault = 0, vend = 0;
+    for (const s of sites) {
+      if (s.where === 'token' || s.where === 'scale') continue; // reached through the system already: nothing to edit
+      const f = (s.origin && s.origin.file) || s.file;
+      if (isVendored(f)) vend += s.count || 1; else inDefault += s.count || 1;
+    }
+    return { occurrences: inDefault, vendored: vend };
+  };
+  // ΔE against the token's dark value: a raw colour is the same in both modes, a mode-varying token is not.
+  const darkDelta = (v, t) => {
+    if (!hasDark || !t || !t.modeVarying || !t.darkSrgb || !v.srgb) return { de: null, visual: 'none', varying: false };
+    const de = color.deltaE2000(color.toLab({ r: v.srgb[0], g: v.srgb[1], b: v.srgb[2] }), color.toLab({ r: t.darkSrgb[0], g: t.darkSrgb[1], b: t.darkSrgb[2] }));
+    return { de: Math.round(de * 100) / 100, visual: visualOfDe(de), varying: true };
+  };
   const findingsBy = (rule) => findings.findings.filter((f) => f.rule === rule);
   const declared = tok.declared;
   const declaredById = new Map(declared.map((d) => [d.id, d]));
@@ -57,7 +78,8 @@ function propose(inv, findings) {
     if (!v.twinOf || v.where.every((w) => w === 'token')) continue;
     const t = declaredById.get(v.twinOf);
     const de = t && t.srgb && v.srgb ? color.deltaE2000(color.toLab({ r: v.srgb[0], g: v.srgb[1], b: v.srgb[2] }), color.toLab({ r: t.srgb[0], g: t.srgb[1], b: t.srgb[2] })) : null;
-    add({ source: v.id, axis: 'color', action: 'promote', target: v.twinOf, visualChange: visualOfDe(de), metric: { deltaE: de == null ? null : Math.round(de * 100) / 100 }, occurrences: v.count, files: v.files, screens: v.routes, basis: (findingsBy('TOKEN-TWIN')[0] || {}).id || null });
+    const dark = darkDelta(v, t);
+    add({ source: v.id, axis: 'color', action: 'promote', target: v.twinOf, visualChange: worst(visualOfDe(de), dark.visual), metric: { deltaE: de == null ? null : Math.round(de * 100) / 100, deltaEDark: dark.de }, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: (findingsBy('TOKEN-TWIN')[0] || {}).id || null, modeVarying: dark.varying, needsUserConfirmation: dark.varying, note: dark.varying ? 'the token looks different in dark mode; a constant colour mapped onto it would change there' : undefined });
   }
   // 2. merge near-duplicate clusters into the dominant / declared member
   for (const c of tok.colors.clusters) {
@@ -69,7 +91,8 @@ function propose(inv, findings) {
       const v = colorById.get(m);
       if (!v || !v.srgb || !tSrgb) continue;
       const de = color.deltaE2000(color.toLab({ r: v.srgb[0], g: v.srgb[1], b: v.srgb[2] }), color.toLab({ r: tSrgb[0], g: tSrgb[1], b: tSrgb[2] }));
-      add({ source: m, axis: 'color', action: 'merge', target, visualChange: visualOfDe(de), metric: { deltaE: Math.round(de * 100) / 100 }, occurrences: v.count, files: v.files, screens: v.routes, basis: findings.findings.find((f) => f.rule === 'NEAR-DUP' && f.subjects.includes(m))?.id || null, needsUserConfirmation: c.needsUserConfirmation });
+      const dark = darkDelta(v, declaredById.get(target));
+      add({ source: m, axis: 'color', action: 'merge', target, visualChange: worst(visualOfDe(de), dark.visual), metric: { deltaE: Math.round(de * 100) / 100, deltaEDark: dark.de }, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: findings.findings.find((f) => f.rule === 'NEAR-DUP' && f.subjects.includes(m))?.id || null, needsUserConfirmation: c.needsUserConfirmation || dark.varying, modeVarying: dark.varying, note: dark.varying ? 'the token looks different in dark mode; a constant colour mapped onto it would change there' : undefined });
     }
   }
   // 3. remaining hardcoded colors used ≥ 3 times → new tokens (named by hue/lightness, to be renamed)
@@ -88,8 +111,8 @@ function propose(inv, findings) {
     const px = v.normalized === 'full' ? Infinity : Number(v.normalized);
     if (!isFinite(px)) continue;
     let best = null;
-    for (const t of radiusTokens) { const d = Math.abs(t.px - px); if (!best || d < best.d) best = { ...t, d }; }
-    if (best && best.d <= SUBTLE_PX * 2) add({ source: v.id, axis: 'radius', action: best.d === 0 ? 'promote' : 'round', target: best.d.id, visualChange: visualOfPx(best.d), metric: { px: best.d }, occurrences: v.count, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'radius')?.id || null });
+    for (const t of radiusTokens) { const dist = Math.abs(t.px - px); if (!best || dist < best.dist) best = { token: t.d, px: t.px, dist }; }
+    if (best && best.dist <= SUBTLE_PX * 2) add({ source: v.id, axis: 'radius', action: best.dist === 0 ? 'promote' : 'round', target: best.token.id, visualChange: visualOfPx(best.dist), metric: { px: best.dist }, occurrences: v.hardcodedCount || v.count, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'radius')?.id || null });
     else add({ source: v.id, axis: 'radius', action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: v.count, files: v.files, screens: v.routes, basis: null, note: 'no radius token within 4px' });
   }
   // 5. spacing off-scale → nearest step
@@ -116,13 +139,16 @@ function propose(inv, findings) {
     const safety = opts.safety || (visual === 'none' ? 'none' : visual === 'subtle' ? 'approve' : 'design');
     const grade = occ <= GRADE_S ? 'S' : occ <= GRADE_M ? 'M' : 'L';
     const key = hash(`${kind}|${axis}|${entries.map((e) => e.source).sort().join(',')}`, 8);
-    cards.push({ id: null, key, kind, axis, title: opts.title, summary: opts.summary, findings: [...new Set(entries.map((e) => e.basis).filter(Boolean).concat(opts.findings || []))], entries: entries.map((e) => ({ source: e.source, target: e.target, action: e.action, occurrences: e.occurrences, screens: e.screens, files: (e.files || []).length, visualChange: e.visualChange, metric: e.metric })), impact: { occurrences: occ, screens: screens.size, files: files.size, weight: occ }, grade, visualChange: visual, safety, prereq: opts.prereq || [], advanced: !!opts.advanced, status: 'proposed', type: opts.type || 'migrate' });
+    const vendored = entries.reduce((n, e) => n + (e.vendored || 0), 0);
+    cards.push({ id: null, key, kind, axis, title: opts.title, summary: opts.summary, findings: [...new Set(entries.map((e) => e.basis).filter(Boolean).concat(opts.findings || []))], entries: entries.map((e) => ({ source: e.source, target: e.target, action: e.action, occurrences: e.occurrences, vendored: e.vendored || 0, screens: e.screens, files: (e.files || []).length, visualChange: e.visualChange, metric: e.metric, modeVarying: !!e.modeVarying })), impact: { occurrences: occ, vendored, screens: screens.size, files: files.size, weight: occ }, grade, visualChange: visual, safety, prereq: opts.prereq || [], advanced: !!opts.advanced, status: 'proposed', type: opts.type || 'migrate', needsUserConfirmation: entries.some((e) => e.needsUserConfirmation) });
   };
-  const promotes = mapping.filter((m) => m.action === 'promote' && m.axis === 'color');
+  const promotes = mapping.filter((m) => m.action === 'promote' && m.axis === 'color' && !m.modeVarying);
   mk('register-tokens', 'color', promotes, { title: 'Replace hardcoded colors that equal an existing token', summary: `${promotes.length} color values are identical to a declared token; swapping them changes nothing on screen.`, safety: 'none' });
+  const darkPromotes = mapping.filter((m) => m.axis === 'color' && (m.action === 'promote' || m.action === 'merge') && m.modeVarying);
+  mk('merge-values', 'color', darkPromotes, { title: 'Decide: colors that match a token only in light mode', summary: `${darkPromotes.length} raw color${darkPromotes.length > 1 ? 's' : ''} equal a token in light mode, but that token changes in dark mode. Mapping them is a design decision, not a cleanup.`, safety: 'design', type: 'design' });
   const newTok = mapping.filter((m) => m.action === 'new-token');
   mk('register-tokens', 'color', newTok, { title: 'Register frequently used raw colors as tokens', summary: `${newTok.length} raw colors used 3+ times get a token each; values stay identical.`, safety: 'none', type: 'design' });
-  const merges = mapping.filter((m) => m.action === 'merge');
+  const merges = mapping.filter((m) => m.action === 'merge' && !m.modeVarying);
   const byCluster = new Map();
   for (const m of merges) { const k = m.target; if (!byCluster.has(k)) byCluster.set(k, []); byCluster.get(k).push(m); }
   for (const [target, list] of byCluster) { const name = (declaredById.get(target) || colorById.get(target) || { name: target }).name || (colorById.get(target) || {}).value || target; mk('merge-values', 'color', list, { title: `Merge ${list.length} near-duplicate color${list.length > 1 ? 's' : ''} into ${name}`, summary: `Colors within ΔE ${Math.max(...list.map((l) => l.metric.deltaE || 0))} of ${name} become ${name}.` }); }

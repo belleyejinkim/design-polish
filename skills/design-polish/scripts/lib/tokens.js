@@ -86,6 +86,9 @@ function buildDeclared(theme) {
       const c = light ? color.parse(light) : null;
       const d = dark ? color.parse(dark) : null;
       entry.hex = c ? color.toHex(c) : null; entry.darkHex = d ? color.toHex(d) : null; entry.srgb = c ? [c.r, c.g, c.b] : null; entry.alpha = c ? c.a : 1;
+      entry.darkSrgb = d ? [d.r, d.g, d.b] : null;
+      // A token whose dark value differs noticeably is mode-varying: mapping a constant onto it changes dark mode.
+      entry.modeVarying = !!(c && d && color.deltaE2000(color.toLab(c), color.toLab(d)) >= NEAR_DUP_DE);
       if (c && color.isAchromatic(c)) { entry.role = 'neutral'; entry.roleBasis = 'achromatic'; }
       else if (BRAND_NAME_RE.test(name)) { entry.role = 'brand'; entry.roleBasis = 'name'; }
       else if (SEMANTIC_NAME_RE.test(name)) { entry.role = 'semantic'; entry.roleBasis = 'name'; }
@@ -155,7 +158,7 @@ function inventory(input) {
     if (vars.some((v) => DEFAULT_PALETTE_RE.test(v))) return 'palette';
     return 'scale';
   };
-  const record = (axis, rawValue, resolvedValue, prop, site, count, where, viaVars) => {
+  const record = (axis, rawValue, resolvedValue, prop, site, count, where, viaVars, allSites) => {
     const map = values[axis];
     let norm, display = resolvedValue;
     if (axis === 'color') {
@@ -182,7 +185,8 @@ function inventory(input) {
     e.files.add(site.file);
     for (const r of site.routes || []) e.routes.add(r);
     for (const v of viaVars || []) { const d = byName.get(v); if (d) e.viaTokens.add(d.id); }
-    if (e.sites.length < 40) e.sites.push({ file: site.file, line: site.line, raw: String(rawValue).slice(0, 80), prop, where });
+    const list = allSites && allSites.length ? allSites : [site];
+    for (const st of list) { if (e.sites.length >= 200) break; e.sites.push({ file: st.file, line: st.line, col: st.col, cls: st.cls || null, origin: st.origin || null, raw: String(rawValue).slice(0, 80), prop, where, conditional: st.conditional || undefined }); }
     return true;
   };
 
@@ -193,6 +197,7 @@ function inventory(input) {
     const isArbitrary = /\[[^\]]+\]/.test(cls) || /\((--[\w-]+)\)/.test(cls);
     const firstSite = stat.sites[0] || { file: '?', line: 0 };
     const site = { file: firstSite.file, line: firstSite.line, routes: [...new Set(stat.sites.flatMap((s) => s.routes || []))] };
+    const clsSites = stat.sites.map((st) => ({ file: st.file, line: st.line, col: st.col, cls, conditional: st.conditional, origin: st.origin || null }));
     for (const v of themeVarsForClass(cls)) { const d = byName.get(v); if (d && d.source === 'project' && !varsIn(JSON.stringify(entry.scopes)).includes(v)) { d.refs.classes += stat.count; d.refs.total += stat.count; } }
     const isSpaceBetween = /^(?:[\w\[\]&:-]*:)?space-[xy]-/.test(cls); // margins between children act as a gap
     for (const [scope, decls] of Object.entries(entry.scopes)) {
@@ -205,7 +210,7 @@ function inventory(input) {
         const where = classifyWhere(cls, raw, isArbitrary, null);
         if (COLOR_PROPS.has(prop)) {
           if (cssEval.hasUnresolved(rv) || /^(transparent|currentcolor|inherit|initial)$/i.test(rv)) continue;
-          if (!record('color', raw, rv, prop, site, stat.count, where, vars)) continue;
+          if (!record('color', raw, rv, prop, site, stat.count, where, vars, clsSites)) continue;
           if (mode === 'light') {
             if (where === 'token') axes.color.onToken += stat.count;
             else if (where === 'palette' || where === 'scale') { axes.color.palette += stat.count; for (const v of vars) if (DEFAULT_PALETTE_RE.test(v)) paletteUse.set(v, (paletteUse.get(v) || 0) + stat.count); }
@@ -215,7 +220,7 @@ function inventory(input) {
           const px = cssEval.toPx(rv); if (px == null) continue;
           fontSizes.set(px, (fontSizes.get(px) || 0) + stat.count);
           if (where === 'class-arbitrary') axes.typography.hardcoded += stat.count; else axes.typography.onToken += stat.count;
-          record('typography', raw, rv, prop, site, stat.count, where, vars);
+          record('typography', raw, rv, prop, site, stat.count, where, vars, clsSites);
         } else if (prop === 'font-weight') { const w = cssEval.hasUnresolved(rv) ? raw : rv; fontWeights.set(String(w), (fontWeights.get(String(w)) || 0) + stat.count); }
         else if (prop === 'line-height') { if (!cssEval.hasUnresolved(rv)) lineHeights.set(String(rv), (lineHeights.get(String(rv)) || 0) + stat.count); }
         else if (prop === 'letter-spacing') { if (!cssEval.hasUnresolved(rv)) letterSpacings.set(String(rv), (letterSpacings.get(String(rv)) || 0) + stat.count); }
@@ -224,15 +229,15 @@ function inventory(input) {
           const px = cssEval.toPx(rv.replace(/\* var\(--tw-space-[xy]-reverse\)/, '* 0').replace(/calc\(1 - 0\)/, '1')); if (px == null || px < 0) continue;
           if (isSpaceBetween && px === 0) continue;
           spacingValues.set(px, (spacingValues.get(px) || 0) + stat.count);
-          record('spacing', raw, rv, isSpaceBetween ? 'gap' : prop, site, stat.count, where, vars);
+          record('spacing', raw, rv, isSpaceBetween ? 'gap' : prop, site, stat.count, where, vars, clsSites);
         } else if (/^border(-[a-z-]+)?-radius$/.test(prop)) {
-          if (!record('radius', raw, rv, prop, site, stat.count, where, vars)) continue;
+          if (!record('radius', raw, rv, prop, site, stat.count, where, vars, clsSites)) continue;
           if (mode === 'light') { if (where === 'class-arbitrary') axes.radius.hardcoded += stat.count; else axes.radius.onToken += stat.count; }
         } else if (/^border(-[a-z-]+)?-width$/.test(prop)) {
-          record('border', raw, rv, prop, site, stat.count, where, vars);
+          record('border', raw, rv, prop, site, stat.count, where, vars, clsSites);
         } else if (prop === '--tw-shadow' || (prop === 'box-shadow' && !/var\(--tw-/.test(raw))) {
           if (/^(none|0 0 #0000)/.test(rv) || cssEval.hasUnresolved(rv)) continue;
-          if (!record('shadow', raw, rv, 'box-shadow', site, stat.count, where, vars)) continue;
+          if (!record('shadow', raw, rv, 'box-shadow', site, stat.count, where, vars, clsSites)) continue;
           if (mode === 'light') { if (where === 'class-arbitrary') axes.shadow.hardcoded += stat.count; else axes.shadow.onToken += stat.count; }
         }
       }
@@ -244,7 +249,7 @@ function inventory(input) {
     const prop = s.prop.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
     const v = String(s.value);
     const site = { file: s.file, line: s.line, routes: s.routes };
-    if (COLOR_PROPS.has(prop) || /color/i.test(prop)) { if (record('color', v, v, prop, site, 1, 'inline-style')) axes.color.hardcoded += 1; }
+    if (COLOR_PROPS.has(prop) || /color/i.test(prop)) { if (record('color', v, v, s.prop, site, 1, 'inline-style')) axes.color.hardcoded += 1; }
     else if (prop === 'font-size') { const px = cssEval.toPx(v); if (px != null) { fontSizes.set(px, (fontSizes.get(px) || 0) + 1); axes.typography.hardcoded += 1; record('typography', v, v, prop, site, 1, 'inline-style'); } }
     else if (SPACING_PROPS.has(prop)) { const px = cssEval.toPx(v); if (px != null && px >= 0) { spacingValues.set(px, (spacingValues.get(px) || 0) + 1); record('spacing', v, v, prop, site, 1, 'inline-style'); } }
     else if (prop === 'border-radius') { if (record('radius', v, v, prop, site, 1, 'inline-style')) axes.radius.hardcoded += 1; }
@@ -278,9 +283,10 @@ function inventory(input) {
     e.hardcoded = [...e.where].some((w) => HARD.has(w));
     e.twinOf = null;
     if (!e.hardcoded || !e.lab) continue;
+    // Prefer tokens that look the same in both modes; a mode-varying twin is still reported but flagged.
     let best = null;
-    for (const d of projectColorTokens) { const de = color.deltaE2000(e.lab, color.toLab({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] })); if (de < TWIN_DE && (!best || de < best.de)) best = { id: d.id, de }; }
-    if (best) e.twinOf = best.id;
+    for (const d of projectColorTokens) { const de = color.deltaE2000(e.lab, color.toLab({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] })); if (de < TWIN_DE && (!best || (best.modeVarying && !d.modeVarying) || (best.modeVarying === !!d.modeVarying && de < best.de))) best = { id: d.id, de, modeVarying: !!d.modeVarying }; }
+    if (best) { e.twinOf = best.id; e.twinModeVarying = best.modeVarying; }
   }
   const clusters = clusterColors(colorList, projectColorTokens);
 
@@ -322,13 +328,14 @@ function clusterColors(colorEntries, projectTokens) {
   // wins). Hardcoded values near no token cluster among themselves. Tokens never cluster with tokens.
   const opaque = (e) => e.lab && (e.alpha == null || e.alpha >= 0.99);
   const loose = colorEntries.filter((e) => opaque(e) && (e.hardcoded || [...e.where].includes('palette'))).map((e) => ({ id: e.id, lab: e.lab, count: e.hardcodedCount || e.count, achromatic: e.achromatic, kind: e.hardcoded ? 'hardcoded' : 'palette' }));
-  const anchors = projectTokens.map((d) => ({ id: d.id, lab: color.toLab({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] }), count: d.refs.total, achromatic: color.isAchromatic({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] }), kind: 'token' }));
+  const anchors = projectTokens.map((d) => ({ id: d.id, lab: color.toLab({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] }), darkLab: d.darkSrgb ? color.toLab({ r: d.darkSrgb[0], g: d.darkSrgb[1], b: d.darkSrgb[2] }) : null, modeVarying: !!d.modeVarying, count: d.refs.total, achromatic: color.isAchromatic({ r: d.srgb[0], g: d.srgb[1], b: d.srgb[2] }), kind: 'token' }));
   const byAnchor = new Map();
   const unanchored = [];
   for (const v of loose) {
     let best = null;
-    for (const a of anchors) { const de = color.deltaE2000(v.lab, a.lab); if (de <= NEAR_DUP_DE && (!best || de < best.de || (de === best.de && a.count > best.a.count))) best = { a, de }; }
-    if (best) { if (!byAnchor.has(best.a.id)) byAnchor.set(best.a.id, { anchor: best.a, members: [] }); byAnchor.get(best.a.id).members.push({ ...v, de: best.de }); }
+    // nearest anchor wins; among equally near anchors a mode-invariant one beats a mode-varying one
+    for (const a of anchors) { const de = color.deltaE2000(v.lab, a.lab); if (de <= NEAR_DUP_DE && (!best || (best.a.modeVarying && !a.modeVarying && de <= best.de + 0.5) || (best.a.modeVarying === a.modeVarying && (de < best.de || (de === best.de && a.count > best.a.count))))) best = { a, de }; }
+    if (best) { if (!byAnchor.has(best.a.id)) byAnchor.set(best.a.id, { anchor: best.a, members: [] }); byAnchor.get(best.a.id).members.push({ ...v, de: best.de, deDark: best.a.darkLab ? Math.round(color.deltaE2000(v.lab, best.a.darkLab) * 100) / 100 : null }); }
     else unanchored.push(v);
   }
   const out = [];
@@ -337,7 +344,8 @@ function clusterColors(colorEntries, projectTokens) {
     const aliases = anchors.filter((a) => a.id !== anchor.id && color.deltaE2000(a.lab, anchor.lab) < TWIN_DE).map((a) => a.id);
     const all = [anchor, ...members.sort((x, y) => y.count - x.count)];
     const maxDe = Math.max(...members.map((m) => m.de));
-    out.push({ id: clusterId('color', all.map((m) => m.id)), axis: 'color', members: all.map((m) => m.id), kinds: [...new Set(all.map((m) => m.kind))].sort(), maxDeltaE: Math.round(maxDe * 100) / 100, indistinguishable: maxDe < TWIN_DE, achromatic: all.every((m) => m.achromatic), dominant: anchor.id, aliases, needsUserConfirmation: false });
+    const maxDeDark = anchor.modeVarying ? Math.max(...members.map((m) => m.deDark || 0)) : null;
+    out.push({ id: clusterId('color', all.map((m) => m.id)), axis: 'color', members: all.map((m) => m.id), kinds: [...new Set(all.map((m) => m.kind))].sort(), maxDeltaE: Math.round(maxDe * 100) / 100, maxDeltaEDark: maxDeDark, anchorModeVarying: anchor.modeVarying, indistinguishable: maxDe < TWIN_DE, achromatic: all.every((m) => m.achromatic), dominant: anchor.id, aliases, needsUserConfirmation: anchor.modeVarying });
   }
   // hardcoded values near no token: single-linkage among themselves (palette values are the scale and are not linked here)
   const hard = unanchored.filter((v) => v.kind === 'hardcoded');

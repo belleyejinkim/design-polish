@@ -4,16 +4,18 @@
 // their looks, so every Button/Badge usage in an app expands through here.
 const { evaluate, staticValue, emptySet, addTokens } = require('./class-eval');
 
-function tokensOf(node, ctx) {
+function tokensOf(node, ctx, model) {
   if (!node) return [];
-  return evaluate(node, ctx).tokens;
+  const set = evaluate(node, ctx);
+  if (model) Object.assign(model.origins, set.origins || {});
+  return set.tokens;
 }
 
 function parseCva(callNode, ctx) {
   const { ts, sf } = ctx;
-  const model = { base: [], variants: {}, defaults: {}, compound: [], file: ctx.index ? ctx.index.rel : null };
+  const model = { base: [], variants: {}, defaults: {}, compound: [], file: ctx.index ? ctx.index.rel : null, origins: {} };
   const [baseNode, cfgNode] = callNode.arguments;
-  model.base = tokensOf(baseNode, ctx);
+  model.base = tokensOf(baseNode, ctx, model);
   if (cfgNode && ts.isObjectLiteralExpression(cfgNode)) {
     for (const p of cfgNode.properties) {
       if (!ts.isPropertyAssignment(p)) continue;
@@ -26,7 +28,7 @@ function parseCva(callNode, ctx) {
           for (const vp of axisProp.initializer.properties) {
             if (!ts.isPropertyAssignment(vp)) continue;
             const value = ts.isIdentifier(vp.name) || ts.isStringLiteral(vp.name) || ts.isNumericLiteral(vp.name) ? vp.name.text : vp.name.getText(sf);
-            model.variants[axis][value] = tokensOf(vp.initializer, ctx);
+            model.variants[axis][value] = tokensOf(vp.initializer, ctx, model);
           }
         }
       } else if (key === 'defaultVariants' && ts.isObjectLiteralExpression(p.initializer)) {
@@ -44,7 +46,7 @@ function parseCva(callNode, ctx) {
           for (const cp of el.properties) {
             if (!ts.isPropertyAssignment(cp)) continue;
             const k = ts.isIdentifier(cp.name) || ts.isStringLiteral(cp.name) ? cp.name.text : cp.name.getText(sf);
-            if (k === 'class' || k === 'className') { tokens = tokensOf(cp.initializer, ctx); continue; }
+            if (k === 'class' || k === 'className') { tokens = tokensOf(cp.initializer, ctx, model); continue; }
             if (ts.isArrayLiteralExpression(cp.initializer)) when[k] = cp.initializer.elements.map((e) => staticValue(e, ctx)).filter((v) => v !== undefined);
             else { const v = staticValue(cp.initializer, ctx); if (v !== undefined) when[k] = v; }
           }
@@ -76,7 +78,7 @@ function applyCva(model, env) {
     });
     if (ok) addTokens(set, c.tokens);
   }
-  return { tokens: set.tokens, axesUsed, inferred };
+  return { tokens: set.tokens, axesUsed, inferred, origins: model.origins || {} };
 }
 
 module.exports = { parseCva, applyCva };

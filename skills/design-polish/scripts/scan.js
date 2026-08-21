@@ -14,7 +14,7 @@ const path = require('path');
 const files = require('./lib/files');
 const tsLoader = require('./lib/ts-loader');
 const { parseFile, readTsconfig, resolveImport } = require('./lib/index-file');
-const { evaluate, CN_FUNCS } = require('./lib/class-eval');
+const { evaluate, fromString, CN_FUNCS } = require('./lib/class-eval');
 const { expandUsage } = require('./lib/resolve-usage');
 const classify = require('./lib/classify');
 const signature = require('./lib/signature');
@@ -50,6 +50,28 @@ function parseArgs(argv) {
     else if (!a.startsWith('-') && !args.root) args.root = a;
   }
   return args;
+}
+
+// Vendored component libraries (shadcn/ui copies and the like) are inventoried but not edited by default.
+// `components.json` (shadcn) names the ui alias; otherwise any `components/ui` directory counts.
+function detectVendored(root, files) {
+  const dirs = new Set();
+  const cj = path.join(root, 'components.json');
+  if (fs.existsSync(cj)) {
+    try {
+      const conf = JSON.parse(fs.readFileSync(cj, 'utf8'));
+      const alias = conf.aliases && conf.aliases.ui;
+      if (alias) {
+        const m = /^@\/(.+)$/.exec(alias);
+        const candidates = m ? ['src/' + m[1], m[1]] : [alias];
+        for (const c of candidates) { const d = c.replace(/\/$/, ''); if (files.some((f) => f.startsWith(d + '/'))) { dirs.add(d); break; } }
+      }
+    } catch (_) { /* unreadable config: fall through to the path rule */ }
+  }
+  for (const f of files) { const m = /^(.*components\/ui)\/[^/]+$/.exec(f); if (m) dirs.add(m[1]); }
+  const list = [...dirs].sort();
+  const isVendored = (file) => list.some((d) => file === d || file.startsWith(d + '/'));
+  return { dirs: list, isVendored, files: files.filter(isVendored).length, basis: fs.existsSync(cj) ? 'components.json' : list.length ? 'components/ui' : 'none' };
 }
 
 function detectCssEntry(cssFiles, explicit) {
@@ -217,6 +239,7 @@ async function scan(rootArg, opts = {}) {
   // 1. files
   const collected = files.collect(root, { includeTests: opts.includeTests, includeDirs: opts.src, excludeDirs: opts.exclude });
   const codeFiles = collected.files.filter((f) => ['tsx', 'jsx', 'ts', 'js'].includes(f.kind));
+  const vendored = detectVendored(root, codeFiles.map((f) => f.rel));
   const cssFiles = collected.files.filter((f) => f.kind.includes('css') || f.kind.includes('scss'));
   log(`files: ${collected.listed} listed (${collected.listSource}), ${codeFiles.length} code + ${cssFiles.length} css scanned`);
 
@@ -310,6 +333,7 @@ async function scan(rootArg, opts = {}) {
   const cvaCache = new Map();
   const ownerEnv = (idx, j) => { const c = idx.components.find((x) => x.name === j.owner); return c ? { env: { ...c.params.defaults }, locals: c.locals } : { env: {}, locals: null }; };
   const classesOfElement = new Map(); // node -> own tokens under the owner's default props
+  const originsOfElement = new Map(); // node -> token -> { file, line, col } where the literal is written
   for (const idx of indexes.values()) {
     const fileRoutes = routesOf(idx.rel);
     for (const j of idx.jsx) {
@@ -318,10 +342,11 @@ async function scan(rootArg, opts = {}) {
       const a = j.attrs.className || j.attrs.class;
       let set = null;
       if (a) {
-        if (a.kind === 'string') set = evaluate({ kind: ts.SyntaxKind.StringLiteral, text: a.value, getText: () => a.value }, ctx);
+        if (a.kind === 'string') set = fromString(a.value, { file: idx.rel, line: j.line, col: j.col });
         else if (a.kind === 'expr' && a.node) set = evaluate(a.node, ctx);
       }
       classesOfElement.set(j.node, set ? set.tokens : []);
+      originsOfElement.set(j.node, set ? set.origins || {} : {});
       if (set && set.unknown.length && a.kind === 'expr' && /\$\{|\+/.test(a.text || '')) dynamicClassSites.push({ file: idx.rel, line: j.line, tag: j.tag, expr: (a.text || '').slice(0, 80), unknown: set.unknown.slice(0, 3) });
       const st = j.attrs.style;
       if (st && st.kind === 'expr' && st.node && ts.isObjectLiteralExpression(st.node)) {
@@ -406,7 +431,7 @@ async function scan(rootArg, opts = {}) {
         // A root that itself resolves through another local component (PrimaryButton → Button) is a wrapper, not an implementation.
         const wraps = cr.eff.chain && cr.eff.chain.length && cr.eff.implRef && cr.eff.implRef.kind === 'local-component' ? ids.implId(cr.det.type, cr.eff.implRef.file, cr.eff.implRef.name) : null;
         const isWrapper = !!wraps || !!cr.eff.asChild || (cr.eff.chain && cr.eff.chain.length > 0 && cr.eff.implRef && cr.eff.implRef.kind === 'library' && cr.eff.tag === null);
-        if (!implementations.has(implId) && cr.det.subtype !== 'item') implementations.set(implId, { id: implId, type: cr.det.type, kind: isWrapper ? 'wrapper' : 'local-component', wraps, skeleton: cr.skeleton || null, name: cr.comp.name, file: idx.rel, primitive: (cr.eff.implRef && cr.eff.implRef.primitive) || null, usages: uses, instances: inst.main + inst.catalog, reachability: fr.reachability, routes: fileRoutes, axes: cr.eff.classSet.cva || null, count: 0, catalogCount: 0, signatures: new Set(), controlRootIsRoot: cr.isRoot });
+        if (!implementations.has(implId) && cr.det.subtype !== 'item') implementations.set(implId, { id: implId, type: cr.det.type, kind: isWrapper ? 'wrapper' : 'local-component', vendored: vendored.isVendored(idx.rel), wraps, skeleton: cr.skeleton || null, name: cr.comp.name, file: idx.rel, primitive: (cr.eff.implRef && cr.eff.implRef.primitive) || null, usages: uses, instances: inst.main + inst.catalog, reachability: fr.reachability, routes: fileRoutes, axes: cr.eff.classSet.cva || null, count: 0, catalogCount: 0, signatures: new Set(), controlRootIsRoot: cr.isRoot });
         if (uses > 0 || (inst.main + inst.catalog) === 0) continue; // counted through usages, or unreached
         // reached without JSX usages (route entry, dynamic import): count the control root itself once
       }
@@ -456,11 +481,11 @@ async function scan(rootArg, opts = {}) {
       const inst = hit ? hit.inst : instancesOf(idx.rel, j.owner);
       const n = inst.main + inst.catalog;
       if (n === 0) continue;
-      let tokens, conditional = [];
-      if (hit && hit.eff.chain && hit.eff.chain.length) { tokens = hit.eff.classSet.tokens; conditional = hit.eff.classSet.conditional; }
-      else { tokens = classesOfElement.get(j.node) || []; }
-      for (const t of tokens) addTokenSite(t, idx, j, n, {});
-      for (const c of conditional) for (const t of c.tokens) addTokenSite(t, idx, j, n, { conditional: c.condition });
+      let tokens, conditional = [], origins = {};
+      if (hit && hit.eff.chain && hit.eff.chain.length) { tokens = hit.eff.classSet.tokens; conditional = hit.eff.classSet.conditional; origins = hit.eff.classSet.origins || {}; }
+      else { tokens = classesOfElement.get(j.node) || []; origins = originsOfElement.get(j.node) || {}; }
+      for (const t of tokens) addTokenSite(t, idx, j, n, { origin: origins[t] || null });
+      for (const c of conditional) for (const t of c.tokens) addTokenSite(t, idx, j, n, { conditional: c.condition, origin: origins[t] || null });
     }
   }
   const cssEntry = detectCssEntry(cssFiles, opts.css);
@@ -517,7 +542,7 @@ async function scan(rootArg, opts = {}) {
       skeleton: (!j.isComponent && j.children.length) ? skeletonOf(idx, j, 0) : null,
       routes: fileRoutes, layoutScope: fr.layouts, reachability: fr.reachability, catalog, unresolvedReason: eff.unresolvedReason,
       parentOccId: null, siblingGroupId: null, computed, states: statesOf(scopes, eff.tag), scopes,
-      count: o.count, catalogCount: o.catalogCount, definedIn: j.owner && !j.isComponent ? { component: j.owner, file: idx.rel } : null,
+      count: o.count, catalogCount: o.catalogCount, vendored: vendored.isVendored(idx.rel), definedIn: j.owner && !j.isComponent ? { component: j.owner, file: idx.rel } : null,
     };
     occurrences.push(occ);
     occByNode.set(j.node, occ);
@@ -579,6 +604,7 @@ async function scan(rootArg, opts = {}) {
       css: { engine: bridge.engine, version: bridge.version, entry: cssEntry, error: bridge.error, darkStrategy: theme.darkStrategy, darkSelector: theme.darkSelector, executedConfig: bridge.executedConfig },
       files: { listSource: collected.listSource, listed: collected.listed, scanned: collected.files.length, code: codeFiles.length, css: cssFiles.length, parseFailed, skipped: Object.fromEntries(Object.entries(collected.skipped).map(([k, v]) => [k, Array.isArray(v) ? { count: v.length, samples: v.slice(0, 5) } : { count: v }])) },
       router: discovered.router,
+      vendored: { basis: vendored.basis, dirs: vendored.dirs, files: vendored.files },
       options: { includeTests: !!opts.includeTests, includeCatalog: !!opts.includeCatalog, src: opts.src || null, exclude: opts.exclude || [] },
     },
     routes: discovered.routes,

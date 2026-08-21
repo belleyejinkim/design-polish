@@ -153,9 +153,16 @@ async function create(root, opts = {}) {
     const base = path.dirname(entryAbs);
     try {
       if (nodeApi && nodeApi.compile) {
-        compiler = await nodeApi.compile(entryText, { base, onDependency: () => {} });
+        // When Tailwind is borrowed from elsewhere (no node_modules in the target), resolve `@import "tailwindcss"` to the engine we found.
+        const customCssResolver = (id, from) => {
+          if (id === 'tailwindcss') return path.join(engine.corePkgDir, 'index.css');
+          if (id.startsWith('tailwindcss/')) { const f = path.join(engine.corePkgDir, id.slice('tailwindcss/'.length)); return fs.existsSync(f) ? f : fs.existsSync(f + '.css') ? f + '.css' : undefined; }
+          return undefined;
+        };
+        const twOpts = { base, onDependency: () => {}, customCssResolver };
+        compiler = await nodeApi.compile(entryText, twOpts);
         if (nodeApi.__unstable__loadDesignSystem) {
-          try { designSystem = await nodeApi.__unstable__loadDesignSystem(entryText, { base }); } catch (_) { designSystem = null; }
+          try { designSystem = await nodeApi.__unstable__loadDesignSystem(entryText, twOpts); } catch (_) { designSystem = null; }
         }
       } else if (engine.coreApi && engine.coreApi.compile) {
         // Core API needs loaders for @import "tailwindcss" and friends.

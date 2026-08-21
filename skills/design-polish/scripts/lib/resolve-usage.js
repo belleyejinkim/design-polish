@@ -67,6 +67,7 @@ function attrsToEnv(jsxInfo, ctx) {
   // An element that spreads {...props} receives the caller's unnamed props (asChild, data-*, type, disabled...).
   if (jsxInfo.spread && ctx.spreadProps) for (const [k, v] of Object.entries(ctx.spreadProps)) if (k !== 'className' && k !== 'children') env[k] = v;
   for (const [name, a] of Object.entries(jsxInfo.attrs)) {
+    if ((name === 'className' || name === 'class') && a.kind === 'string') { env[name] = { classSet: fromString(a.value, { file: ctx.index.rel, line: jsxInfo.line, col: jsxInfo.col }) }; continue; }
     if (a.kind === 'string' || a.kind === 'number') env[name] = a.value;
     else if (a.kind === 'true') env[name] = true;
     else if (a.kind === 'false') env[name] = false;
@@ -128,7 +129,7 @@ function expandUsage(jsxInfo, ctx) {
   const { ts } = ctx;
   const depth = ctx.depth || 0;
   const attrs = attrsToEnv(jsxInfo, ctx);
-  const ownClasses = attrs.className && attrs.className.classSet ? attrs.className.classSet : (typeof attrs.className === 'string' ? fromString(attrs.className) : emptySet());
+  const ownClasses = attrs.className && attrs.className.classSet ? attrs.className.classSet : (typeof attrs.className === 'string' ? fromString(attrs.className, { file: ctx.index.rel, line: jsxInfo.line, col: jsxInfo.col }) : emptySet());
   const style = attrs.style && attrs.style.style ? attrs.style.style : {};
   const staticAttrs = {};
   for (const [k, v] of Object.entries(attrs)) if (v === null || typeof v !== 'object') staticAttrs[k] = v;
@@ -276,6 +277,7 @@ function passThrough(jsxInfo, ctx, wrapperClasses, wrapperAttrs, style, chain, d
   addTokens({ tokens: mergedTokens }, wrapperClasses.tokens);
   addTokens({ tokens: mergedTokens }, cs.tokens);
   cs.tokens = mergedTokens;
+  cs.origins = { ...(wrapperClasses.origins || {}), ...(cs.origins || {}) };
   inner.classSet = cs;
   inner.asChild = true;
   inner.asChildStyled = inner.asChildStyled || wrapperClasses.tokens.length > 0; // did the wrapper contribute the look?

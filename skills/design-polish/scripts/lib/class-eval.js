@@ -10,12 +10,20 @@ const CN_FUNCS = new Set(['cn', 'clsx', 'classNames', 'classnames', 'twMerge', '
 // Following wrappers deeper than this almost always means a design-system library, not app code.
 const MAX_DEPTH = 6;
 
-function emptySet() { return { tokens: [], conditional: [], unknown: [], slots: [] }; }
+function emptySet() { return { tokens: [], conditional: [], unknown: [], slots: [], origins: {} }; }
 
-function fromString(str) {
+// origin: where the literal that produced these tokens is written ({ file, line, col }); apply.js edits there.
+function fromString(str, origin) {
   const set = emptySet();
-  addTokens(set, String(str).split(/\s+/).filter(Boolean));
+  const tokens = String(str).split(/\s+/).filter(Boolean);
+  addTokens(set, tokens);
+  if (origin) for (const t of tokens) set.origins[t] = origin;
   return set;
+}
+
+function originOf(node, ctx) {
+  if (!node || !ctx || !ctx.sf || !ctx.index) return null;
+  try { const lc = ctx.sf.getLineAndCharacterOfPosition(node.getStart(ctx.sf)); return { file: ctx.index.rel, line: lc.line + 1, col: lc.character + 1 }; } catch (_) { return null; }
 }
 
 // Keep the LAST occurrence of a duplicate token so "later wins" ordering is preserved.
@@ -30,6 +38,7 @@ function addTokens(set, tokens) {
 function merge(into, from) {
   if (!from) return into;
   addTokens(into, from.tokens);
+  if (from.origins) Object.assign(into.origins, from.origins);
   into.conditional.push(...from.conditional);
   into.unknown.push(...from.unknown);
   for (const s of from.slots) if (!into.slots.includes(s)) into.slots.push(s);
@@ -168,7 +177,7 @@ function evaluate(node, ctx) {
   const { ts, sf } = ctx;
   if (!node) return emptySet();
   if (ctx.depth > MAX_DEPTH) return unknownSet('depth');
-  if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return fromString(node.text);
+  if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return fromString(node.text, originOf(node, ctx));
   if (ts.isJsxExpression(node)) return evaluate(node.expression, ctx);
   if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isNonNullExpression(node) || (ts.isSatisfiesExpression && ts.isSatisfiesExpression(node)) || ts.isTypeAssertionExpression?.(node)) return evaluate(node.expression, ctx);
   if (ts.isTemplateExpression(node)) {
@@ -180,10 +189,11 @@ function evaluate(node, ctx) {
     let cur = ''; // current token being assembled; null-safe marker when it contains an expression
     let curHasExpr = false;
     let curExprSet = null;
+    const tplOrigin = originOf(node, ctx);
     const flush = () => {
       if (cur !== '' || curHasExpr) {
         if (curHasExpr) { if (cur === '') { if (curExprSet) merge(set, curExprSet); } else set.unknown.push(cur.replace(/\u0000/g, '${…}')); }
-        else addTokens(set, [cur]);
+        else { addTokens(set, [cur]); if (tplOrigin) set.origins[cur] = tplOrigin; }
       }
       cur = ''; curHasExpr = false; curExprSet = null;
     };
@@ -222,8 +232,8 @@ function evaluate(node, ctx) {
       if (!ts.isPropertyAssignment(p)) { if (ts.isShorthandPropertyAssignment(p)) { const c = evalCond(p.name, ctx); if (c) addTokens(set, fromString(p.name.text).tokens); else if (c === undefined) conditional(set, p.name.text, fromString(p.name.text)); } continue; }
       const key = ts.isStringLiteral(p.name) || ts.isIdentifier(p.name) ? p.name.text : p.name.getText(sf);
       const c = evalCond(p.initializer, ctx);
-      if (c === true) addTokens(set, fromString(key).tokens);
-      else if (c === undefined) conditional(set, p.initializer.getText(sf), fromString(key));
+      if (c === true) merge(set, fromString(key, originOf(p.name, ctx)));
+      else if (c === undefined) conditional(set, p.initializer.getText(sf), fromString(key, originOf(p.name, ctx)));
     }
     return set;
   }
@@ -262,7 +272,7 @@ function evaluate(node, ctx) {
       const v = r.value;
       const set = emptySet();
       if (name === 'className' || name === 'class') set.slots.push(name);
-      if (typeof v === 'string') addTokens(set, fromString(v).tokens);
+      if (typeof v === 'string') merge(set, fromString(v, v.__origin || null));
       else if (v && typeof v === 'object' && v.classSet) merge(set, v.classSet);
       else if (v && typeof v === 'object' && v.expr) set.unknown.push(v.expr);
       return set; // undefined prop → nothing
@@ -348,6 +358,7 @@ function evaluate(node, ctx) {
         const applied = applyCva(model, argEnv);
         const set = emptySet();
         addTokens(set, applied.tokens);
+        for (const t of applied.tokens) if (applied.origins[t]) set.origins[t] = applied.origins[t];
         if (classNameSet) merge(set, classNameSet);
         set.cva = { name: r.name, file: r.index.rel, axes: applied.axesUsed, inferred: applied.inferred };
         return set;

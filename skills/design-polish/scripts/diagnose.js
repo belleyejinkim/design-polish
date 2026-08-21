@@ -26,9 +26,13 @@ function sev(level, screens, T) {
   return level;
 }
 
+// Findings whose membership shifts as the code is cleaned keep a stable id (rule + axis, or an explicit key)
+// so before/after comparisons can say "remaining" instead of "resolved + new".
+const AXIS_KEYED = new Set(['SIG-SPRAWL', 'DUP-IMPL', 'PAD-INCONS', 'RATIO', 'PALETTE-GRAYS', 'TOKEN-SPRAWL', 'HARDCODE', 'DEAD-TOKEN', 'DARK-GAP', 'OFF-SCALE', 'NO-SCALE', 'SIB-RADIUS-PATTERN', 'INVALID-CLASS', 'UNREACHED', 'TOKEN-TWIN']);
 function make(rule, axis, subjects, opts) {
+  const keyed = opts.key != null ? [String(opts.key)] : AXIS_KEYED.has(rule) ? [axis] : subjects;
   const f = {
-    id: findingId(rule, subjects), rule, axis, severity: opts.severity, title: opts.title, summary: opts.summary,
+    id: findingId(rule, keyed), rule, axis, severity: opts.severity, title: opts.title, summary: opts.summary,
     params: opts.params || {}, subjects, counts: opts.counts || {}, screens: [...new Set(opts.screens || [])].sort(),
     evidence: opts.evidence || { kind: 'list', refs: subjects, sites: [] },
     recommendation: opts.recommendation || null, needsUserConfirmation: !!opts.needsUserConfirmation, basis: opts.basis,
@@ -53,7 +57,7 @@ function diagnose(inv, T) {
     const total = c.members.reduce((n, m) => n + ((colorById.get(m) || {}).count || (declaredById.get(m) || { refs: { total: 0 } }).refs.total), 0);
     const screens = screensOf(c.members);
     const target = c.dominant || c.members.find((m) => declaredById.has(m)) || null;
-    findings.push(make('NEAR-DUP', 'color', c.members, {
+    findings.push(make('NEAR-DUP', 'color', c.members, { key: target ? `anchor:${target}` : undefined,
       severity: c.indistinguishable ? 'medium' : 'low', // a look-alike is never urgent; the fix is what decides visibility
       title: `${c.members.length} ${c.achromatic ? 'grays' : 'colors'} within ΔE ${c.maxDeltaE}`,
       summary: `${c.members.length} ${c.achromatic ? 'grays' : 'colors'} differ by at most ΔE ${c.maxDeltaE}${c.indistinguishable ? ' (indistinguishable by eye)' : ''}; ${total} uses across ${screens.length} screens.`,
@@ -245,7 +249,7 @@ function diagnose(inv, T) {
   const heightGroups = groups.filter((g) => g.mismatch.height);
   const groupScreens = (gs) => [...new Set(gs.flatMap((g) => [...(g.routes || []), ...(g.layoutScope || [])]))];
   for (const g of radiusGroups) {
-    findings.push(make('SIB-RADIUS', 'radius', g.members, {
+    findings.push(make('SIB-RADIUS', 'radius', g.members, { key: g.id,
       severity: 'medium', title: `Neighbors with different corner radii (${g.radiusPx.filter((r) => r != null).join(' / ')}px)`,
       summary: `${g.memberTypes.join(' and ')} sit in one ${g.layout} with radii ${g.radiusPx.map((r) => r == null ? '?' : r).join(' / ')}px.`,
       params: { types: g.memberTypes, radii: g.radiusPx, layout: g.layout }, counts: { members: g.members.length }, screens: [...(g.routes || []), ...(g.layoutScope || [])],
@@ -253,7 +257,7 @@ function diagnose(inv, T) {
     }));
   }
   for (const g of heightGroups) {
-    findings.push(make('SIB-HEIGHT', 'spacing', g.members, {
+    findings.push(make('SIB-HEIGHT', 'spacing', g.members, { key: g.id,
       severity: 'medium', title: `Neighbors with different heights (${g.heightPx.filter((r) => r != null).join(' / ')}px)`,
       summary: `${g.memberTypes.join(' and ')} sit in one ${g.layout} with heights ${g.heightPx.map((r) => r == null ? '?' : r).join(' / ')}px.`,
       params: { types: g.memberTypes, heights: g.heightPx, layout: g.layout }, counts: { members: g.members.length }, screens: [...(g.routes || []), ...(g.layoutScope || [])],

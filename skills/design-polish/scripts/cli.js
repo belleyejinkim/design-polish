@@ -24,12 +24,14 @@ function main() {
 
   npx design-polish [path]            inventory report, no AI needed (opens in your browser)
   npx design-polish check [path]      fail if new hardcoded styles appeared since the baseline
+  npx design-polish recheck [path]    re-scan and compare with the run whose cards you applied
   npx design-polish <step> …          steps: ${Object.keys(STEPS).join(', ')}
 
 In Claude Code / Codex / Cursor, say "polish my design" to diagnose, choose and apply changes.`);
     process.exit(0);
   }
   if (cmd === 'check') process.exit(run('baseline.js', argv.slice(1)));
+  if (cmd === 'recheck') process.exit(run('inventory.js', ['--recheck', ...argv.slice(1)]));
   if (cmd && STEPS[cmd] && cmd !== 'check') process.exit(run(STEPS[cmd], argv.slice(1)));
   // default: inventory pipeline — everything after the optional verb goes through untouched
   const rest = cmd === 'inventory' ? argv.slice(1) : argv;
