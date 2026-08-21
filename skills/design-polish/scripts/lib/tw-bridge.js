@@ -111,7 +111,7 @@ function collectClassDecls(stylesheet, into, source) {
       const entry = into.get(split.className);
       entry.scopes[scope] = entry.scopes[scope] || {};
       for (const d of rule.declarations) {
-        if (d.prop.startsWith('--tw-') && !/^--tw-(shadow|ring-color|ring-offset|gradient)/.test(d.prop)) continue; // internal plumbing
+        if (d.prop.startsWith('--tw-') && !/^--tw-(shadow|ring-color|ring-offset|gradient)/.test(d.prop)) { entry.internal = true; continue; } // internal plumbing (animation/transform inputs)
         entry.scopes[scope][d.prop] = d.value + (d.important ? ' !important' : '');
       }
       entry.selectors.push(sel);
@@ -240,7 +240,7 @@ async function create(root, opts = {}) {
       if (/^(group|peer)(\/[\w-]+)?$/.test(cls)) { byClass.set(cls, { scopes: {}, source: 'marker', selectors: [] }); continue; } // markers emit no CSS by design
       const fromTw = generated.get(cls);
       const fromProject = projectCss.get(cls) || projectCss.get(cls.split(':').pop());
-      if (fromTw && Object.values(fromTw.scopes).some((s) => Object.keys(s).length)) byClass.set(cls, { ...fromTw, source: 'tailwind' });
+      if (fromTw && (fromTw.internal || Object.values(fromTw.scopes).some((s) => Object.keys(s).length))) byClass.set(cls, { ...fromTw, source: 'tailwind' });
       else if (fromProject) byClass.set(cls, { ...fromProject, source: 'project-css' });
       else unresolved.push({ cls, reason: bridge.engine === 'none' ? 'no-engine' : (looksLikeUtility(cls) ? 'invalid-utility' : 'unknown-class') });
     }

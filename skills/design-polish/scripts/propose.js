@@ -157,13 +157,23 @@ function propose(inv, findings) {
   mk('merge-values', 'radius', radiusMoves.filter((m) => m.visualChange !== 'none'), { title: 'Snap odd corner radii to the nearest radius token', summary: 'Radii within a few px of a token are rounded to it.' });
   const rounds = mapping.filter((m) => m.axis === 'spacing' && m.action === 'round');
   mk('merge-values', 'spacing', rounds, { title: `Round ${rounds.length} off-grid spacing value${rounds.length > 1 ? 's' : ''} to the ${tok.spacing.dominantStep}px grid`, summary: 'Values between grid steps move to the nearest step.' });
-  // sibling radius groups → align-neighbors
+  // sibling radius groups → align-neighbors: one card per radius pattern (all "6 / 8px" rows together),
+  // so a project with eight such rows reviews one card, not eight.
+  const byPattern = new Map();
   for (const f of findingsBy('SIB-RADIUS')) {
     const g = (inv.relationships.siblingGroups || []).find((x) => x.id === f.evidence.refs[0]);
     if (!g) continue;
+    const pattern = [...new Set((g.radiusPx || []).map((r) => (r == null ? '?' : String(r))))].sort((a, b) => Number(a) - Number(b)).join('/');
+    if (!byPattern.has(pattern)) byPattern.set(pattern, { findings: [], entries: [], rows: 0 });
+    const bucket = byPattern.get(pattern);
+    bucket.findings.push(f.id); bucket.rows += 1;
     const occs = g.members.map((id) => inv.occurrences.find((o) => o.id === id)).filter(Boolean);
-    const entries = occs.map((o) => ({ source: o.id, target: null, action: 'align', occurrences: 1, files: [o.file], screens: o.routes, visualChange: 'subtle', metric: { px: null }, basis: f.id }));
-    mk('align-neighbors', 'radius', entries, { title: f.title, summary: f.summary, findings: [f.id], safety: 'approve' });
+    const maxGap = Math.max(...(g.radiusPx || []).filter((r) => typeof r === 'number')) - Math.min(...(g.radiusPx || []).filter((r) => typeof r === 'number'));
+    for (const o of occs) bucket.entries.push({ source: o.id, target: null, action: 'align', occurrences: 1, files: [o.file], screens: o.routes, visualChange: isFinite(maxGap) && maxGap >= SUBTLE_PX * 2 ? 'visible' : 'subtle', metric: { px: isFinite(maxGap) ? maxGap : null, group: g.id }, basis: f.id });
+  }
+  for (const [pattern, b] of byPattern) {
+    const label = pattern.split('/').map((r) => (r === '?' ? '?' : r + 'px')).join(' / ');
+    mk('align-neighbors', 'radius', b.entries, { title: b.rows > 1 ? `Give ${b.rows} rows of neighbours one corner radius (${label})` : `Neighbors with different corner radii (${label})`, summary: b.rows > 1 ? `${b.rows} rows mix ${label}; each row's minority members adopt the majority radius.` : `Controls in one row use ${label}; the minority adopts the majority radius.`, findings: b.findings, safety: 'approve' });
   }
   // dead tokens
   const dead = findingsBy('DEAD-TOKEN')[0];

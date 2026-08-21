@@ -68,7 +68,7 @@ function brief(runDir, opts = {}) {
   L.push('');
   L.push('## Render & verification');
   if (spec) L.push(`specimens: ${spec.items.filter((i) => i.html).length}/${spec.items.length} rendered (${spec.engine}${spec.status !== 'ok' ? ', ' + spec.status + (spec.reason ? ': ' + spec.reason : '') : ''})`);
-  L.push(`unresolved classes: ${inv.classes.unresolved.length} (${inv.classes.unresolved.slice(0, 8).map((u) => u.cls).join(', ')}) · dynamic class sites: ${inv.classes.dynamicSites.length} · parse failures: ${inv.meta.files.parseFailed}`);
+  L.push(`unresolved classes: ${inv.classes.unresolved.length} (${inv.classes.unresolved.slice(0, 8).map((u) => u.cls).join(', ')}) · dynamic class sites: ${inv.classes.dynamicSites.length} · parse failures: ${Array.isArray(inv.meta.files.parseFailed) ? inv.meta.files.parseFailed.length : inv.meta.files.parseFailed || 0}`);
   if (ver) L.push(`verify: ${ver.summary.passed} passed · ${ver.summary.failed} failed · ${ver.summary.pending} pending${ver.summary.failed ? ' — FAILED: ' + ver.checks.filter((c) => c.passed === false).map((c) => c.id + ' ' + c.text).join('; ') : ''}`);
   if (delta) L.push(`delta vs ${delta.baseline}: findings ${delta.findings.resolved.length} resolved / ${delta.findings.remaining.length} remaining / ${delta.findings.new.length} new · ${Object.entries(delta.values).filter(([, v]) => v.before !== v.after).map(([k, v]) => `${k} ${v.before}→${v.after}`).join(' · ')}`);
   const text = L.join('\n');

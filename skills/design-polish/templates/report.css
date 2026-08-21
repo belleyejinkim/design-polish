@@ -55,7 +55,8 @@ button{font:inherit;color:inherit}
 .part>h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .part>h3 .n{color:var(--ink-2);letter-spacing:0;text-transform:none;font-weight:500;font-size:13px}
 .help{color:var(--ink-2);font-size:14px;margin:-6px 0 14px}
-.lede{font-size:17px;color:var(--ink-2);max-width:none;margin:8px 0 24px}
+.headline{font-size:22px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);margin:8px 0 6px;text-wrap:balance}
+.lede{font-size:17px;color:var(--ink-2);max-width:none;margin:0 0 24px}
 
 /* tables */
 table.t{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden}
@@ -76,16 +77,19 @@ table.t{width:100%;border-collapse:collapse;font-size:14px;background:var(--card
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 
 /* summary */
-.summary-grid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:28px;align-items:start}
+.summary-grid{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:28px;align-items:start}
 @media (max-width:860px){.summary-grid{grid-template-columns:1fr}}
 .scorecard{background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:22px;display:flex;gap:22px;align-items:center}
-.ring{width:118px;height:118px;flex:none}
+.scorecard .axes{flex:1;min-width:0}
+.ring{width:104px;height:104px;flex:none}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 .ring .bg{fill:none;stroke:var(--tint-2);stroke-width:10}
 .ring .fg{fill:none;stroke:var(--ink);stroke-width:10;stroke-linecap:round}
 .ring .val{position:relative;margin-top:-84px;text-align:center;font-size:30px;font-weight:650;letter-spacing:-0.02em}
-.axes{flex:1;display:grid;gap:8px}
-.axis{display:grid;grid-template-columns:86px 1fr 44px;align-items:center;gap:10px;font-size:13px}
+.axes{flex:1;display:grid;grid-template-columns:auto minmax(40px,1fr) 40px;gap:8px 10px;align-items:center;font-size:13px}
+.axes>.caps,.axes>.small{grid-column:1/-1}
+.axis{display:contents}
+.axis>span:first-child{white-space:nowrap}
 .axis .bar{display:block;height:8px;background:var(--tint-2);border-radius:4px;overflow:hidden}
 .axis .bar i{display:block;height:100%;background:var(--ink)}
 .axis .bar i.low{background:var(--red)}.axis .bar i.mid{background:var(--amber)}
