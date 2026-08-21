@@ -41,7 +41,8 @@ design-polish가 대신 코드를 읽습니다. 색·글자 크기·여백·모�
 ## 설치
 
 ```bash
-npx skills add belleyejinkim/design-polish        # Claude Code, Codex, Cursor … (다시 실행하면 업데이트)
+npx skills add belleyejinkim/design-polish -a claude-code      # 이 프로젝트에 (모든 프로젝트면 -g 추가)
+npx skills add belleyejinkim/design-polish                     # 메뉴에서 Codex, Cursor … 선택; 다시 실행하면 업데이트
 ```
 
 Claude Code 플러그인(서브에이전트 타입 3개 포함):
