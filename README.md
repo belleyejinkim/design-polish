@@ -41,9 +41,10 @@ All three are synthetic fixtures from `skills/design-polish/evals/fixtures`; no 
 ## Install
 
 ```bash
-npx skills add belleyejinkim/design-polish -a claude-code      # this project (add -g for every project)
-npx skills add belleyejinkim/design-polish                     # pick Codex, Cursor, … in the menu; re-run to update
+npx skills add belleyejinkim/design-polish -a claude-code -y
 ```
+
+Installs into this project's `.claude/skills/`; add `-g` for every project. Re-run to update. For Codex, Cursor and other agents use `-a codex`, `-a cursor`, … (or drop `-a` to pick from a menu).
 
 Claude Code plugin (adds the three subagent types):
 
