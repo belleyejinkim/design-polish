@@ -130,7 +130,8 @@ function build(runDir, opts = {}) {
   const totalLooks = TYPES.reduce((s, t) => s + inv.components[t].looks, 0);
   const typesPresent = TYPES.filter((t) => inv.components[t].total > 0).length;
   const adHocLooks = TYPES.reduce((s, t) => s + inv.components[t].signatures.filter((x) => x.count > 0 && x.adHoc && x.resolved).length, 0);
-  const hardcodedColors = inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0).length;
+  const ownHard = (v) => (v.ownHardcodedCount != null ? v.ownHardcodedCount : v.hardcodedCount);
+  const hardcodedColors = inv.tokens.colors.values.filter((v) => ownHard(v) > 0).length;
   const headline = (narrative && narrative.headline) || fmt(T.summary.headline_default, { project, looks: totalLooks, types: typesPresent, hardcoded: hardcodedColors, findings: findings ? findings.findings.length : 0 });
   const ringR = 50, circ = 2 * Math.PI * ringR;
   const comp = scores.composite == null ? 0 : scores.composite;

@@ -63,8 +63,12 @@ test('polish loop: inventory → apply safe cards → recheck shows the delta', 
     assert.notEqual(run2, run1);
     const delta = readJson(path.join(run2, 'delta.json'));
     assert.equal(delta.baseline, path.basename(run1));
+    // 4 unused tokens: 2 project tokens are removed, the 2 shadcn base-set tokens (chart-1, chart-2) are kept
     assert.equal(delta.values.deadTokens.before, 4);
-    assert.equal(delta.values.deadTokens.after, 0);
+    assert.equal(delta.values.deadTokens.after, 2);
+    const css = fs.readFileSync(path.join(dir, 'src/app/globals.css'), 'utf8');
+    assert.ok(!css.includes('--legacy-blue') && !css.includes('--promo-yellow'), 'project dead tokens removed');
+    assert.ok(css.includes('--chart-1') && css.includes('--chart-2'), 'shadcn base-set tokens kept');
     assert.ok(delta.values.rawColors.after < delta.values.rawColors.before);
     assert.ok(delta.values.rawRadiusUses.after < delta.values.rawRadiusUses.before);
     assert.equal(delta.findings.new.length, 0, 'no new findings after safe cards');

@@ -470,7 +470,11 @@ async function scan(rootArg, opts = {}) {
   const tokenStats = new Map();
   const addTokenSite = (t, idx, j, n, extra) => {
     if (!tokenStats.has(t)) tokenStats.set(t, { count: 0, sites: [] });
-    const s = tokenStats.get(t); s.count += n; if (s.sites.length < 200) s.sites.push({ file: idx.rel, line: j.line, col: j.col, routes: routesOf(idx.rel), ...extra });
+    const s = tokenStats.get(t); s.count += n;
+    // the site where the class is written decides whether it is the project's own code or a vendored library copy
+    const originFile = extra && extra.origin && extra.origin.file ? extra.origin.file : idx.rel;
+    if (vendored.isVendored(originFile)) s.vendoredCount = (s.vendoredCount || 0) + n;
+    if (s.sites.length < 200) s.sites.push({ file: idx.rel, line: j.line, col: j.col, count: n, vendored: vendored.isVendored(originFile), routes: routesOf(idx.rel), ...extra });
   };
   for (const idx of indexes.values()) {
     for (const j of idx.jsx) {
@@ -571,7 +575,7 @@ async function scan(rootArg, opts = {}) {
   // 11. tokens
   const jsLiterals = [];
   for (const idx of indexes.values()) jsLiterals.push(...jsLiteralsOf(ts, idx, routesOf));
-  const tokenInv = tokens.inventory({ tokenStats, resolved: resolvedAll.byClass, unresolved: resolvedAll.unresolved, theme, cssLiterals: cssLiteralsOf(cssFiles.filter((f) => f.rel !== cssEntry || true)), inlineStyles, jsLiterals, fileRoutes: attributed.fileRoutes });
+  const tokenInv = tokens.inventory({ tokenStats, resolved: resolvedAll.byClass, unresolved: resolvedAll.unresolved, theme, cssLiterals: cssLiteralsOf(cssFiles.filter((f) => f.rel !== cssEntry || true)), inlineStyles, jsLiterals, fileRoutes: attributed.fileRoutes, isVendored: vendored.isVendored, shadcn: vendored.basis === 'components.json' });
 
   // 12. assemble
   const byType = {};

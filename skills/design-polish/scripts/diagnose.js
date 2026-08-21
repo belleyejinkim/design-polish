@@ -206,14 +206,16 @@ function diagnose(inv, T) {
   }
   // HARDCODE per axis
   const bands = (ratio) => (ratio >= T.hardcodeBands.ok ? 'ok' : ratio >= T.hardcodeBands.partial ? 'partial' : ratio >= T.hardcodeBands.decorative ? 'decorative' : 'none');
-  const axisTotals = { color: [tok.axes.color.onToken, tok.axes.color.hardcoded], typography: [tok.axes.typography.onToken, tok.axes.typography.hardcoded], radius: [tok.axes.radius.onToken, tok.axes.radius.hardcoded], shadow: [tok.axes.shadow.onToken, tok.axes.shadow.hardcoded] };
+  // vendored library raw values count as "through the system" here: they are not the project's drift
+  const own = (a) => [a.onToken + (a.hardcodedVendored || 0), a.hardcodedOwn != null ? a.hardcodedOwn : a.hardcoded];
+  const axisTotals = { color: own(tok.axes.color), typography: own(tok.axes.typography), radius: own(tok.axes.radius), shadow: own(tok.axes.shadow) };
   for (const [axis, [on, off]] of Object.entries(axisTotals)) {
     const total = on + off;
     if (total < T.hardcodeMinOccurrences.value) continue;
     const ratio = on / total;
     const band = bands(ratio);
     if (band === 'ok') continue;
-    const vals = tok[axis === 'shadow' ? 'shadows' : axis].values.filter((v) => !v.where.every((w) => w === 'token' || w === 'scale'));
+    const vals = tok[axis === 'shadow' ? 'shadows' : axis].values.filter((v) => !v.where.every((w) => w === 'token' || w === 'scale') && (v.ownHardcodedCount == null || v.ownHardcodedCount > 0 || (v.hardcodedCount === 0)));
     const subjects = vals.map((v) => v.id);
     findings.push(make('HARDCODE', axis, subjects, {
       severity: band === 'partial' ? 'medium' : 'high', title: `${Math.round((1 - ratio) * 100)}% of ${axis} values bypass tokens`,
@@ -227,11 +229,13 @@ function diagnose(inv, T) {
   if (dead.length) {
     const subjects = dead.map((d) => d.id);
     const twinned = dead.filter((d) => tok.colors.values.some((v) => v.twinOf === d.id));
+    const library = dead.filter((d) => d.librarySet);
+    const own = dead.length - library.length;
     findings.push(make('DEAD-TOKEN', 'tokens', subjects, {
-      severity: twinned.length ? 'medium' : 'low', title: `${dead.length} declared tokens are never used`,
-      summary: `${dead.length} tokens are declared but referenced nowhere${twinned.length ? `; ${twinned.length} of them have a hardcoded twin in use` : ''}.`,
-      params: { n: dead.length, twinned: twinned.length }, counts: { tokens: dead.length, twinned: twinned.length }, screens: [],
-      evidence: { kind: 'token-list', refs: subjects, sites: [] }, recommendation: { action: twinned.length ? 'promote' : 'remove-token', to: null }, basis: 'refs.total == 0 among project-declared tokens',
+      severity: twinned.length ? 'medium' : own ? 'low' : 'info', title: `${dead.length} declared tokens are never used`,
+      summary: `${dead.length} tokens are declared but referenced nowhere${twinned.length ? `; ${twinned.length} of them have a hardcoded twin in use` : ''}${library.length ? `; ${library.length} belong to the shadcn/ui base set and are kept` : ''}.`,
+      params: { n: dead.length, twinned: twinned.length, librarySet: library.length }, counts: { tokens: dead.length, twinned: twinned.length, librarySet: library.length }, screens: [],
+      evidence: { kind: 'token-list', refs: subjects, sites: [] }, recommendation: { action: twinned.length ? 'promote' : own ? 'remove-token' : 'keep', to: null }, basis: 'refs.total == 0 among project-declared tokens; shadcn base-set members are reported but not removed',
     }));
   }
   // DARK-GAP

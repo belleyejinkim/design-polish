@@ -41,10 +41,12 @@ function brief(runDir, opts = {}) {
   L.push('## Tokens');
   const ax = inv.tokens.axes;
   for (const k of Object.keys(ax)) { const a = ax[k]; const on = (a.onToken || 0) + (a.onScale || 0) + (a.palette || 0); const off = (a.hardcoded || 0) + (a.offScale || 0); L.push(`- ${k}: ${on + off} uses · ${off} raw/off-scale${a.palette ? ` · ${a.palette} via Tailwind palette` : ''} · score ${inv.scores[k] == null ? '–' : inv.scores[k]}`); }
-  const raw = inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0).slice(0, 20);
-  L.push(`- raw colors (${inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0).length}): ${raw.map((v) => `${v.value}×${v.hardcodedCount}${v.twinOf ? '=' + name(v.twinOf) : ''}`).join(', ') || 'none'}`);
+  const ownHard = (v) => (v.ownHardcodedCount != null ? v.ownHardcodedCount : v.hardcodedCount);
+  const raw = inv.tokens.colors.values.filter((v) => ownHard(v) > 0).slice(0, 20);
+  const vendOnly = inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0 && ownHard(v) === 0);
+  L.push(`- raw colors in the project's own code (${inv.tokens.colors.values.filter((v) => ownHard(v) > 0).length}): ${raw.map((v) => `${v.value}×${ownHard(v)}${v.twinOf ? '=' + name(v.twinOf) : ''}`).join(', ') || 'none'}${vendOnly.length ? ` · only inside vendored files: ${vendOnly.map((v) => v.value).join(', ')}` : ''}`);
   const dead = inv.tokens.declared.filter((d) => d.source === 'project' && d.refs.total === 0);
-  L.push(`- unused tokens (${dead.length}): ${dead.map((d) => d.name).join(', ') || 'none'}`);
+  L.push(`- unused tokens (${dead.length}): ${dead.map((d) => d.name + (d.librarySet ? ' (shadcn base set, kept)' : '')).join(', ') || 'none'}`);
   const darkMissing = inv.tokens.declared.filter((d) => d.darkMissing);
   L.push(`- tokens without dark value (${darkMissing.length}): ${darkMissing.map((d) => d.name).join(', ') || 'none'}`);
   L.push(`- spacing base ${inv.tokens.spacing.basePx || '?'}px (${inv.tokens.spacing.scaleBasis || 'inferred'}) · off-scale: ${inv.tokens.spacing.offScale.map((v) => v + 'px').join(', ') || 'none'}`);

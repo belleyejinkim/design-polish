@@ -30,7 +30,7 @@ Do **not** run `npm install` inside the fixture. Tests resolve `typescript` and 
 - **D1 · Dropdown trigger Button.** The asChild `<Button>` inside `<DropdownMenuTrigger>` counts as a button occurrence (toolbar.tsx:18, signature B-outline-sm) AND the DropdownMenu counts as one dropdown-menu occurrence (toolbar.tsx:16). counts.buttonOccurrencesExcludingDropdownTrigger (19) is provided if the scanner chooses not to double-list it.
 - **D2 · DynamicButton usage.** DynamicButton is used once (dashboard/page.tsx:52) so that it is not also an unreached component. Its occurrence is counted in button.occurrences (20) but has no signature (button.signatures = 11 counts resolved looks only).
 - **D3 · hoverWithoutFocusVisible scope.** Applied the rule mechanically: RAW-A ×3 plus the Chip × button (chip.tsx:7), which also has hover: without focus-visible:. RAW-B was given focus-visible:focus-ring (using the project @utility) so it is deliberately NOT flagged.
-- **D4 · Extra tokens beyond the brief.** Added --secondary-foreground, --accent-foreground, --popover, --popover-foreground so the vendored shadcn classes (text-secondary-foreground, hover:text-accent-foreground, bg-popover ...) resolve. All four are used; dead tokens remain exactly sidebar-accent + chart-1..3.
+- **D4 · Extra tokens beyond the brief.** Added --secondary-foreground, --accent-foreground, --popover, --popover-foreground so the vendored shadcn classes (text-secondary-foreground, hover:text-accent-foreground, bg-popover ...) resolve. All four are used; dead tokens remain exactly promo-yellow + legacy-blue (project tokens) + chart-1..2 (shadcn base set: reported, never proposed for deletion).
 - **D5 · Radio / LegacyCheckbox shapes.** LegacyCheckbox root IS the `<input type=checkbox>` (label lives at the usage site). Radio root is a `<label>` wrapping exactly one `<input type=radio>`; each `<Radio />` usage is one radio occurrence (single-control wrapper resolution).
 - **D6 · Sibling mismatch count.** Two groups mismatch, not one: the brief's toolbar (RAW-A rounded-[6px] beside rounded-md buttons) necessarily mismatches too. The settings-form Input/Button row is marked headline:true (same 36px height).
 - **D7 · Switch markup.** Used the classic shadcn switch (h-5 w-9, thumb size-4, translate-x-4) instead of the newer h-[1.15rem] version so the only off-scale spacing value in the fixture is p-[18px].
@@ -474,8 +474,8 @@ Variants defined but used only in the catalog: `Button.variant.secondary`, `Butt
 | `--color-brand-soft` | `--brand-soft` | `#E8F6EC` | **missing** | yes — bg-brand-soft (dashboard/page.tsx:25) |
 | `--color-chart-1` | `--chart-1` | `oklch(0.646 0.222 41.116)` | `oklch(0.488 0.243 264.376)` | **no (dead)** |
 | `--color-chart-2` | `--chart-2` | `oklch(0.6 0.118 184.704)` | `oklch(0.696 0.17 162.48)` | **no (dead)** |
-| `--color-chart-3` | `--chart-3` | `oklch(0.398 0.07 227.392)` | `oklch(0.769 0.188 70.08)` | **no (dead)** |
-| `--color-sidebar-accent` | `--sidebar-accent` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` | **no (dead)** |
+| `--color-legacy-blue` | `--legacy-blue` | `oklch(0.398 0.07 227.392)` | `oklch(0.769 0.188 70.08)` | **no (dead)** |
+| `--color-promo-yellow` | `--promo-yellow` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` | **no (dead)** |
 
 22 color tokens, 18 used, 4 dead.
 
@@ -485,12 +485,12 @@ Project utility: `@utility focus-ring` (line 93) = `@apply outline-none ring-2 r
 
 ### Dead tokens (`deadTokens`, count 4)
 
-- `--color-sidebar-accent` (`--sidebar-accent`; theme line 77, :root 28, .dark 52) — declared, referenced by no utility anywhere
+- `--color-promo-yellow` (`--promo-yellow`; theme line 77, :root 28, .dark 52) — declared, referenced by no utility anywhere (project token)
 - `--color-chart-1` (`--chart-1`; theme line 74, :root 25, .dark 49) — declared but unused; chart colors are hardcoded in chart-legend.tsx instead
 - `--color-chart-2` (`--chart-2`; theme line 75, :root 26, .dark 50) — declared but unused; chart colors are hardcoded in chart-legend.tsx instead
-- `--color-chart-3` (`--chart-3`; theme line 76, :root 27, .dark 51) — declared but unused; chart colors are hardcoded in chart-legend.tsx instead
+- `--color-legacy-blue` (`--legacy-blue`; theme line 76, :root 27, .dark 51) — declared but unused (project token)
 
-Verified with `grep -rn "sidebar-accent\|chart-[123]" src --include=*.tsx` → no matches.
+Verified with `grep -rn "promo-yellow\|legacy-blue\|chart-[12]" src --include=*.tsx` → no matches.
 
 ### Dark-missing (`darkMissing`, count 1)
 

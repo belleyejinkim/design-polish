@@ -98,11 +98,11 @@ function propose(inv, findings) {
   // 3. remaining hardcoded colors used ≥ 3 times → new tokens (named by hue/lightness, to be renamed)
   for (const v of tok.colors.values) {
     if (mapped.has(v.id) || v.where.every((w) => w === 'token' || w === 'palette')) continue;
-    if (v.count < 3) { add({ source: v.id, axis: 'color', action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: v.count, files: v.files, screens: v.routes, basis: null, note: 'used fewer than 3 times; decide in the report' }); continue; }
+    if (counted(v).occurrences < 3) { add({ source: v.id, axis: 'color', action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: null, note: 'used fewer than 3 times; decide in the report' }); continue; }
     const name = suggestColorName(v.value, usedNames);
     const id = proposedTokId('color', name);
     newTokens.push({ id, axis: 'color', name: `--color-${name}`, value: v.value, nameBasis: 'auto', absorbs: [v.id], occurrences: v.count });
-    add({ source: v.id, axis: 'color', action: 'new-token', target: id, visualChange: 'none', metric: {}, occurrences: v.count, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'color')?.id || null });
+    add({ source: v.id, axis: 'color', action: 'new-token', target: id, visualChange: 'none', metric: {}, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'color')?.id || null });
   }
   // 4. radius: arbitrary values → nearest declared radius token (within 1px = none, else subtle/visible)
   const radiusTokens = declared.filter((d) => d.axis === 'radius' && d.light != null).map((d) => ({ d, px: require('./lib/css-eval').toPx(d.light) })).filter((x) => x.px != null);
@@ -112,8 +112,8 @@ function propose(inv, findings) {
     if (!isFinite(px)) continue;
     let best = null;
     for (const t of radiusTokens) { const dist = Math.abs(t.px - px); if (!best || dist < best.dist) best = { token: t.d, px: t.px, dist }; }
-    if (best && best.dist <= SUBTLE_PX * 2) add({ source: v.id, axis: 'radius', action: best.dist === 0 ? 'promote' : 'round', target: best.token.id, visualChange: visualOfPx(best.dist), metric: { px: best.dist }, occurrences: v.hardcodedCount || v.count, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'radius')?.id || null });
-    else add({ source: v.id, axis: 'radius', action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: v.count, files: v.files, screens: v.routes, basis: null, note: 'no radius token within 4px' });
+    if (best && best.dist <= SUBTLE_PX * 2) add({ source: v.id, axis: 'radius', action: best.dist === 0 ? 'promote' : 'round', target: best.token.id, visualChange: visualOfPx(best.dist), metric: { px: best.dist }, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: findingsBy('HARDCODE').find((f) => f.axis === 'radius')?.id || null });
+    else add({ source: v.id, axis: 'radius', action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: null, note: 'no radius token within 4px' });
   }
   // 5. spacing off-scale → nearest step
   if (tok.spacing.dominantStep) {
@@ -122,15 +122,17 @@ function propose(inv, findings) {
       if (!isFinite(px) || !tok.spacing.offScale.includes(px)) continue;
       const step = tok.spacing.dominantStep;
       const rounded = Math.round(px / step) * step;
-      add({ source: v.id, axis: 'spacing', action: 'round', target: `tok+:spacing.${rounded}`, visualChange: visualOfPx(rounded - px), metric: { px: rounded - px }, occurrences: v.count, files: v.files, screens: v.routes, basis: (findingsBy('OFF-SCALE')[0] || {}).id || null });
+      add({ source: v.id, axis: 'spacing', action: 'round', target: `tok+:spacing.${rounded}`, visualChange: visualOfPx(rounded - px), metric: { px: rounded - px }, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: (findingsBy('OFF-SCALE')[0] || {}).id || null });
     }
   }
   // 6. everything else on the token axes: keep
-  for (const axis of ['typography', 'shadows', 'border']) for (const v of tok[axis].values) if (!mapped.has(v.id)) add({ source: v.id, axis: axis === 'shadows' ? 'shadow' : axis, action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: v.count, files: v.files, screens: v.routes, basis: null });
+  for (const axis of ['typography', 'shadows', 'border']) for (const v of tok[axis].values) if (!mapped.has(v.id)) add({ source: v.id, axis: axis === 'shadows' ? 'shadow' : axis, action: 'keep', target: null, visualChange: 'none', metric: {}, occurrences: counted(v).occurrences, vendored: counted(v).vendored, files: v.files, screens: v.routes, basis: null });
 
   // ---- cards ----
   const cards = [];
   const mk = (kind, axis, entries, opts) => {
+    // entries whose every site is vendored have nothing to edit by default; they stay in the proposal mapping only
+    if (kind === 'register-tokens' || kind === 'merge-values') entries = entries.filter((e) => (e.occurrences || 0) > 0 || e.action === 'new-token');
     if (!entries.length) return;
     const occ = entries.reduce((n, e) => n + (e.occurrences || 0), 0);
     const files = new Set(entries.flatMap((e) => e.files || []));
@@ -177,7 +179,11 @@ function propose(inv, findings) {
   }
   // dead tokens
   const dead = findingsBy('DEAD-TOKEN')[0];
-  if (dead) mk('delete-dead-tokens', 'tokens', dead.subjects.map((s) => ({ source: s, target: null, action: 'delete', occurrences: 0, files: [], screens: [], visualChange: 'none', metric: {}, basis: dead.id })), { title: dead.title, summary: dead.summary, findings: [dead.id], safety: 'none' });
+  if (dead) {
+    // shadcn base-set tokens stay: a later `shadcn add` expects them
+    const removable = dead.subjects.filter((s) => { const d = declaredById.get(s); return d && !d.librarySet; });
+    if (removable.length) mk('delete-dead-tokens', 'tokens', removable.map((s) => ({ source: s, target: null, action: 'delete', occurrences: 0, files: [], screens: [], visualChange: 'none', metric: {}, basis: dead.id })), { title: `${removable.length} declared token${removable.length > 1 ? 's are' : ' is'} never used`, summary: `${removable.length} project token${removable.length > 1 ? 's' : ''} referenced nowhere${dead.subjects.length > removable.length ? `; ${dead.subjects.length - removable.length} unused shadcn base-set token${dead.subjects.length - removable.length > 1 ? 's are' : ' is'} kept` : ''}.`, findings: [dead.id], safety: 'none' });
+  }
   // ad-hoc looks → align-signature (design-level)
   for (const f of findingsBy('SIG-SPRAWL')) {
     const type = f.axis.replace('component:', '');

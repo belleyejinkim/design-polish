@@ -56,11 +56,15 @@ function resolveValue(value, theme, mode) {
 }
 
 function newValueEntry(axis, id, value) {
-  return { id, axis, value, normalized: null, count: 0, hardcodedCount: 0, whereCounts: {}, files: new Set(), routes: new Set(), sites: [], where: new Set(), roles: {}, viaTokens: new Set() };
+  return { id, axis, value, normalized: null, count: 0, hardcodedCount: 0, ownHardcodedCount: 0, vendoredCount: 0, whereCounts: {}, files: new Set(), routes: new Set(), sites: [], where: new Set(), roles: {}, viaTokens: new Set() };
 }
 
 /** Declared tokens with alias resolution: `--color-primary: var(--primary)` is one logical token named --color-primary. */
-function buildDeclared(theme) {
+// The shadcn/ui base set: declared by `shadcn init` for every project, often unused until a component needs them.
+// Unused members are reported, but never proposed for deletion (a later `shadcn add` expects them).
+const SHADCN_SET_RE = /^--(?:color-)?(?:background|foreground|card(?:-foreground)?|popover(?:-foreground)?|primary(?:-foreground)?|secondary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|destructive(?:-foreground)?|border|input|ring|chart-[1-5]|sidebar(?:-[\w-]+)?|radius(?:-(?:sm|md|lg|xl|2xl|3xl|4xl))?)$/;
+
+function buildDeclared(theme, opts = {}) {
   const projectNames = new Set((theme.sources || []).map((s) => s.name));
   const aliasTarget = (name) => { const v = theme.light.get(name) ?? theme.dark.get(name); const m = v && /^var\((--[\w-]+)\)$/.exec(String(v).trim()); return m ? m[1] : null; };
   const aliasedBy = new Map(); // raw var -> theme name that aliases it
@@ -81,6 +85,7 @@ function buildDeclared(theme) {
       id: declaredTokId(axis, name), axis, name, rawVar, light, dark, rawLight: theme.light.get(name) ?? null, rawDark: darkRaw,
       source: isProject ? 'project' : (DEFAULT_PALETTE_RE.test(name) || !isProject ? 'tailwind-default' : 'project'),
       refs: { classes: 0, vars: 0, total: 0 }, darkMissing: false, role: null, roleBasis: null, hex: null, darkHex: null, srgb: null, alpha: 1,
+      librarySet: !!(opts.shadcn && (SHADCN_SET_RE.test(name) || (rawVar && SHADCN_SET_RE.test(rawVar)))),
     };
     if (axis === 'color') {
       const c = light ? color.parse(light) : null;
@@ -123,8 +128,9 @@ function isOnSpacingScale(px, basePx) {
  */
 function inventory(input) {
   const { tokenStats, resolved, theme } = input;
+  const isVendored = input.isVendored || (() => false);
   const routesOf = (file) => { const fr = input.fileRoutes && input.fileRoutes.get(file); return fr ? fr.routes : []; };
-  const { declared, byName } = buildDeclared(theme);
+  const { declared, byName } = buildDeclared(theme, { shadcn: !!input.shadcn });
   const values = { color: new Map(), typography: new Map(), spacing: new Map(), radius: new Map(), border: new Map(), shadow: new Map() };
   const fontSizes = new Map(), fontWeights = new Map(), lineHeights = new Map(), fontFamilies = new Map(), letterSpacings = new Map();
   const paletteUse = new Map();
@@ -181,7 +187,13 @@ function inventory(input) {
     e.roles[role] = (e.roles[role] || 0) + count;
     e.count += count;
     e.whereCounts[where] = (e.whereCounts[where] || 0) + count;
-    if (HARD_WHERE.has(where)) e.hardcodedCount = (e.hardcodedCount || 0) + count;
+    if (HARD_WHERE.has(where)) {
+      e.hardcodedCount = (e.hardcodedCount || 0) + count;
+      // raw values inside vendored library files are the library's choice, not the project's drift
+      const vend = site.vendoredCount != null ? site.vendoredCount : (isVendored(site.file) ? count : 0);
+      e.vendoredCount = (e.vendoredCount || 0) + vend;
+      e.ownHardcodedCount = (e.ownHardcodedCount || 0) + (count - vend);
+    }
     e.files.add(site.file);
     for (const r of site.routes || []) e.routes.add(r);
     for (const v of viaVars || []) { const d = byName.get(v); if (d) e.viaTokens.add(d.id); }
@@ -196,7 +208,7 @@ function inventory(input) {
     if (!entry) continue;
     const isArbitrary = /\[[^\]]+\]/.test(cls) || /\((--[\w-]+)\)/.test(cls);
     const firstSite = stat.sites[0] || { file: '?', line: 0 };
-    const site = { file: firstSite.file, line: firstSite.line, routes: [...new Set(stat.sites.flatMap((s) => s.routes || []))] };
+    const site = { file: firstSite.file, line: firstSite.line, vendoredCount: stat.vendoredCount || 0, routes: [...new Set(stat.sites.flatMap((s) => s.routes || []))] };
     const clsSites = stat.sites.map((st) => ({ file: st.file, line: st.line, col: st.col, cls, conditional: st.conditional, origin: st.origin || null }));
     for (const v of themeVarsForClass(cls)) { const d = byName.get(v); if (d && d.source === 'project' && !varsIn(JSON.stringify(entry.scopes)).includes(v)) { d.refs.classes += stat.count; d.refs.total += stat.count; } }
     const isSpaceBetween = /^(?:[\w\[\]&:-]*:)?space-[xy]-/.test(cls); // margins between children act as a gap
@@ -302,12 +314,21 @@ function inventory(input) {
 
   const finalize = (m) => [...m.values()].map((e) => ({ ...e, files: [...e.files].sort(), routes: [...e.routes].sort(), where: [...e.where].sort(), viaTokens: [...e.viaTokens].sort(), fileCount: e.files.size, tokenDriven: ![...e.where].some((w) => HARD.has(w)) })).sort((a, b) => b.count - a.count || (a.id < b.id ? -1 : 1));
   const score = (ok, off) => (ok + off === 0 ? null : Math.round((ok / (ok + off)) * 1000) / 10);
+  // Raw values written inside vendored library files are the library's choice (shadcn's `rounded-[4px]` checkbox):
+  // they stay in the inventory but do not count against the project's consistency.
+  for (const [axis, m] of Object.entries(values)) {
+    const key = axis === 'shadow' ? 'shadow' : axis === 'border' ? null : axis;
+    if (!key || !axes[key]) continue;
+    let vend = 0; for (const e of m.values()) vend += e.vendoredCount || 0;
+    axes[key].hardcodedVendored = vend;
+    axes[key].hardcodedOwn = Math.max(0, (axes[key].hardcoded || 0) - vend);
+  }
   const scores = {
-    color: score(axes.color.onToken + axes.color.palette, axes.color.hardcoded), // palette use is the Tailwind scale: legal, reported separately
-    typography: score(axes.typography.onToken, axes.typography.hardcoded),
+    color: score(axes.color.onToken + axes.color.palette + axes.color.hardcodedVendored, axes.color.hardcodedOwn), // palette use is the Tailwind scale: legal, reported separately
+    typography: score(axes.typography.onToken + axes.typography.hardcodedVendored, axes.typography.hardcodedOwn),
     spacing: score(axes.spacing.onScale, axes.spacing.offScale),
-    radius: score(axes.radius.onToken, axes.radius.hardcoded),
-    shadow: score(axes.shadow.onToken, axes.shadow.hardcoded),
+    radius: score(axes.radius.onToken + axes.radius.hardcodedVendored, axes.radius.hardcodedOwn),
+    shadow: score(axes.shadow.onToken + axes.shadow.hardcodedVendored, axes.shadow.hardcodedOwn),
   };
 
   return {
@@ -366,4 +387,4 @@ function clusterColors(colorEntries, projectTokens) {
   return out.sort((a, b) => b.members.length - a.members.length || (a.id < b.id ? -1 : 1));
 }
 
-module.exports = { inventory, clusterColors, axisOfVar, buildDeclared, isOnSpacingScale, NEAR_DUP_DE, TWIN_DE, DOMINANCE_RATIO, SPACING_STEPS, SCALE_FIT, COLOR_PROPS, SPACING_PROPS, DEFAULT_PALETTE_RE };
+module.exports = { inventory, clusterColors, axisOfVar, buildDeclared, isOnSpacingScale, SHADCN_SET_RE, NEAR_DUP_DE, TWIN_DE, DOMINANCE_RATIO, SPACING_STEPS, SCALE_FIT, COLOR_PROPS, SPACING_PROPS, DEFAULT_PALETTE_RE };

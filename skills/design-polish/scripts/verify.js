@@ -91,7 +91,7 @@ async function verify(runDir, opts = {}) {
     let m, checked = 0, mism = [];
     const derived = {
       'routes.pages': inv.routes.filter((r) => r.kind === 'page').length,
-      'tokens.colors.hardcoded': inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0).length,
+      'tokens.colors.hardcoded': inv.tokens.colors.values.filter((v) => (v.ownHardcodedCount != null ? v.ownHardcodedCount : v.hardcodedCount) > 0).length,
       'components.looks': Object.values(inv.components).reduce((n, t) => n + t.looks, 0),
       'components.adhoc': Object.values(inv.components).reduce((n, t) => n + t.signatures.filter((s) => s.count > 0 && s.adHoc && s.resolved).length, 0),
       'findings.length': findings ? findings.findings.length : null,

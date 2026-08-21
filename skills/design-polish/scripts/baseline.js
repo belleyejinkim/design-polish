@@ -15,11 +15,11 @@ function metrics(inv) {
   let adHoc = 0;
   for (const [type, t] of Object.entries(inv.components)) { looks[type] = t.looks; adHoc += t.signatures.filter((s) => s.count > 0 && s.adHoc && s.resolved).length; }
   return {
-    rawColors: inv.tokens.colors.values.filter((v) => v.hardcodedCount > 0).length,
-    rawColorUses: inv.tokens.axes.color.hardcoded,
+    rawColors: inv.tokens.colors.values.filter((v) => (v.ownHardcodedCount != null ? v.ownHardcodedCount : v.hardcodedCount) > 0).length,
+    rawColorUses: (inv.tokens.axes.color.hardcodedOwn != null ? inv.tokens.axes.color.hardcodedOwn : inv.tokens.axes.color.hardcoded),
     offScaleSpacing: inv.tokens.spacing.offScale.length,
-    rawRadiusUses: inv.tokens.axes.radius.hardcoded,
-    rawShadowUses: inv.tokens.axes.shadow.hardcoded,
+    rawRadiusUses: (inv.tokens.axes.radius.hardcodedOwn != null ? inv.tokens.axes.radius.hardcodedOwn : inv.tokens.axes.radius.hardcoded),
+    rawShadowUses: (inv.tokens.axes.shadow.hardcodedOwn != null ? inv.tokens.axes.shadow.hardcodedOwn : inv.tokens.axes.shadow.hardcoded),
     invalidClasses: inv.classes.unresolved.filter((u) => u.reason === 'invalid-utility').length,
     adHocLooks: adHoc,
     siblingRadiusMismatches: inv.relationships.siblingGroups.filter((g) => g.mismatch.radius && !g.catalog).length,
