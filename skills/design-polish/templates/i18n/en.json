@@ -113,14 +113,17 @@
       "unclassified": "Other",
       "hardcoded": "Raw values (not a token)",
       "palette": "Tailwind palette (not a project token)",
-      "via": "Via tokens"
+      "via": "Via tokens",
+      "vendored": "Raw values inside vendored library files"
     },
     "dead": "never used",
     "dark_missing": "no dark value",
     "clusters_h": "Look-alikes",
     "cluster_help": "Colors a viewer cannot tell apart, shown edge to edge. ΔE is the perceptual distance (CIEDE2000); below 1 is invisible, below 2 needs a side-by-side.",
     "twin": "same as {token}",
-    "palette_note": "{n} Tailwind palette colors used directly"
+    "palette_note": "{n} Tailwind palette colors used directly",
+    "vendored_help": "Written by the library (shadcn/ui and the like), not by this project. Counted, shown, left alone unless you ask.",
+    "in_library": "+{n} in library files"
   },
   "typography": {
     "h": "04 · Typography",

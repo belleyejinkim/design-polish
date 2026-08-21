@@ -113,14 +113,17 @@
       "unclassified": "기타",
       "hardcoded": "직접 쓴 값 (토큰 아님)",
       "palette": "Tailwind 팔레트 (프로젝트 토큰 아님)",
-      "via": "토큰을 거친 값"
+      "via": "토큰을 거친 값",
+      "vendored": "복사해 온 라이브러리 파일 안의 직접 쓴 값"
     },
     "dead": "사용 없음",
     "dark_missing": "다크 값 없음",
     "clusters_h": "닮은 색",
     "cluster_help": "눈으로 구분하기 어려운 색을 붙여서 보여줍니다. ΔE는 지각 거리(CIEDE2000). 1 미만은 구분 불가, 2 미만은 나란히 놓아야 보입니다.",
     "twin": "{token}과 같은 색",
-    "palette_note": "Tailwind 팔레트 색 {n}종을 직접 사용"
+    "palette_note": "Tailwind 팔레트 색 {n}종을 직접 사용",
+    "vendored_help": "이 프로젝트가 아니라 라이브러리(shadcn/ui 등)가 적은 값입니다. 세고 보여주되, 요청하지 않으면 건드리지 않습니다.",
+    "in_library": "라이브러리 파일 안 +{n}"
   },
   "typography": {
     "h": "04 · 글자",
