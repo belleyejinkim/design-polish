@@ -1,0 +1,32 @@
+{
+  "$id": "design-polish.decisions/1",
+  "type": "object",
+  "required": ["schema", "run_id", "entries"],
+  "properties": {
+    "schema": { "const": "design-polish.decisions/1" },
+    "run_id": { "type": "string" },
+    "inventory_hash": { "type": ["string", "null"] },
+    "decided_at": { "type": "string" },
+    "via": { "enum": ["serve", "clipboard", "file", "agent"] },
+    "draft": { "type": "boolean" },
+    "includeVendored": { "type": "boolean" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "action"],
+        "properties": {
+          "id": { "type": "string" },
+          "action": { "enum": ["keep", "merge", "leave"] },
+          "target": { "type": "string" },
+          "note": { "type": "string" },
+          "card": { "type": "string" }
+        }
+      }
+    },
+    "cards": {
+      "type": "array",
+      "items": { "type": "object", "required": ["id", "status"], "properties": { "id": { "type": "string", "pattern": "^C[0-9]+$" }, "status": { "enum": ["accepted", "edited", "partial", "rejected", "untouched"] } } }
+    }
+  }
+}

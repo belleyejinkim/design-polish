@@ -1,0 +1,15 @@
+{
+  "$id": "design-polish.verification/1",
+  "type": "object",
+  "required": ["schema", "verifiedAt", "checks", "summary", "passed"],
+  "properties": {
+    "schema": { "const": "design-polish.verification/1" },
+    "seed": { "type": "integer" },
+    "checks": {
+      "type": "array",
+      "items": { "type": "object", "required": ["id", "passed", "text", "evidence"], "properties": { "id": { "type": "string", "pattern": "^V[0-9]$" }, "passed": { "type": ["boolean", "null"] }, "text": { "type": "string" }, "evidence": { "type": "string" } } }
+    },
+    "summary": { "type": "object", "required": ["passed", "failed", "pending", "total"] },
+    "passed": { "type": "boolean" }
+  }
+}

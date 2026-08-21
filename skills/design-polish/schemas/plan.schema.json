@@ -1,0 +1,31 @@
+{
+  "$id": "design-polish.plan/1",
+  "type": "object",
+  "required": ["schema", "runId", "cardId", "kind", "createdAt", "edits", "skipped", "newTokens", "summary"],
+  "properties": {
+    "schema": { "const": "design-polish.plan/1" },
+    "cardId": { "type": "string", "pattern": "^C[0-9]+$" },
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "kind", "confidence"],
+        "properties": {
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "col": { "type": "integer", "minimum": 0 },
+          "before": { "type": ["string", "null"] },
+          "after": { "type": ["string", "null"] },
+          "kind": { "enum": ["class", "inline-style", "css-literal", "css-line", "css-insert", "write", "append", "baseline", "jsx"] },
+          "confidence": { "enum": ["exact", "likely", "review"] },
+          "role": { "type": ["string", "null"] },
+          "visualChange": { "enum": ["none", "subtle", "visible"] }
+        }
+      }
+    },
+    "skipped": { "type": "array", "items": { "type": "object", "required": ["reason"] } },
+    "newTokens": { "type": "array", "items": { "type": "object", "required": ["id", "name", "value"] } },
+    "summary": { "type": "object", "required": ["edits", "files", "skipped", "visualChange", "safety"] },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -24,7 +24,8 @@
     "css_engine": "values from the project's {engine}",
     "no_model": "Inventory only — diagnosis and proposals need an agent: run /design-polish",
     "generated": "Generated {date} · run {run}",
-    "dark": "dark theme: {strategy}"
+    "dark": "dark theme: {strategy}",
+    "no_engine": "values not compiled — no Tailwind v4 engine found; looks are keyed by class names"
   },
   "summary": {
     "h": "01 · Summary",

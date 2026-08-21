@@ -1,0 +1,50 @@
+{
+  "$id": "design-polish.cards/1",
+  "type": "object",
+  "required": ["schema", "generatedAt", "cards"],
+  "properties": {
+    "schema": { "const": "design-polish.cards/1" },
+    "runId": { "type": ["string", "null"] },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "key", "kind", "axis", "title", "summary", "findings", "entries", "impact", "grade", "visualChange", "safety", "prereq", "advanced", "status", "type"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^C[0-9]+$" },
+          "key": { "type": "string" },
+          "kind": { "enum": ["register-tokens", "merge-values", "align-neighbors", "align-signature", "delete-dead-tokens", "add-state", "fix-class", "guardrails", "extract-component"] },
+          "axis": { "type": "string" },
+          "title": { "type": "string" },
+          "summary": { "type": "string" },
+          "findings": { "type": "array", "items": { "type": "string", "pattern": "^F:" } },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["source", "action"],
+              "properties": {
+                "source": { "type": "string" },
+                "target": { "type": ["string", "null"] },
+                "action": { "type": "string" },
+                "occurrences": { "type": "integer", "minimum": 0 },
+                "vendored": { "type": "integer", "minimum": 0 },
+                "visualChange": { "enum": ["none", "subtle", "visible"] },
+                "modeVarying": { "type": "boolean" }
+              }
+            }
+          },
+          "impact": { "type": "object", "required": ["occurrences", "screens", "files", "weight"] },
+          "grade": { "enum": ["S", "M", "L"] },
+          "visualChange": { "enum": ["none", "subtle", "visible"] },
+          "safety": { "enum": ["none", "approve", "design"] },
+          "prereq": { "type": "array", "items": { "type": "string" } },
+          "advanced": { "type": "boolean" },
+          "status": { "enum": ["proposed", "accepted", "edited", "partial", "rejected", "untouched", "applied", "skipped", "failed"] },
+          "type": { "enum": ["migrate", "design", "refactor", "docs"] },
+          "needsUserConfirmation": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

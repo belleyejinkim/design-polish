@@ -1,0 +1,14 @@
+{
+  "$id": "design-polish.baseline/1",
+  "type": "object",
+  "required": ["schema", "createdAt", "scannerVersion", "metrics"],
+  "properties": {
+    "schema": { "const": "design-polish.baseline/1" },
+    "scannerVersion": { "type": "string" },
+    "metrics": {
+      "type": "object",
+      "required": ["rawColors", "rawColorUses", "offScaleSpacing", "rawRadiusUses", "rawShadowUses", "invalidClasses", "adHocLooks", "siblingRadiusMismatches", "looks"],
+      "properties": { "looks": { "type": "object" } }
+    }
+  }
+}

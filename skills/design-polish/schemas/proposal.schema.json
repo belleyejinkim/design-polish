@@ -1,0 +1,36 @@
+{
+  "$id": "design-polish.proposal/1",
+  "type": "object",
+  "required": ["schema", "generatedAt", "architecture", "newTokens", "mapping", "unmapped", "summary"],
+  "properties": {
+    "schema": { "const": "design-polish.proposal/1" },
+    "architecture": { "type": "object", "required": ["layers"] },
+    "newTokens": {
+      "type": "array",
+      "items": { "type": "object", "required": ["id", "axis", "name", "value"], "properties": { "id": { "type": "string", "pattern": "^tok\\+:" }, "axis": { "type": "string" }, "name": { "type": "string" } } }
+    },
+    "mapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "axis", "action", "target", "visualChange", "metric", "occurrences", "files", "screens"],
+        "properties": {
+          "source": { "type": "string", "pattern": "^(tok|sig|occ):" },
+          "axis": { "enum": ["color", "typography", "spacing", "radius", "border", "shadow", "component"] },
+          "action": { "enum": ["promote", "merge", "round", "new-token", "keep", "align", "delete"] },
+          "target": { "type": ["string", "null"] },
+          "visualChange": { "enum": ["none", "subtle", "visible"] },
+          "metric": { "type": "object" },
+          "occurrences": { "type": "integer", "minimum": 0 },
+          "vendored": { "type": "integer", "minimum": 0 },
+          "files": { "type": "array", "items": { "type": "string" } },
+          "screens": { "type": "array", "items": { "type": "string" } },
+          "modeVarying": { "type": "boolean" },
+          "needsUserConfirmation": { "type": "boolean" }
+        }
+      }
+    },
+    "unmapped": { "type": "array" },
+    "summary": { "type": "object", "required": ["mapped", "promote", "merge", "round", "newToken", "keep"] }
+  }
+}

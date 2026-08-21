@@ -24,7 +24,8 @@
     "css_engine": "값은 프로젝트의 {engine}가 계산",
     "no_model": "인벤토리만 — 진단과 제안은 에이전트에서 /design-polish 를 실행하세요",
     "generated": "{date} 생성 · 런 {run}",
-    "dark": "다크 테마: {strategy}"
+    "dark": "다크 테마: {strategy}",
+    "no_engine": "값을 컴파일하지 못함 — Tailwind v4 엔진이 없어 모양은 클래스 이름으로만 구분"
   },
   "summary": {
     "h": "01 · 요약",

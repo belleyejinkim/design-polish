@@ -1,0 +1,29 @@
+{
+  "$id": "design-polish.narrative/1",
+  "type": "object",
+  "required": ["schema", "run_id", "lang", "headline", "lede"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "design-polish.narrative/1" },
+    "run_id": { "type": "string" },
+    "lang": { "enum": ["en", "ko"] },
+    "headline": { "type": "string", "minLength": 1, "maxLength": 140 },
+    "lede": { "type": "string", "minLength": 1, "maxLength": 600 },
+    "screens": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 60 } },
+    "samples": { "type": "object", "additionalProperties": { "type": "object", "required": ["text"], "properties": { "text": { "type": "string", "maxLength": 120 } } } },
+    "chapters": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "properties": { "summary": { "type": "string", "maxLength": 500 }, "no_change_reason": { "type": "string", "maxLength": 300 } } }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "required": ["title"], "properties": { "title": { "type": "string", "maxLength": 120 }, "explanation": { "type": "string", "maxLength": 600 }, "cause": { "type": "string", "maxLength": 300 } } }
+    },
+    "cards": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "required": ["title"], "properties": { "title": { "type": "string", "maxLength": 120 }, "why": { "type": "string", "maxLength": 500 } } }
+    },
+    "recommendations": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 300 } },
+    "limits": { "type": "array", "items": { "type": "string", "maxLength": 300 } }
+  }
+}

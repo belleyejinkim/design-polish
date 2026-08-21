@@ -187,7 +187,7 @@ function replaceToken(lineText, before, after) {
   return lineText.replace(re, (m, p1) => p1 + after);
 }
 
-function applyPlan(runDir, cardId, opts = {}) {
+async function applyPlan(runDir, cardId, opts = {}) {
   const inv = read(runDir, 'inventory.json');
   const p = read(runDir, `apply/${cardId}.plan.json`);
   if (!p) throw new Error(`no plan for ${cardId}; run "apply plan" first`);
@@ -204,26 +204,31 @@ function applyPlan(runDir, cardId, opts = {}) {
     if (list.some((e) => e.kind === 'append')) { pending.push({ rel, abs, text: (text || '') + list.find((e) => e.kind === 'append').after, edits: list }); continue; }
     if (list.some((e) => e.kind === 'baseline')) { pending.push({ rel, abs, text: null, baseline: true, edits: list }); continue; }
     if (text == null) { for (const e of list) results.skipped.push({ ...e, reason: 'file missing' }); continue; }
+    const orig = text;
     let lines = text.split('\n');
     const inserts = list.filter((e) => e.kind === 'css-insert');
     for (const e of list.filter((e) => e.kind !== 'css-insert').sort((a, b) => (b.line || 0) - (a.line || 0))) {
+      if (e.confidence === 'review' && !opts.includeReview) { results.skipped.push({ ...e, reason: 'marked for human review (pass --include-review to apply)' }); continue; }
       const i = findLine(lines, e.line, e.before);
       if (i < 0) { results.skipped.push({ ...e, reason: 'before text not found near its line' }); continue; }
       if (e.kind === 'css-line') { lines.splice(i, 1); results.applied.push({ ...e, line: i + 1 }); continue; }
-      const next = replaceToken(lines[i], e.before, e.after);
+      // jsx edits replace an exact snippet once (props, wrappers); class edits respect token boundaries
+      const next = e.kind === 'jsx' ? lines[i].replace(e.before, e.after) : replaceToken(lines[i], e.before, e.after);
       if (next === lines[i]) { results.skipped.push({ ...e, reason: 'token boundary mismatch' }); continue; }
       lines[i] = next;
       results.applied.push({ ...e, line: i + 1 });
     }
     let out = lines.join('\n');
     for (const e of inserts) { const r = insertIntoBlock(out, e.block, e.after); if (!r) { results.skipped.push({ ...e, reason: `block ${e.block} not found` }); continue; } out = r.text; results.applied.push({ ...e, line: r.line }); }
-    pending.push({ rel, abs, text: out, edits: list });
+    pending.push({ rel, abs, text: out, orig, edits: list });
   }
-  if (opts.dryRun) return { ...results, dryRun: true, plan: p };
+  if (opts.dryRun) return { ...results, dryRun: true, plan: p, preview: pending.filter((w) => w.orig != null).map((w) => ({ file: w.rel, before: w.orig, after: w.text })) };
   // phase 2: write
   for (const w of pending) {
     if (w.baseline) { const { check } = require('./baseline'); results.files.push(w.rel); results.baselinePromise = check(root, { update: true }); continue; }
     if (w.text == null) continue;
+    w.existed = fs.existsSync(w.abs);
+    if (w.existed && w.orig == null) w.orig = fs.readFileSync(w.abs, 'utf8');
     fs.mkdirSync(path.dirname(w.abs), { recursive: true });
     fs.writeFileSync(w.abs, w.text);
     results.files.push(w.rel);
@@ -232,16 +237,26 @@ function applyPlan(runDir, cardId, opts = {}) {
   const finish = async () => {
     if (results.baselinePromise) { await results.baselinePromise; delete results.baselinePromise; }
     if (opts.typecheck) {
-      const tsc = spawnSync('npx', ['--no-install', 'tsc', '--noEmit', '-p', root], { cwd: root, encoding: 'utf8', timeout: 240000 });
-      results.typecheck = { status: tsc.status, output: (tsc.stdout || '') + (tsc.stderr || '') };
+      const hasTs = fs.existsSync(path.join(root, 'tsconfig.json')) && fs.existsSync(path.join(root, 'node_modules', 'typescript'));
+      if (!hasTs) results.typecheck = { status: null, output: 'skipped: no tsconfig.json or no node_modules/typescript in the project' };
+      else {
+        const tsc = spawnSync(process.execPath, [path.join(root, 'node_modules', 'typescript', 'bin', 'tsc'), '--noEmit', '-p', root], { cwd: root, encoding: 'utf8', timeout: 240000 });
+        results.typecheck = { status: tsc.status, output: (tsc.stdout || '') + (tsc.stderr || '') };
+        if (tsc.status !== 0) {
+          // put every file back exactly as it was; nothing is committed
+          for (const w of pending) { if (w.text == null) continue; if (w.existed) fs.writeFileSync(w.abs, w.orig); else fs.rmSync(w.abs, { force: true }); }
+          results.reverted = true;
+          results.applied = [];
+        }
+      }
     }
-    if (opts.commit && results.files.length) {
+    if (opts.commit && results.files.length && !results.reverted) {
       const msg = opts.message || `design-polish: ${cardId} ${p.kind} (${results.applied.length} edit${results.applied.length === 1 ? '' : 's'} in ${results.files.length} file${results.files.length === 1 ? '' : 's'})`;
       const add = spawnSync('git', ['add', '--', ...results.files], { cwd: root, encoding: 'utf8' });
       const commit = add.status === 0 ? spawnSync('git', ['commit', '-q', '-m', msg], { cwd: root, encoding: 'utf8' }) : add;
       results.commit = { status: commit.status, sha: commit.status === 0 ? spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout.trim() : null, output: (commit.stdout || '') + (commit.stderr || '') };
     }
-    const result = { schema: 'design-polish.apply-result/1', runId: p.runId, cardId, appliedAt: new Date().toISOString(), applied: results.applied.length, skipped: results.skipped, files: results.files, typecheck: results.typecheck || null, commit: results.commit || null };
+    const result = { schema: 'design-polish.apply-result/1', runId: p.runId, cardId, appliedAt: new Date().toISOString(), applied: results.applied.length, skipped: results.skipped, files: results.reverted ? [] : results.files, reverted: !!results.reverted, typecheck: results.typecheck || null, commit: results.commit || null };
     fs.writeFileSync(path.join(runDir, 'apply', `${cardId}.result.json`), JSON.stringify(result, null, 2));
     return result;
   };
@@ -265,11 +280,21 @@ function summary(runDir, cardId, lang = 'en') {
 
 if (require.main === module) {
   const [cmd, runDir, cardId, ...rest] = process.argv.slice(2);
-  if (!cmd || !runDir || !cardId) { console.error('usage: apply.js plan|apply|summary <run-dir> <card-id> [--commit] [--typecheck] [--dry-run] [--lang ko]'); process.exit(2); }
+  if (!cmd || !runDir || !cardId) { console.error('usage: apply.js plan|apply|summary <run-dir> <card-id> [--include-vendored] [--commit] [--typecheck] [--dry-run] [--include-review] [--lang ko]'); process.exit(2); }
   const li = rest.indexOf('--lang');
   if (cmd === 'plan') { const p = plan(runDir, cardId, { includeVendored: rest.includes('--include-vendored') }); console.log(summary(runDir, cardId, li >= 0 ? rest[li + 1] : 'en')); console.log(`→ ${path.join(runDir, 'apply', `${cardId}.plan.json`)}`); }
   else if (cmd === 'summary') console.log(summary(runDir, cardId, li >= 0 ? rest[li + 1] : 'en'));
-  else if (cmd === 'apply') applyPlan(runDir, cardId, { commit: rest.includes('--commit'), typecheck: rest.includes('--typecheck'), dryRun: rest.includes('--dry-run') }).then((r) => { console.log(JSON.stringify({ applied: r.applied, skipped: r.skipped.length, files: r.files, typecheck: r.typecheck && r.typecheck.status, commit: r.commit && r.commit.sha }, null, 1)); if (r.typecheck && r.typecheck.status) { console.error(r.typecheck.output.slice(0, 2000)); process.exit(1); } }).catch((e) => { console.error(e.message); process.exit(1); });
+  else if (cmd === 'apply') applyPlan(runDir, cardId, { commit: rest.includes('--commit'), typecheck: rest.includes('--typecheck'), dryRun: rest.includes('--dry-run'), includeReview: rest.includes('--include-review') }).then((r) => {
+    if (r.dryRun) {
+      // a line-level preview the person can read: "- old line" / "+ new line" per changed line
+      for (const f of r.preview) { const a = f.before.split('\n'), b = f.after.split('\n'); console.log(`--- ${f.file}`); const n = Math.max(a.length, b.length); for (let i = 0; i < n; i++) if (a[i] !== b[i]) { if (a[i] !== undefined) console.log(`-${i + 1}: ${a[i]}`); if (b[i] !== undefined) console.log(`+${i + 1}: ${b[i]}`); } }
+      for (const sk of r.skipped) console.log(`skip ${sk.file || ''}${sk.line ? ':' + sk.line : ''} — ${sk.reason}`);
+      console.log(`dry run: ${r.applied.length} edits would be written to ${new Set(r.applied.map((e) => e.file)).size} files`);
+      return;
+    }
+    console.log(JSON.stringify({ applied: r.applied, skipped: r.skipped.length, files: r.files, reverted: r.reverted, typecheck: r.typecheck && r.typecheck.status, commit: r.commit && r.commit.sha }, null, 1));
+    if (r.typecheck && r.typecheck.status) { console.error(r.typecheck.output.slice(0, 2000)); process.exit(1); }
+  }).catch((e) => { console.error(e.message); process.exit(1); });
   else { console.error('unknown command'); process.exit(2); }
 }
 module.exports = { plan, applyPlan, summary, rewriteClass, replaceToken, insertIntoBlock };

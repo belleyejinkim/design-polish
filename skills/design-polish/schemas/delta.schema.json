@@ -1,0 +1,20 @@
+{
+  "$id": "design-polish.delta/1",
+  "type": "object",
+  "required": ["schema", "baseline", "after", "comparable", "looks", "values", "findings", "occurrences", "tokens"],
+  "properties": {
+    "schema": { "const": "design-polish.delta/1" },
+    "baseline": { "type": "string" },
+    "after": { "type": "string" },
+    "comparable": { "type": "object", "required": ["sameScanner", "filesBefore", "filesAfter"] },
+    "applied": { "type": "array", "items": { "type": "object", "required": ["cardId", "applied", "files"] } },
+    "scores": { "type": ["object", "null"] },
+    "looks": { "type": "object" },
+    "values": { "type": "object", "required": ["rawColors", "rawColorUses", "offScaleSpacing", "rawRadiusUses", "deadTokens", "siblingRadiusMismatches"] },
+    "findings": { "type": "object", "required": ["resolved", "remaining", "new"], "properties": { "resolved": { "type": "array" }, "remaining": { "type": "array" }, "new": { "type": "array" } } },
+    "occurrences": { "type": "object", "required": ["moved", "gone", "added"] },
+    "skipped": { "type": "array" },
+    "tokens": { "type": "array", "items": { "type": "object", "required": ["id", "name", "axis", "refs", "isNew"] } },
+    "removedTokens": { "type": "array", "items": { "type": "string" } }
+  }
+}
