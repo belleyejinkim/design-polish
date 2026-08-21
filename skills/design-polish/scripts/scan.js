@@ -373,7 +373,20 @@ async function scan(rootArg, opts = {}) {
     }
     return null;
   };
-  for (const idx of indexes.values()) for (const comp of idx.components) { const cr = findControlRoot(idx, comp); if (cr) controlRoots.set(`${idx.rel}#${comp.name}`, { ...cr, comp, idx }); }
+  // A small DOM sketch of a definition (root + parts such as indicators, thumbs, chevrons) so specimens
+  // can render the real markup with the real classes. Depth and width are capped; it is a sketch, not a clone.
+  const SKELETON_DEPTH = 3, SKELETON_WIDTH = 8;
+  const KEEP_ATTRS = new Set(['type', 'role', 'placeholder', 'aria-label', 'aria-hidden', 'data-slot', 'data-state', 'disabled', 'checked', 'value', 'rows', 'href']);
+  const skeletonOf = (idx, j, depth) => {
+    const eff = expandUsage(j, ctxFor(idx, j));
+    const node = { tag: eff.tag || (j.isComponent ? null : j.tag), classes: eff.classSet.tokens.join(' '), attrs: {}, text: j.textLabels[0] || null, children: [], component: j.isComponent ? j.tag : null };
+    for (const [k, v] of Object.entries(eff.attrs || {})) if (KEEP_ATTRS.has(k) && (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean')) node.attrs[k] = v;
+    if (eff.implRef && eff.implRef.kind === 'library' && eff.tag === 'svg') node.icon = j.tag;
+    if (eff.tag === null && eff.absorbed) node.tag = null;
+    if (depth < SKELETON_DEPTH) for (const c of j.children.slice(0, SKELETON_WIDTH)) { if (c.inRenderProp) continue; node.children.push(skeletonOf(idx, c, depth + 1)); }
+    return node;
+  };
+  for (const idx of indexes.values()) for (const comp of idx.components) { const cr = findControlRoot(idx, comp); if (cr) { const ci = idx.jsxByNode.get(cr.node); controlRoots.set(`${idx.rel}#${comp.name}`, { ...cr, comp, idx, skeleton: ci ? skeletonOf(idx, ci, 0) : null }); } }
   const controlRootNodes = new Map([...controlRoots.values()].map((cr) => [cr.node, cr]));
 
   for (const idx of indexes.values()) {
@@ -393,7 +406,7 @@ async function scan(rootArg, opts = {}) {
         // A root that itself resolves through another local component (PrimaryButton → Button) is a wrapper, not an implementation.
         const wraps = cr.eff.chain && cr.eff.chain.length && cr.eff.implRef && cr.eff.implRef.kind === 'local-component' ? ids.implId(cr.det.type, cr.eff.implRef.file, cr.eff.implRef.name) : null;
         const isWrapper = !!wraps || !!cr.eff.asChild || (cr.eff.chain && cr.eff.chain.length > 0 && cr.eff.implRef && cr.eff.implRef.kind === 'library' && cr.eff.tag === null);
-        if (!implementations.has(implId) && cr.det.subtype !== 'item') implementations.set(implId, { id: implId, type: cr.det.type, kind: isWrapper ? 'wrapper' : 'local-component', wraps, name: cr.comp.name, file: idx.rel, primitive: (cr.eff.implRef && cr.eff.implRef.primitive) || null, usages: uses, instances: inst.main + inst.catalog, reachability: fr.reachability, routes: fileRoutes, axes: cr.eff.classSet.cva || null, count: 0, catalogCount: 0, signatures: new Set(), controlRootIsRoot: cr.isRoot });
+        if (!implementations.has(implId) && cr.det.subtype !== 'item') implementations.set(implId, { id: implId, type: cr.det.type, kind: isWrapper ? 'wrapper' : 'local-component', wraps, skeleton: cr.skeleton || null, name: cr.comp.name, file: idx.rel, primitive: (cr.eff.implRef && cr.eff.implRef.primitive) || null, usages: uses, instances: inst.main + inst.catalog, reachability: fr.reachability, routes: fileRoutes, axes: cr.eff.classSet.cva || null, count: 0, catalogCount: 0, signatures: new Set(), controlRootIsRoot: cr.isRoot });
         if (uses > 0 || (inst.main + inst.catalog) === 0) continue; // counted through usages, or unreached
         // reached without JSX usages (route entry, dynamic import): count the control root itself once
       }
@@ -499,6 +512,9 @@ async function scan(rootArg, opts = {}) {
       classes: eff.classSet.tokens.join(' '), usageClasses: usageTokens.join(' '), adHoc: eff.chain.length ? adHocTokens.length > 0 : true, adHocTokens,
       unresolvedClasses: unresolved, unknownParts: eff.classSet.unknown, conditional: eff.classSet.conditional.map((c) => c.condition), spread: j.spread,
       style: eff.style, labels: j.textLabels.slice(0, 3), inMap: j.inMap, inConditional: j.inConditional, branch: eff.branch, asChild: eff.asChild,
+      attrs: Object.fromEntries(Object.entries(eff.attrs || {}).filter(([k, v]) => KEEP_ATTRS.has(k) && (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'))),
+      itemClasses: o.items && o.items.length ? [...new Set(o.items.flat())].join(' ') : null,
+      skeleton: (!j.isComponent && j.children.length) ? skeletonOf(idx, j, 0) : null,
       routes: fileRoutes, layoutScope: fr.layouts, reachability: fr.reachability, catalog, unresolvedReason: eff.unresolvedReason,
       parentOccId: null, siblingGroupId: null, computed, states: statesOf(scopes, eff.tag), scopes,
       count: o.count, catalogCount: o.catalogCount, definedIn: j.owner && !j.isComponent ? { component: j.owner, file: idx.rel } : null,
@@ -509,7 +525,7 @@ async function scan(rootArg, opts = {}) {
     impl.catalogCount = (impl.catalogCount || 0) + o.catalogCount;
     impl.signatures.add(sig.id);
     const resolvedLook = Object.keys(sig.canonical).length > 0 || (eff.classSet.tokens.length === 0 && eff.classSet.unknown.length === 0);
-    if (!sigMap.has(sig.id)) sigMap.set(sig.id, { ...sig, type: det.type, resolved: resolvedLook, implIds: new Set(), occurrences: [], spellings: new Set(), computed, states: occ.states, scopes, labels: new Set(), routes: new Set(), layoutScopes: new Set(), variantProps: occ.variantProps, adHoc: false, unresolvedClasses: new Set(unresolved), catalogCount: 0, count: 0 });
+    if (!sigMap.has(sig.id)) sigMap.set(sig.id, { ...sig, type: det.type, resolved: resolvedLook, implIds: new Set(), occurrences: [], spellings: new Set(), computed, states: occ.states, scopes, labels: new Set(), routes: new Set(), layoutScopes: new Set(), variantProps: occ.variantProps, adHoc: false, unresolvedClasses: new Set(unresolved), catalogCount: 0, count: 0, tag: eff.tag, role: eff.role, subtype: det.subtype || null, attrs: occ.attrs, itemClasses: occ.itemClasses, skeleton: occ.skeleton, asChild: eff.asChild });
     const s = sigMap.get(sig.id);
     s.implIds.add(implKey);
     s.occurrences.push(occ.id);
@@ -543,9 +559,10 @@ async function scan(rootArg, opts = {}) {
       looks: sigs.filter((s) => s.count > 0 && s.resolved).length,
       unresolvedLooks: sigs.filter((s) => s.count > 0 && !s.resolved).length,
       catalogOnlyLooks: sigs.filter((s) => s.count === 0 && s.catalogCount > 0).length,
-      implementations: impls.map((i) => ({ ...i, signatures: [...i.signatures].sort(), usages: i.count || i.usages })),
+      implementations: impls.map((i) => ({ ...i, signatures: [...i.signatures].sort(), usages: i.count || i.usages, skeleton: i.skeleton || null })),
       signatures: sigs.map((s) => ({
         id: s.id, type: s.type, idBasis: s.idBasis, resolved: s.resolved, count: s.count, catalogCount: s.catalogCount, adHoc: s.adHoc,
+        tag: s.tag, role: s.role, subtype: s.subtype, attrs: s.attrs, itemClasses: s.itemClasses, skeleton: s.skeleton, asChild: !!s.asChild,
         implIds: [...s.implIds].sort(), variantProps: s.variantProps, canonical: s.canonical,
         spelling: [...s.spellings][0], spellings: [...s.spellings].sort(), computed: s.computed, states: s.states,
         labels: [...s.labels].slice(0, 5), routes: [...s.routes].sort(), layoutScopes: [...s.layoutScopes].sort(), unresolvedClasses: [...s.unresolvedClasses].sort(),
