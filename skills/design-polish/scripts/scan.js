@@ -265,7 +265,9 @@ async function scan(rootArg, opts = {}) {
   log(`parsed ${indexes.size} files in ${Date.now() - t0}ms`);
 
   // 4. routes
-  const discovered = routes.discover(indexes, [...indexes.keys()]);
+  const isNext = fs.existsSync(path.join(root, 'next.config.js')) || fs.existsSync(path.join(root, 'next.config.mjs')) || fs.existsSync(path.join(root, 'next.config.ts')) || (() => { try { const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')); return !!((pkg.dependencies || {}).next || (pkg.devDependencies || {}).next); } catch (_) { return false; } })();
+  for (const idx of indexes.values()) idx.ts = ts;
+  const discovered = routes.discover(indexes, [...indexes.keys()], { next: isNext });
   const attributed = routes.attribute(indexes, discovered.routeFiles, resolve);
   const routeById = new Map(discovered.routes.map((r) => [r.id, r]));
   const routesOf = (rel) => { const fr = attributed.fileRoutes.get(rel); return fr ? fr.routes : []; }; // pages only; layouts are kept in layoutScope
@@ -331,7 +333,9 @@ async function scan(rootArg, opts = {}) {
   const inlineStyles = [];
   const dynamicClassSites = [];
   const cvaCache = new Map();
-  const ownerEnv = (idx, j) => { const c = idx.components.find((x) => x.name === j.owner); return c ? { env: { ...c.params.defaults }, locals: c.locals } : { env: {}, locals: null }; };
+  // Under the owner's default props: every named prop is present (undefined unless it has a default), so
+  // `className ?? ""` and `VARIANTS[variant]` resolve the same way they do for a usage that passes nothing.
+  const ownerEnv = (idx, j) => { const c = idx.components.find((x) => x.name === j.owner); if (!c) return { env: {}, locals: null }; const env = {}; for (const n of c.params.names || []) env[n] = undefined; Object.assign(env, c.params.defaults); return { env, locals: c.locals }; };
   const classesOfElement = new Map(); // node -> own tokens under the owner's default props
   const originsOfElement = new Map(); // node -> token -> { file, line, col } where the literal is written
   for (const idx of indexes.values()) {

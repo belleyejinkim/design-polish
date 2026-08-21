@@ -8,16 +8,18 @@ Measured on a MacBook (Apple Silicon), Node 25, 2026-08-21. Re-run with `npm tes
 |---|---|---|---|---|---|---|---|
 | `messy-next` fixture | 28 | 7 | 24 (11 types) | 16 | 9 | 0.19 s | 0.23 s |
 | `clean-shadcn` fixture | 12 | 5 | 5 (3 types) | 1 (info) | 1 (guardrails) | 0.13 s | 0.16 s |
+| `vite-router` fixture (React Router, const-map button) | 8 | 3 (+1 layout) | 6 (3 types) | 4 | 2 | 0.12 s | 0.15 s |
 | Livebetter (private CRM, Next.js + shadcn) | 226 | 20 | 60 (8 types) | 42 | 14 | 0.41 s | 0.48 s |
 
 "Scan" includes loading the project's TypeScript and Tailwind engine; "total" adds diagnosis, proposal, specimen rendering and the HTML (280 KB / 107 KB / 800 KB).
 
-`verify.js` passes 15/15 on all three (V6 determinism: two scans produce identical JSON).
+`verify.js` passes on all four (V6 determinism: two scans produce identical JSON).
 
 ## Accuracy
 
 - `messy-next` ships with a hand-written ground truth (`evals/fixtures/messy-next/ground-truth.json`); `tests/fixture-messy-next.test.js` asserts the inventory matches it exactly (button looks and uses, checkbox implementations, dead tokens, the missing dark value, the off-scale padding, the invalid class, both sibling mismatches, screen titles).
 - `clean-shadcn` is the false-positive control: every axis 100, no finding above `info`, the only card is guardrails.
+- `vite-router` checks React Router route discovery (`createBrowserRouter` objects, nested layouts) and const-map variant resolution (`VARIANTS[variant]` without cva/clsx): 3 Button looks + 1 hand-written button, no dynamic sites, no dead tokens.
 - Livebetter was audited by hand in July 2026 before this tool existed; the tool finds the same button/input corner mismatch (8 px vs 6 px in one row) that audit found, plus 7 more rows.
 
 ## Apply loop (`tests/e2e-apply.test.js`)

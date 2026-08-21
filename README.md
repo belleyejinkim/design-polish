@@ -30,13 +30,13 @@ design-polish reads the code for you: every colour, text size, spacing, corner, 
 4. **A re-count** — "raw colours 6 → 1 · 3 findings resolved, 13 remaining", computed, not claimed.
 5. **Guardrails** — `DESIGN-TOKENS.md`, one line in `CLAUDE.md` / `AGENTS.md`, and `design-polish check` for CI.
 
-## Two live reports
+## Three live reports
 
-| [Messy app](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [Clean app](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) |
-|---|---|
-| 28 files, 11 button looks, a legacy checkbox, a toolbar whose corners disagree, dead tokens, a missing dark value | 12 files, tidy shadcn/ui. Nothing to fix — and the report says so instead of inventing work |
+| [Messy app](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [Clean app](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) | [No cva, no shadcn](https://yejin-newmean.github.io/design-polish/examples/vite-router/report.html) |
+|---|---|---|
+| Next.js, 28 files, 11 button looks, a legacy checkbox, a toolbar whose corners disagree, dead tokens, a missing dark value | 12 files of tidy shadcn/ui. Nothing to fix — and the report says so instead of inventing work | Vite + React Router, a const-map button; one hand-written button breaks a row |
 
-Both are synthetic fixtures from `skills/design-polish/evals/fixtures`; no real product code is published.
+All three are synthetic fixtures from `skills/design-polish/evals/fixtures`; no real product code is published.
 
 ## Install
 

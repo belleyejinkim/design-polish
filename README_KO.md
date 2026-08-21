@@ -30,13 +30,13 @@ design-polish가 대신 코드를 읽습니다. 색·글자 크기·여백·모�
 4. **재측정** — "직접 쓴 색 6 → 1 · 발견 3건 해결, 13건 남음"을 주장이 아니라 계산으로 보여줍니다.
 5. **재발 방지** — `DESIGN-TOKENS.md`, `CLAUDE.md` / `AGENTS.md`의 한 줄 포인터, CI용 `design-polish check`.
 
-## 살아 있는 리포트 두 개
+## 살아 있는 리포트 세 개
 
-| [어지러운 앱](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [깨끗한 앱](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) |
-|---|---|
-| 파일 28개, 버튼 모양 11가지, 옛날 체크박스, 모서리가 서로 다른 툴바, 죽은 토큰, 다크 값 누락 | 파일 12개, 정돈된 shadcn/ui. 고칠 게 없고, 리포트가 일을 만들어내는 대신 그렇다고 말합니다 |
+| [어지러운 앱](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [깨끗한 앱](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) | [cva도 shadcn도 없는 앱](https://yejin-newmean.github.io/design-polish/examples/vite-router/report.html) |
+|---|---|---|
+| Next.js, 파일 28개, 버튼 모양 11가지, 옛날 체크박스, 모서리가 서로 다른 툴바, 죽은 토큰, 다크 값 누락 | 파일 12개, 정돈된 shadcn/ui. 고칠 게 없고, 리포트가 일을 만들어내는 대신 그렇다고 말합니다 | Vite + React Router, const-map 버튼. 손으로 적은 버튼 하나가 한 줄을 어긋나게 합니다 |
 
-둘 다 `skills/design-polish/evals/fixtures`의 합성 픽스처입니다. 실제 제품 코드는 공개하지 않습니다.
+셋 다 `skills/design-polish/evals/fixtures`의 합성 픽스처입니다. 실제 제품 코드는 공개하지 않습니다.
 
 ## 설치
 

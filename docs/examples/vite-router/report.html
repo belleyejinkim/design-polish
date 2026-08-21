@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vite-router — design inventory</title>
+<meta name="generator" content="design-polish 3.0.0">
+<style>/* design-polish report — the page is neutral paper and ink; the only saturated colors are the
+   project's own values (in swatches and specimens) and the two severity tones. One measure token. */
+:root{
+  --paper:#FBFAF7; --card:#FFFFFF; --tint:#F3F1E9; --tint-2:#ECEAE0; --hair:#E5E2D8; --hair-2:#D6D3C8;
+  --ink:#1C1D1B; --ink-2:#55564F; --ink-3:#8A8A82; --deep:#2E2F29; --deep-2:#45463C;
+  --amber:#9A7414; --amber-bg:#FAF3E2; --red:#8E2F1B; --red-bg:#FBEFE9; --ok:#3D6B45; --ok-bg:#ECF3EC;
+  --measure:1120px;
+  --sans:'Pretendard Variable',Pretendard,Inter,'Noto Sans KR',-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,'D2Coding',Menlo,Consolas,monospace;
+  --r:6px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.65;word-break:keep-all;overflow-wrap:break-word;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+p,h1,h2,h3,h4,li,td,th,dd,dt{text-wrap:pretty}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-0.01em}
+a{color:inherit}
+code,.mono{font-family:var(--mono);font-size:0.88em}
+button{font:inherit;color:inherit}
+.wrap{max-width:var(--measure);margin:0 auto;padding:0 28px}
+.muted{color:var(--ink-2)}.faint{color:var(--ink-3)}.small{font-size:13px}.caps{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.hidden{display:none!important}
+
+/* cover */
+.cover{background:var(--deep);color:#F4F2EA;padding:64px 0 44px;background-image:radial-gradient(1200px 400px at 10% -20%,rgba(255,255,255,.06),transparent),radial-gradient(800px 300px at 100% 120%,rgba(255,255,255,.05),transparent)}
+.cover h1{font-size:clamp(38px,6vw,64px);line-height:1.05;letter-spacing:-0.02em;font-weight:650}
+.cover .sub{font-size:18px;color:#CFCCC0;margin-top:14px;max-width:none}
+.cover .meta{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px 22px;color:#BDB9AC;font-size:14px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 11px;font-size:12.5px;color:#E6E3D8}
+.badge.warn{border-color:#D9B25A;color:#F0D68A}
+.banner{background:var(--amber-bg);border-bottom:1px solid var(--hair);color:#5E4A0C;padding:12px 0;font-size:14px}
+
+/* nav */
+.topnav{position:sticky;top:0;z-index:30;background:rgba(251,250,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+.topnav .wrap{display:flex;align-items:center;gap:10px;height:50px;overflow-x:auto;scrollbar-width:none}
+.topnav .wrap::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;border:1px solid transparent;border-radius:999px;padding:4px 11px;font-size:13px;color:var(--ink-2);text-decoration:none}
+.chip.active,.chip:hover{border-color:var(--hair-2);background:var(--card);color:var(--ink)}
+.topnav .spacer{flex:1}
+.search{border:1px solid var(--hair-2);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;min-width:220px;outline:none}
+.search:focus{border-color:var(--ink-3)}
+.toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);white-space:nowrap;cursor:pointer}
+.toggle input{accent-color:var(--ink)}
+
+/* chapters */
+.chapter{padding:56px 0 8px;border-top:1px solid var(--hair)}
+.chapter:first-of-type{border-top:0}
+.band{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding:0 0 18px;margin-bottom:26px;border-bottom:2px solid var(--ink)}
+.band h2{font-size:26px;letter-spacing:-0.015em}
+.band .stats{margin-left:auto;display:flex;gap:16px;flex-wrap:wrap;color:var(--ink-2);font-size:14px}
+.band .stats b{color:var(--ink);font-weight:600}
+.part{margin:30px 0}
+.part>h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.part>h3 .n{color:var(--ink-2);letter-spacing:0;text-transform:none;font-weight:500;font-size:13px}
+.help{color:var(--ink-2);font-size:14px;margin:-6px 0 14px}
+.headline{font-size:22px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);margin:8px 0 6px;text-wrap:balance}
+.lede{font-size:17px;color:var(--ink-2);max-width:none;margin:0 0 24px}
+
+/* tables */
+table.t{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden}
+.t th{text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--hair);background:var(--tint)}
+.t td{padding:9px 12px;border-bottom:1px solid var(--hair);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.t td.r,.t th.r{text-align:right}
+.tablewrap{overflow-x:auto}
+.sw{display:inline-block;width:28px;height:28px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);vertical-align:middle;background:
+ linear-gradient(45deg,#ddd 25%,transparent 25%,transparent 75%,#ddd 75%),linear-gradient(45deg,#ddd 25%,#fff 25%,#fff 75%,#ddd 75%);background-size:10px 10px;background-position:0 0,5px 5px;position:relative;overflow:hidden}
+.sw i{position:absolute;inset:0;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.sw.lg{width:44px;height:44px;border-radius:8px}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--hair-2);border-radius:999px;padding:1px 9px;font-size:12px;color:var(--ink-2);background:var(--card);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:#BFD3C1;background:var(--ok-bg)}
+.pill.warn{color:var(--amber);border-color:#E3CF92;background:var(--amber-bg)}
+.pill.bad{color:var(--red);border-color:#E6BDB0;background:var(--red-bg)}
+.pill.ink{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+
+/* summary */
+.summary-grid{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:28px;align-items:start}
+@media (max-width:860px){.summary-grid{grid-template-columns:1fr}}
+.scorecard{background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:22px;display:flex;gap:22px;align-items:center}
+.scorecard .axes{flex:1;min-width:0}
+.ring{width:104px;height:104px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .bg{fill:none;stroke:var(--tint-2);stroke-width:10}
+.ring .fg{fill:none;stroke:var(--ink);stroke-width:10;stroke-linecap:round}
+.ring .val{position:relative;margin-top:-84px;text-align:center;font-size:30px;font-weight:650;letter-spacing:-0.02em}
+.axes{flex:1;display:grid;grid-template-columns:auto minmax(40px,1fr) 40px;gap:8px 10px;align-items:center;font-size:13px}
+.axes>.caps,.axes>.small{grid-column:1/-1}
+.axis{display:contents}
+.axis>span:first-child{white-space:nowrap}
+.axis .bar{display:block;height:8px;background:var(--tint-2);border-radius:4px;overflow:hidden}
+.axis .bar i{display:block;height:100%;background:var(--ink)}
+.axis .bar i.low{background:var(--red)}.axis .bar i.mid{background:var(--amber)}
+.axis .v{text-align:right;color:var(--ink-2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:14px 16px}
+.tile b{display:block;font-size:26px;font-weight:650;letter-spacing:-0.02em;line-height:1.1}
+.tile span{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.good{background:var(--ok-bg);border:1px solid #CFE0D1;border-radius:8px;padding:14px 18px;font-size:14px;color:#2F5436}
+.good h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:6px}
+.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:22px}
+.glossary div{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:12px 14px;font-size:13.5px;color:var(--ink-2)}
+.glossary b{color:var(--ink);display:block;margin-bottom:2px}
+
+/* findings */
+.findings{display:grid;gap:14px}
+.fnd{background:var(--card);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.fnd>.head{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--tint);border-bottom:1px solid var(--hair)}
+.fnd.high>.head{background:var(--red-bg)}.fnd.medium>.head{background:var(--amber-bg)}
+.fnd .id{font-family:var(--mono);font-size:12px;color:var(--ink-3);font-weight:600}
+.fnd .head h4{font-size:15.5px;font-weight:600;flex:1}
+.fnd .sev{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-2)}
+.fnd.high .sev{color:var(--red)}.fnd.medium .sev{color:var(--amber)}
+.fnd .body{padding:14px 16px;display:grid;gap:12px}
+.fnd .body p{margin:0;color:var(--ink-2)}
+.fnd .ev{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.strip{display:inline-flex;border-radius:6px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.strip i{width:40px;height:40px;display:block}
+.fnd .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--ink-2)}
+details.dev{margin-top:4px}
+details.dev summary{cursor:pointer;font-size:12.5px;color:var(--ink-3)}
+details.dev ul{margin:6px 0 0;padding-left:18px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+body:not(.dev) .devonly{display:none}
+
+/* rows (curation) */
+.rows{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.row{background:var(--card);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr) minmax(220px,300px);gap:16px;padding:12px 14px;align-items:center}
+.row.wide{grid-template-columns:minmax(0,1fr) minmax(220px,300px)}
+@media (max-width:760px){.row,.row.wide{grid-template-columns:1fr}}
+.row .key{display:flex;align-items:center;gap:10px}
+.row .val{font-family:var(--mono);font-size:13.5px;font-weight:600}
+.row .meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--ink-2);margin-top:2px}
+.row .reco{font-size:13px;color:var(--ink-2);margin-top:4px}
+.row .reco b{color:var(--ink);font-weight:600}
+.row.decided{background:#FDFCF8}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-self:end}
+.seg{display:inline-flex;border:1px solid var(--hair-2);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg label{padding:4px 10px;font-size:12.5px;color:var(--ink-2);cursor:pointer;border-right:1px solid var(--hair)}
+.seg label:last-child{border-right:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label.on{background:var(--ink);color:#fff}
+.seg label.on.leave{background:var(--ink-3)}
+.ctl select{font:inherit;font-size:12.5px;border:1px solid var(--hair-2);border-radius:6px;padding:4px 6px;background:var(--card);max-width:190px}
+.impact{font-size:12px;color:var(--ink-3);grid-column:1/-1}
+.impact.visible b{color:var(--amber)}
+
+/* specimens */
+.spec{display:grid;gap:10px}
+.stage{background:var(--tint);border:1px solid var(--hair);border-radius:8px;padding:0;overflow:hidden;min-height:56px;position:relative}
+.stage iframe{display:block;width:100%;height:56px;border:0;background:transparent}
+.stage.dark-on{background:#17181A}
+.spec .tabs{display:flex;gap:4px;flex-wrap:wrap}
+.spec .tabs button{border:1px solid var(--hair-2);background:var(--card);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--ink-2);cursor:pointer}
+.spec .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.spec .tabs button:disabled{opacity:.4;cursor:default}
+.classes{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);word-break:break-all;line-height:1.5}
+.sigrow{background:var(--card);display:grid;grid-template-columns:minmax(260px,1.2fr) minmax(0,1fr) minmax(220px,300px);gap:16px;padding:14px;align-items:start}
+@media (max-width:960px){.sigrow{grid-template-columns:1fr}}
+.sigrow .title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:600;font-size:14px}
+.states{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.states span{font-size:11.5px;border-radius:4px;padding:1px 6px;background:var(--tint);color:var(--ink-2)}
+.states span.yes{background:var(--ok-bg);color:var(--ok)}
+.states span.no{background:var(--red-bg);color:var(--red)}
+.typeh{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:26px 0 10px}
+.typeh h3{font-size:19px}
+.typeh .stat{font-size:13.5px;color:var(--ink-2)}
+.diff{font-size:13px;border-collapse:collapse;margin-top:8px}
+.diff td,.diff th{padding:4px 10px;border-bottom:1px solid var(--hair);text-align:left}
+.diff th{font-weight:600;color:var(--ink-3);font-size:12px}
+.diff td.d{font-weight:600}
+
+/* typography specimens */
+.typerows{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.typerow{background:var(--card);display:grid;grid-template-columns:110px 1fr auto;gap:14px;align-items:baseline;padding:10px 14px}
+.typerow .sample{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.typerow .k{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+
+/* spacing ruler */
+.ruler{display:grid;gap:6px}
+.ruler .r{display:grid;grid-template-columns:70px 1fr 120px;gap:12px;align-items:center;font-size:13px}
+.ruler .r .bar{height:14px;background:var(--ink);border-radius:3px;opacity:.85;min-width:2px}
+.ruler .r.off .bar{background:var(--amber)}
+.ruler .r .k{font-family:var(--mono);color:var(--ink-2)}
+.shapes{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+.shape{text-align:center;font-size:12.5px;color:var(--ink-2)}
+.shape i{display:block;width:96px;height:56px;background:var(--card);border:1.5px solid var(--ink);margin-bottom:6px}
+.shape.off i{border-color:var(--amber)}
+.shadows{display:flex;flex-wrap:wrap;gap:28px;padding:10px 0 6px}
+.shadowcard{width:150px;height:90px;background:var(--card);border-radius:8px;display:flex;align-items:flex-end;padding:8px 10px;font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+
+/* relations */
+.relrow{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:14px;display:grid;gap:10px}
+.relrow .pair{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.relrow .pair .stage{flex:1 1 220px}
+.relrow .why{font-size:13.5px;color:var(--ink-2)}
+.relrow .why b{color:var(--amber)}
+
+/* cards */
+.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.card>.head{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--tint);border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.card .head h4{font-size:15.5px;font-weight:600;flex:1}
+.card .body{padding:12px 16px;display:grid;gap:10px;font-size:14px;color:var(--ink-2)}
+.card .entries{font-size:13px}
+.card .entries li{margin:2px 0}
+.card .foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--hair);font-size:13px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:999px;padding:5px 14px;font-size:13px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* cart */
+.cart{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--deep);color:#F1EFE6;border-top:1px solid rgba(255,255,255,.12);transform:translateY(110%);transition:transform .2s ease}
+.cart.show{transform:none}
+.cart .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 28px}
+.cart .sum{flex:1;font-size:14px}
+.cart .warn{font-size:12.5px;color:#F0D68A;width:100%}
+.cart .btn{border-color:#F1EFE6;background:#F1EFE6;color:var(--deep)}
+.cart .btn.ghost{background:transparent;color:#F1EFE6}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;font-size:13px;z-index:50;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+
+/* method */
+.kv{display:grid;grid-template-columns:160px 1fr;gap:6px 16px;font-size:14px}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0}
+ul.plain{padding-left:18px;margin:6px 0}
+footer{padding:40px 0 120px;color:var(--ink-3);font-size:13px}
+@media print{.topnav,.cart,.toast,.ctl,.tabs{display:none!important}.chapter{break-inside:avoid-page}body{font-size:12px}.cover{padding:30px 0}}
+/* 12 · before/after */
+.tile.delta b{font-size:20px;white-space:nowrap}
+.tile b .num{display:inline;font-size:inherit;color:inherit;margin:0}
+.tile b.same{color:var(--ink-2)}
+.t .ok{color:var(--ok)}
+.t .warn{color:var(--amber)}
+</style>
+</head>
+<body>
+<header class="cover"><div class="wrap">
+    <h1>vite-router</h1>
+    <p class="sub">Every color, size, spacing, radius, shadow and form control in the code, at real size.</p>
+    <div class="meta"><span><span class="num" data-metric="meta.files.code">8</span> code files · <span class="num" data-metric="routes.pages">3</span> screens · <span class="num" data-metric="classes.unique">47</span> distinct classes</span><span>Generated 2026-08-21 · run vite-router</span></div>
+    <div class="badges"><span class="badge">read with the project's TypeScript</span><span class="badge">values from the project's tailwind4 4.3.3</span></div>
+  </div></header>
+<div class="banner"><div class="wrap">Inventory only — diagnosis and proposals need an agent: run /design-polish</div></div>
+<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"><label class="toggle"><input type="checkbox" id="devToggle"> Developer info</label></div></nav>
+<main>
+<section class="chapter" id="summary"><div class="wrap">
+    <div class="band"><h2>01 · Summary</h2></div>
+    <p class="headline">vite-router: 6 component looks across 3 types, 0 raw colors, 4 findings.</p>
+    <div class="summary-grid">
+      <div class="scorecard"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="305.3628059289279 314.1592653589793"/></svg><div class="val"><span class="num" data-metric="scores.composite">97.2</span></div></div><div class="axes"><div class="caps">Consistency score</div><div class="axis"><span>Color</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.color">100</span></span></div><div class="axis"><span>Type</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.typography">100</span></span></div><div class="axis"><span>Spacing</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.spacing">100</span></span></div><div class="axis"><span>Corners</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.radius">100</span></span></div><div class="axis"><span>Shadows</span><span class="bar"><i class="" style="width:0%"></i></span><span class="v">–</span></div><div class="axis"><span>Components</span><span class="bar"><i class="mid" style="width:75%"></i></span><span class="v"><span class="num" data-metric="scores.component">75</span></span></div><div class="small faint">Share of style occurrences that go through a token or the scale, weighted by count. Not an aesthetic score.</div></div></div>
+      <div>
+        <div class="tiles">
+          <div class="tile"><b><span class="num" data-metric="tokens.colors.values.length">11</span></b><span>distinct colors</span></div>
+          <div class="tile"><b><span class="num" data-metric="tokens.colors.hardcoded">0</span></b><span>raw colors</span></div>
+          <div class="tile"><b><span class="num" data-metric="components.looks">6</span></b><span>component looks</span></div>
+          <div class="tile"><b><span class="num" data-metric="components.adhoc">2</span></b><span>one-off looks</span></div>
+          <div class="tile"><b><span class="num" data-metric="findings.length">4</span></b><span>findings</span></div>
+          <div class="tile"><b><span class="num" data-metric="cards.length">2</span></b><span>cards</span></div>
+        </div>
+        <div class="part"><h3>What stands out</h3><ul class="plain"><li><a href="#F:DUP-IMPL:41d379"><b>F1</b> 2 different Button implementations</a> <span class="pill warn">medium</span></li><li><a href="#F:PALETTE-GRAYS:6dd0fe"><b>F2</b> 4 Tailwind grays beside 3 neutral tokens</a> <span class="pill warn">medium</span></li><li><a href="#F:RATIO:41d379"><b>F3</b> 1 Button looks with an unusual corner ratio</a> <span class="pill ">low</span></li></ul></div>
+        <div class="good"><h4>What is already consistent</h4><div>Color: 100% of 23 occurrences use tokens or the scale — no change proposed.</div><div>Typography: 100% of 13 occurrences use tokens or the scale — no change proposed.</div><div>Spacing: 100% of 20 occurrences use tokens or the scale — no change proposed.</div><div>Corners: 100% of 8 occurrences use tokens or the scale — no change proposed.</div><div>Shadows: –% of 0 occurrences use tokens or the scale — no change proposed.</div></div>
+      </div>
+    </div>
+    <div class="glossary"><div><b>token</b>a named value defined once (a CSS variable like --color-brand) that the code refers to instead of typing the value</div><div><b>raw value</b>a value typed directly where it is used (#1AA44D, 18px); it cannot be changed in one place</div><div><b>look</b>one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows here</div><div><b>screen</b>a page of the app; every item lists the screens it appears on, so you can check it by eye</div></div>
+  </div></section>
+<section class="chapter" id="screens"><div class="wrap">
+    <div class="band"><h2>02 · Screens</h2><div class="stats"><span>screens <b><span class="num" data-metric="routes.pages">3</span></b></span></div></div>
+    <p class="help">Screens found from the router. Every value and look below lists the screens it appears on.</p>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Screen</th><th>Path</th><th>Controls</th><th>Distinct looks</th></tr></thead><tbody><tr data-search="Interviews this week /"><td><b>Interviews this week</b></td><td class="mono">/</td><td class="r">3</td><td class="r">3</td></tr><tr data-search="Participant /participants/:id"><td><b>Participant</b></td><td class="mono">/participants/:id</td><td class="r">2</td><td class="r">2</td></tr><tr data-search="Reports /reports"><td><b>Reports</b></td><td class="mono">/reports</td><td class="r">3</td><td class="r">3</td></tr></tbody></table></div>
+  </div></section>
+<section class="chapter" id="color"><div class="wrap">
+      <div class="band"><h2>03 · Color</h2><div class="stats"><span>distinct colors <b><span class="num" data-metric="tokens.colors.values.length">11</span></b></span><span>Declared <b><span class="num" data-metric="tokens.declared.color">5</span></b></span><span>raw colors <b><span class="num" data-metric="tokens.colors.hardcoded">0</span></b></span><span>Color <b><span class="num" data-metric="scores.color">100%</span></b></span></div></div>
+      
+      <div class="part"><h3>Declared <span class="n">5</span></h3><p class="help">Tokens the project defines. Uses counts every class or rule that refers to the token.</p><div class="tablewrap"><table class="t"><thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Uses</th><th>Role</th></tr></thead><tbody><tr data-search="--color-accent #2563eb"><td><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span></td><td class="mono">--color-accent</td><td class="mono small">#2563eb</td><td class="mono small">–</td><td class="r">11</td><td><span class="pill">Brand</span></td></tr><tr data-search="--color-accent-soft #dbeafe"><td><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span></td><td class="mono">--color-accent-soft</td><td class="mono small">#dbeafe</td><td class="mono small">–</td><td class="r">2</td><td><span class="pill">Brand</span></td></tr><tr data-search="--color-ink #1f2937"><td><span class="sw" title="#1f2937"><i style="background:#1f2937"></i></span></td><td class="mono">--color-ink</td><td class="mono small">#1f2937</td><td class="mono small">–</td><td class="r">5</td><td><span class="pill">Neutral</span></td></tr><tr data-search="--color-ink-soft #6b7280"><td><span class="sw" title="#6b7280"><i style="background:#6b7280"></i></span></td><td class="mono">--color-ink-soft</td><td class="mono small">#6b7280</td><td class="mono small">–</td><td class="r">3</td><td><span class="pill">Neutral</span></td></tr><tr data-search="--color-line #e5e7eb"><td><span class="sw" title="#e5e7eb"><i style="background:#e5e7eb"></i></span></td><td class="mono">--color-line</td><td class="mono small">#e5e7eb</td><td class="mono small">–</td><td class="r">2</td><td><span class="pill">Neutral</span></td></tr></tbody></table></div></div>
+      <div class="part"><h3>In use · Raw values (not a token) <span class="n">0</span></h3><p class="muted">–</p></div>
+      
+      <div class="part"><h3>In use · Tailwind palette (not a project token) <span class="n">6</span></h3><div class="rows"><div class="row" data-id="tok:color:#1447e6" data-target="tok:color:var:--color-accent" data-visual="visible" data-card="" data-occ="2" data-screens="2" data-screen-ids="route:/ route:/reports" data-search="#1447e6 Interviews this week Reports">
+        <div class="key"><span class="sw lg" title="#1447e6"><i style="background:#1447e6"></i></span></div>
+        <div><div class="val">#1447e6 <button class="pill" data-copy="#1447e6">Copy</button></div><div class="meta"><span>2 uses</span><span>2 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/home.tsx:8 var(--color-blue-700)</li><li>src/pages/reports.tsx:10 var(--color-blue-700)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-accent" data-visual="visible" selected>--color-accent · ΔE 8.6</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 21.5</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 24.1</option><option value="tok:color:var:--color-accent-soft" data-visual="visible">--color-accent-soft · ΔE 46.5</option><option value="tok:color:var:--color-line" data-visual="visible">--color-line · ΔE 50.5</option></select></div><div class="impact"></div></div><div class="row" data-id="tok:color:#bedbff" data-target="tok:color:var:--color-accent-soft" data-visual="visible" data-card="" data-occ="2" data-screens="2" data-screen-ids="route:/ route:/participants/:id" data-search="#bedbff Interviews this week Participant">
+        <div class="key"><span class="sw lg" title="#bedbff"><i style="background:#bedbff"></i></span></div>
+        <div><div class="val">#bedbff <button class="pill" data-copy="#bedbff">Copy</button></div><div class="meta"><span>2 uses</span><span>2 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Interviews this week</span><span class="pill">Participant</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/home.tsx:9 var(--color-blue-200)</li><li>src/pages/participants.tsx:11 var(--color-blue-200)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-accent-soft" data-visual="visible" selected>--color-accent-soft · ΔE 6.5</option><option value="tok:color:var:--color-line" data-visual="visible">--color-line · ΔE 12.8</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 31.9</option><option value="tok:color:var:--color-accent" data-visual="visible">--color-accent · ΔE 34.1</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 70.1</option></select></div><div class="impact"></div></div><div class="row" data-id="tok:color:#ffffff" data-target="tok:color:var:--color-line" data-visual="visible" data-card="" data-occ="2" data-screens="2" data-screen-ids="route:/ route:/reports" data-search="#ffffff Interviews this week Reports">
+        <div class="key"><span class="sw lg" title="#ffffff"><i style="background:#ffffff"></i></span></div>
+        <div><div class="val">#ffffff <button class="pill" data-copy="#ffffff">Copy</button></div><div class="meta"><span>2 uses</span><span>2 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/home.tsx:8 var(--color-white)</li><li>src/pages/reports.tsx:10 var(--color-white)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-line" data-visual="visible" selected>--color-line · ΔE 5.4</option><option value="tok:color:var:--color-accent-soft" data-visual="visible">--color-accent-soft · ΔE 10.2</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 39.2</option><option value="tok:color:var:--color-accent" data-visual="visible">--color-accent · ΔE 49.4</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 76.1</option></select></div><div class="impact"></div></div><div class="row" data-id="tok:color:#d1d5dc" data-target="tok:color:var:--color-line" data-visual="visible" data-card="" data-occ="1" data-screens="1" data-screen-ids="route:/reports" data-search="#d1d5dc Reports">
+        <div class="key"><span class="sw lg" title="#d1d5dc"><i style="background:#d1d5dc"></i></span></div>
+        <div><div class="val">#d1d5dc <button class="pill" data-copy="#d1d5dc">Copy</button></div><div class="meta"><span>1 uses</span><span>1 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/reports.tsx:12 var(--color-gray-300)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-line" data-visual="visible" selected>--color-line · ΔE 4.4</option><option value="tok:color:var:--color-accent-soft" data-visual="visible">--color-accent-soft · ΔE 7.2</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 30.3</option><option value="tok:color:var:--color-accent" data-visual="visible">--color-accent · ΔE 38.7</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 68.9</option></select></div><div class="impact"></div></div><div class="row" data-id="tok:color:#f3f4f6" data-target="tok:color:var:--color-line" data-visual="visible" data-card="" data-occ="1" data-screens="1" data-screen-ids="route:/" data-search="#f3f4f6 Interviews this week">
+        <div class="key"><span class="sw lg" title="#f3f4f6"><i style="background:#f3f4f6"></i></span></div>
+        <div><div class="val">#f3f4f6 <button class="pill" data-copy="#f3f4f6">Copy</button></div><div class="meta"><span>1 uses</span><span>1 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Interviews this week</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/home.tsx:10 var(--color-gray-100)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-line" data-visual="visible" selected>--color-line · ΔE 2.9</option><option value="tok:color:var:--color-accent-soft" data-visual="visible">--color-accent-soft · ΔE 8.5</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 37</option><option value="tok:color:var:--color-accent" data-visual="visible">--color-accent · ΔE 46.1</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 74.6</option></select></div><div class="impact"></div></div><div class="row" data-id="tok:color:#f9fafb" data-target="tok:color:var:--color-line" data-visual="visible" data-card="" data-occ="1" data-screens="1" data-screen-ids="route:/reports" data-search="#f9fafb Reports">
+        <div class="key"><span class="sw lg" title="#f9fafb"><i style="background:#f9fafb"></i></span></div>
+        <div><div class="val">#f9fafb <button class="pill" data-copy="#f9fafb">Copy</button></div><div class="meta"><span>1 uses</span><span>1 screens</span><span>1 files</span><span class="faint">palette</span></div><div class="tags small"><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/reports.tsx:12 var(--color-gray-50)</li></ul></details></div>
+        <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="tok:color:var:--color-line" data-visual="visible" selected>--color-line · ΔE 4.2</option><option value="tok:color:var:--color-accent-soft" data-visual="visible">--color-accent-soft · ΔE 9.3</option><option value="tok:color:var:--color-ink-soft" data-visual="visible">--color-ink-soft · ΔE 38.2</option><option value="tok:color:var:--color-accent" data-visual="visible">--color-accent · ΔE 46.9</option><option value="tok:color:var:--color-ink" data-visual="visible">--color-ink · ΔE 75.4</option></select></div><div class="impact"></div></div></div></div>
+      <div class="part"><h3>In use · Via tokens <span class="n">5</span></h3><div class="tags"><span class="pill" title="--color-accent"><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span> <span class="mono">#2563eb</span> · 11</span><span class="pill" title="--color-ink"><span class="sw" title="#1f2937"><i style="background:#1f2937"></i></span> <span class="mono">#1f2937</span> · 5</span><span class="pill" title="--color-ink-soft"><span class="sw" title="#6b7280"><i style="background:#6b7280"></i></span> <span class="mono">#6b7280</span> · 3</span><span class="pill" title="--color-accent-soft"><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span> <span class="mono">#dbeafe</span> · 2</span><span class="pill" title="--color-line"><span class="sw" title="#e5e7eb"><i style="background:#e5e7eb"></i></span> <span class="mono">#e5e7eb</span> · 2</span></div></div>
+      
+      <div class="part"><h3>Findings <span class="n">1</span></h3><div class="findings"><article class="fnd medium" id="F:PALETTE-GRAYS:6dd0fe" data-search="4 Tailwind grays beside 3 neutral tokens PALETTE-GRAYS">
+      <div class="head"><span class="id">F2</span><h4>4 Tailwind grays beside 3 neutral tokens</h4><span class="sev">medium</span></div>
+      <div class="body"><p>4 grays come straight from Tailwind's palette (gray-100, gray-500…) although the project defines 3 neutral tokens of its own; the two ramps drift apart.</p><div class="ev"><span class="strip"><i style="background:#ffffff" title="#ffffff"></i><i style="background:#d1d5dc" title="#d1d5dc"></i><i style="background:#f3f4f6" title="#f3f4f6"></i><i style="background:#f9fafb" title="#f9fafb"></i></span><span class="small mono muted">#ffffff · #d1d5dc · #f3f4f6 · #f9fafb</span></div>
+      <div class="foot"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div>
+      <details class="dev devonly"><summary>Code locations · Rule: ≥ 3 palette grays and ≥ 3 project neutral tokens</summary><ul><li>src/pages/home.tsx:8</li><li>src/pages/reports.tsx:10</li><li>src/pages/reports.tsx:12</li><li>src/pages/home.tsx:10</li><li>src/pages/reports.tsx:12</li></ul></details></div>
+    </article></div></div>
+      
+      <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
+    </div></section>
+<section class="chapter" id="typography"><div class="wrap">
+      <div class="band"><h2>04 · Typography</h2><div class="stats"><span>Font sizes in use <b><span class="num" data-metric="tokens.typography.fontSizes.length">3</span></b></span><span>Weights <b><span class="num" data-metric="tokens.typography.fontWeights.length">2</span></b></span><span>Type <b><span class="num" data-metric="scores.typography">100%</span></b></span></div></div>
+      
+      <div class="part"><h3>Font sizes in use <span class="n">3</span></h3><div class="typerows"><div class="typerow" data-search="14px"><span class="k">14px</span><span class="sample" style="font-size:14px;font-family:inherit">The quick brown fox jumps over the lazy dog</span><span class="k">10 uses</span></div><div class="typerow" data-search="24px"><span class="k">24px</span><span class="sample" style="font-size:24px;font-family:inherit">The quick brown fox jumps over the lazy dog</span><span class="k">2 uses</span></div><div class="typerow" data-search="30px"><span class="k">30px</span><span class="sample" style="font-size:30px;font-family:inherit">The quick brown fox jumps over the lazy dog</span><span class="k">1 uses</span></div></div></div>
+      <div class="part"><h3>Weights</h3><div class="tags"><span class="pill" style="font-weight:500">500 · 5</span><span class="pill" style="font-weight:600">600 · 4</span></div></div>
+      <div class="part"><h3>Line heights</h3><div class="tags"><span class="pill mono">calc(1.25 / .875) · 10</span><span class="pill mono">calc(2 / 1.5) · 2</span><span class="pill mono">calc(2.25 / 1.875) · 1</span></div></div>
+      
+      
+      <div class="part"><h3>Proposal</h3><p class="muted">No change proposed: 100% of occurrences use tokens/scale</p></div>
+    </div></section>
+<section class="chapter" id="spacing"><div class="wrap">
+      <div class="band"><h2>05 · Spacing</h2><div class="stats"><span>Padding and gaps in use <b><span class="num" data-metric="tokens.spacing.sorted.length">6</span></b></span><span>off the scale <b><span class="num" data-metric="tokens.spacing.offScale.length">0</span></b></span><span>Spacing <b><span class="num" data-metric="scores.spacing">100%</span></b></span></div></div>
+      
+      <div class="part"><h3>Padding and gaps in use</h3><p class="help">Scale base 4px (--spacing)</p><div class="ruler"><div class="r" data-search="4px"><span class="k">4px</span><span><i class="bar" style="width:12.5%"></i></span><span class="k">1 uses</span></div><div class="r" data-search="8px"><span class="k">8px</span><span><i class="bar" style="width:25%"></i></span><span class="k">3 uses</span></div><div class="r" data-search="12px"><span class="k">12px</span><span><i class="bar" style="width:37.5%"></i></span><span class="k">1 uses</span></div><div class="r" data-search="16px"><span class="k">16px</span><span><i class="bar" style="width:50%"></i></span><span class="k">9 uses</span></div><div class="r" data-search="24px"><span class="k">24px</span><span><i class="bar" style="width:75%"></i></span><span class="k">4 uses</span></div><div class="r" data-search="32px"><span class="k">32px</span><span><i class="bar" style="width:100%"></i></span><span class="k">2 uses</span></div></div></div>
+      
+      <div class="part"><h3>Component padding</h3><div class="tablewrap"><table class="t"><thead><tr><th>Control</th><th>Look</th><th>Height</th><th>Padding x</th><th>Padding y</th></tr></thead><tbody><tr><td>Button</td><td class="small">variant=secondary · 2</td><td class="r">36px</td><td class="r">16px</td><td class="r">–</td></tr><tr><td>Button</td><td class="small">base · 2</td><td class="r">36px</td><td class="r">16px</td><td class="r">–</td></tr><tr><td>Button</td><td class="small">one-off · 1</td><td class="r">36px</td><td class="r">16px</td><td class="r">–</td></tr><tr><td>Button</td><td class="small">variant=ghost · 1</td><td class="r">36px</td><td class="r">16px</td><td class="r">–</td></tr><tr><td>Text field</td><td class="small">label=Search · 1</td><td class="r">36px</td><td class="r">12px</td><td class="r">–</td></tr></tbody></table></div></div>
+      
+      <div class="part"><h3>Proposal</h3><p class="muted">No change proposed: 100% of occurrences use tokens/scale</p></div>
+    </div></section>
+<section class="chapter" id="radius"><div class="wrap">
+      <div class="band"><h2>06 · Corners and borders</h2><div class="stats"><span>Corner radii in use <b><span class="num" data-metric="tokens.radius.values.length">3</span></b></span><span>Corners <b><span class="num" data-metric="scores.radius">100%</span></b></span></div></div>
+      
+      <div class="part"><h3>Declared</h3><div class="tags"><span class="pill mono">--radius-ctl = 6px</span></div></div>
+      <div class="part"><h3>Corner radii in use</h3><p class="help">KRDS reference: height × 0.125, even, max 12px</p><div class="shapes"><div class="shape" data-search="6"><i style="border-radius:6px"></i><span class="mono">6px</span> · 6</div><div class="shape" data-search="4"><i style="border-radius:4px"></i><span class="mono">4px</span> · 1</div><div class="shape" data-search="8"><i style="border-radius:8px"></i><span class="mono">8px</span> · 1</div></div></div>
+      
+      <div class="part"><h3>Border widths</h3><div class="tags"><span class="pill mono">1px · 2</span></div></div>
+      <div class="part"><h3>Findings <span class="n">1</span></h3><div class="findings"><article class="fnd medium" id="F:SIB-RADIUS:9addcb" data-search="Neighbors with different corner radii (6px / 6px / 8px) SIB-RADIUS">
+      <div class="head"><span class="id">F4</span><h4>Neighbors with different corner radii (6px / 6px / 8px)</h4><span class="sev">medium</span></div>
+      <div class="body"><p>text-field and button and button sit in one row with radii 6 / 6 / 8px.</p><div class="ev"><div class="stage" data-html="&lt;div class=&quot;flex items-end gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;&lt;/div&gt;"><iframe title="row" loading="lazy"></iframe></div></div>
+      <div class="foot"><span class="pill">Reports</span></div>
+      <details class="dev devonly"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/pages/reports.tsx:8</li></ul></details></div>
+    </article></div></div>
+      
+    </div></section>
+<section class="chapter" id="shadow"><div class="wrap">
+      <div class="band"><h2>07 · Shadows</h2><div class="stats"><span>Shadows in use <b><span class="num" data-metric="tokens.shadows.values.length">0</span></b></span><span>Shadows <b>–</b></span></div></div>
+      
+      <div class="part"><h3>Shadows in use</h3><p class="muted">–</p></div>
+      
+      <div class="part"><h3>Proposal</h3><p class="muted">No change proposed: no values on this axis</p></div>
+    </div></section>
+<section class="chapter" id="components"><div class="wrap">
+      <div class="band"><h2>08 · Components</h2><div class="stats"><span>component looks <b><span class="num" data-metric="components.looks">6</span></b></span><span>one-off looks <b><span class="num" data-metric="components.adhoc">2</span></b></span><span>Components <b><span class="num" data-metric="scores.component">75%</span></b></span></div></div>
+      
+      <div class="typeh" id="c-button"><h3>Button</h3><span class="stat">4 looks · 6 uses</span><span class="stat">2 implementation(s): Button · raw &lt;button&gt;</span></div><div class="rows"><div class="sigrow" data-sig="sig:button:96197a0beed8" data-occ="2" data-screens="2" data-screen-ids="route:/ route:/participants/:id" data-search="Button inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200 Interviews this week Participant Import notes Send reminder">
+          <div class="spec" data-sig="sig:button:96197a0beed8"><div class="stage" data-html="&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200&quot; data-dp-root&gt;Import notes&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="hover" class="">Hover</button><button type="button" data-state="focus-visible" class="">Focus</button><button type="button" data-state="disabled" class="">Disabled</button></div></div>
+          <div><div class="title"><span class="pill ok">base</span><span class="pill">variant=secondary</span><span class="muted small">Button</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>2 uses</span><span>2 screens</span><span>h 36px</span><span>r 6px</span><span><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span> #dbeafe</span></div>
+            <div class="states"><span class="yes">hover: styled</span><span class="yes">focus: styled</span><span class="yes">disabled: styled</span></div>
+            
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span><span class="pill">Participant</span></div>
+            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200</div>
+            
+          </div>
+          <div></div>
+        </div><div class="sigrow" data-sig="sig:button:f39e1c92616e" data-occ="2" data-screens="2" data-screen-ids="route:/ route:/reports" data-search="Button inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700 Interviews this week Reports New interview Search">
+          <div class="spec" data-sig="sig:button:f39e1c92616e"><div class="stage" data-html="&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="hover" class="">Hover</button><button type="button" data-state="focus-visible" class="">Focus</button><button type="button" data-state="disabled" class="">Disabled</button></div></div>
+          <div><div class="title"><span class="pill ok">base</span><span class="muted small">Button</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>2 uses</span><span>2 screens</span><span>h 36px</span><span>r 6px</span><span><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span> #2563eb</span></div>
+            <div class="states"><span class="yes">hover: styled</span><span class="yes">focus: styled</span><span class="yes">disabled: styled</span></div>
+            
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div>
+            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700</div>
+            
+          </div>
+          <div></div>
+        </div><div class="sigrow" data-id="sig:button:78525c92ceaa" data-target="sig:button:96197a0beed8" data-visual="visible" data-card="" data-occ="1" data-screens="1" data-screen-ids="route:/reports" data-search="Button h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50 Reports Export CSV">
+          <div class="spec" data-sig="sig:button:78525c92ceaa"><div class="stage" data-html="&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="hover" class="">Hover</button><button type="button" data-state="disabled" class="">Disabled</button></div></div>
+          <div><div class="title"><span class="pill warn">one-off</span><span class="muted small">raw &lt;button&gt;</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>1 uses</span><span>1 screens</span><span>h 36px</span><span>r 8px</span></div>
+            <div class="states"><span class="yes">hover: styled</span><span class="">focus: browser default</span><span class="">disabled: browser default</span></div>
+            <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>radius</td><td>6px</td><td class="d">8px</td></tr><tr><td>borderWidth</td><td>–</td><td class="d">1px</td></tr><tr><td>bg</td><td><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span> #dbeafe</td><td class="d">–</td></tr><tr><td>fg</td><td><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span> #2563eb</td><td class="d">–</td></tr><tr><td>border</td><td>–</td><td class="d"><span class="sw" title="#d1d5dc"><i style="background:#d1d5dc"></i></span> #d1d5dc</td></tr></table>
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Reports</span></div>
+            <div class="classes devonly">h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50</div>
+            
+          </div>
+          <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:96197a0beed8" data-visual="visible" selected>Button · variant=secondary</option><option value="sig:button:f39e1c92616e" data-visual="visible">Button · base</option><option value="sig:button:c5d8aca88559" data-visual="visible">Button · variant=ghost</option></select></div><div class="impact"></div>
+        </div><div class="sigrow" data-sig="sig:button:c5d8aca88559" data-occ="1" data-screens="1" data-screen-ids="route:/" data-search="Button inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 text-ink-soft hover:bg-gray-100 Interviews this week Archive">
+          <div class="spec" data-sig="sig:button:c5d8aca88559"><div class="stage" data-html="&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 text-ink-soft hover:bg-gray-100&quot; data-dp-root&gt;Archive&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="hover" class="">Hover</button><button type="button" data-state="focus-visible" class="">Focus</button><button type="button" data-state="disabled" class="">Disabled</button></div></div>
+          <div><div class="title"><span class="pill ok">base</span><span class="pill">variant=ghost</span><span class="muted small">Button</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>1 uses</span><span>1 screens</span><span>h 36px</span><span>r 6px</span></div>
+            <div class="states"><span class="yes">hover: styled</span><span class="yes">focus: styled</span><span class="yes">disabled: styled</span></div>
+            
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span></div>
+            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 text-ink-soft hover:bg-gray-100</div>
+            
+          </div>
+          <div></div>
+        </div></div><div class="typeh" id="c-checkbox"><h3>Checkbox</h3><span class="stat">1 looks · 1 uses</span><span class="stat">1 implementation(s): raw &lt;input&gt;</span></div><div class="rows"><div class="sigrow" data-id="sig:checkbox:1819cff5f59d" data-target="" data-visual="visible" data-card="" data-occ="1" data-screens="1" data-screen-ids="route:/participants/:id" data-search="Checkbox size-4 rounded-sm border-line accent-accent Participant ">
+          <div class="spec" data-sig="sig:checkbox:1819cff5f59d"><div class="stage" data-html="&lt;input type=&quot;checkbox&quot; class=&quot;size-4 rounded-sm border-line accent-accent&quot; type=&quot;checkbox&quot; data-dp-root&gt;" data-state="default"><iframe title="Checkbox" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="disabled" class="">Disabled</button><button type="button" data-state="checked" class="">Checked</button></div></div>
+          <div><div class="title"><span class="pill warn">one-off</span><span class="muted small">raw &lt;input&gt;</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>1 uses</span><span>1 screens</span><span>h 16px</span><span>r 4px</span></div>
+            <div class="states"><span class="no">hover: not styled</span><span class="">focus: browser default</span><span class="">disabled: browser default</span><span class="">checked: n/a</span></div>
+            
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Participant</span></div>
+            <div class="classes devonly">size-4 rounded-sm border-line accent-accent</div>
+            
+          </div>
+          <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span></div><div class="impact"></div>
+        </div></div><div class="typeh" id="c-dropdown-menu"><h3>Dropdown menu</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-radio"><h3>Radio</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-select"><h3>Select</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-textarea"><h3>Text area</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-text-field"><h3>Text field</h3><span class="stat">1 looks · 1 uses</span><span class="stat">1 implementation(s): Field</span></div><div class="rows"><div class="sigrow" data-sig="sig:text-field:b818c7d689a3" data-occ="1" data-screens="1" data-screen-ids="route:/reports" data-search="Text field h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent Reports ">
+          <div class="spec" data-sig="sig:text-field:b818c7d689a3"><div class="stage" data-html="&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;" data-state="default"><iframe title="Text field" loading="lazy"></iframe></div><div class="tabs"><button type="button" data-state="default" class="on">Default</button><button type="button" data-state="focus-visible" class="">Focus</button><button type="button" data-state="disabled" class="">Disabled</button></div></div>
+          <div><div class="title"><span class="pill ok">base</span><span class="pill">label=Search</span><span class="muted small">Field</span></div>
+            <div class="meta" style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:6px"><span>1 uses</span><span>1 screens</span><span>h 36px</span><span>r 6px</span></div>
+            <div class="states"><span class="no">hover: not styled</span><span class="yes">focus: styled</span><span class="">disabled: browser default</span></div>
+            
+            
+            <div class="tags small" style="margin-top:6px"><span class="pill">Reports</span></div>
+            <div class="classes devonly">h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent</div>
+            
+          </div>
+          <div></div>
+        </div></div><div class="typeh" id="c-toggle"><h3>Toggle</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-badge"><h3>Badge</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-tag"><h3>Tag</h3><span class="stat muted">Not detected in this codebase.</span></div><div class="typeh" id="c-chip"><h3>Chip</h3><span class="stat muted">Not detected in this codebase.</span></div>
+      <div class="part"><h3>Findings <span class="n">2</span></h3><div class="findings"><article class="fnd medium" id="F:DUP-IMPL:41d379" data-search="2 different Button implementations DUP-IMPL">
+      <div class="head"><span class="id">F1</span><h4>2 different Button implementations</h4><span class="sev">medium</span></div>
+      <div class="body"><p>button is built 2 different ways (Button, raw &lt;button&gt;).</p><div class="ev"><div class="spec" data-sig="sig:button:96197a0beed8"><div class="stage" data-html="&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200&quot; data-dp-root&gt;Import notes&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:78525c92ceaa"><div class="stage" data-html="&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div></div>
+      <div class="foot"><span class="pill">Interviews this week</span><span class="pill">Participant</span><span class="pill">Reports</span></div>
+      </div>
+    </article><article class="fnd low" id="F:RATIO:41d379" data-search="1 Button looks with an unusual corner ratio RATIO">
+      <div class="head"><span class="id">F3</span><h4>1 Button looks with an unusual corner ratio</h4><span class="sev">low</span></div>
+      <div class="body"><p>Most buttons round corners at 17% of their height; 1 looks deviate (KRDS reference: height × 0.125, max 12px).</p><div class="ev"><div class="spec" data-sig="sig:button:78525c92ceaa"><div class="stage" data-html="&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div></div>
+      <div class="foot"><span class="pill">Reports</span></div>
+      <details class="dev devonly"><summary>Code locations · Rule: |ratio − modal| &gt; 0.05</summary><ul><li>src/pages/reports.tsx:12</li></ul></details></div>
+    </article></div></div>
+      <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
+    </div></section>
+<section class="chapter" id="relations"><div class="wrap">
+      <div class="band"><h2>09 · Side by side</h2><div class="stats"><span>Side by side <b><span class="num" data-metric="relationships.mismatches">1</span></b></span></div></div>
+      <p class="help">Controls that sit in one row or grid. Values are legal on their own; they should still match their neighbours.</p>
+      <div class="findings"><div class="relrow" data-search="Text field Button Button Reports"><div class="why"><b>corner radius: 6px / 6px / 8px</b> — Text field + Button + Button</div><div class="stage" data-html="&lt;div class=&quot;flex items-end gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/reports.tsx:8 · flex items-end gap-2</li></ul></details></div></div>
+    </div></section>
+<section class="chapter" id="proposal"><div class="wrap">
+      <div class="band"><h2>10 · Proposed system</h2><div class="stats"><span>new <b><span class="num" data-metric="proposal.newTokens.length">0</span></b></span><span> <b>2-layer token architecture</b></span></div></div>
+      <p class="help">Derived from what the code already uses. Nothing here is applied until you choose it.</p>
+      <div class="tablewrap"><table class="t"><thead><tr><th></th><th>Token</th><th>Value</th><th>Absorbs</th><th>Uses</th><th>Status</th></tr></thead><tbody><tr data-search="--color-accent"><td><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span></td><td class="mono">--color-accent</td><td class="mono small">#2563eb</td><td>–</td><td class="r">11</td><td><span class="pill">existing</span></td></tr><tr data-search="--color-accent-soft"><td><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span></td><td class="mono">--color-accent-soft</td><td class="mono small">#dbeafe</td><td>–</td><td class="r">2</td><td><span class="pill">existing</span></td></tr><tr data-search="--color-ink"><td><span class="sw" title="#1f2937"><i style="background:#1f2937"></i></span></td><td class="mono">--color-ink</td><td class="mono small">#1f2937</td><td>–</td><td class="r">5</td><td><span class="pill">existing</span></td></tr><tr data-search="--color-ink-soft"><td><span class="sw" title="#6b7280"><i style="background:#6b7280"></i></span></td><td class="mono">--color-ink-soft</td><td class="mono small">#6b7280</td><td>–</td><td class="r">3</td><td><span class="pill">existing</span></td></tr><tr data-search="--color-line"><td><span class="sw" title="#e5e7eb"><i style="background:#e5e7eb"></i></span></td><td class="mono">--color-line</td><td class="mono small">#e5e7eb</td><td>–</td><td class="r">2</td><td><span class="pill">existing</span></td></tr></tbody></table></div>
+    </div></section>
+<section class="chapter" id="cards"><div class="wrap">
+      <div class="band"><h2>11 · Cards</h2><div class="stats"><span>cards <b><span class="num" data-metric="cards.length">2</span></b></span></div></div>
+      <p class="help">Each card is one safe-to-review change. Choose rows above or add a card's recommendation here. Nothing is pre-selected.</p>
+      <div class="cards"><article class="card" id="C1" data-card="C1" data-entries="[]" data-search="Write DESIGN-TOKENS.md and tell the agent to use it guardrails">
+        <div class="head"><span class="id mono">C1</span><h4>Write DESIGN-TOKENS.md and point the agent to it</h4><span class="pill ok">invisible</span><span class="pill">safe</span><span class="pill">S</span><span class="pill status">proposed</span></div>
+        <div class="body"><p>Documents the surviving tokens, adds a one-line pointer to CLAUDE.md/AGENTS.md and a baseline for `design-polish check`, so the next generation reuses what exists.</p><div class="small muted">0 places · 0 screens · 2 files</div>
+        </div>
+        <div class="foot"><span class="faint small">guardrails</span></div>
+      </article><article class="card" id="C2" data-card="C2" data-entries="[{&quot;source&quot;:&quot;occ:be95d66fb3bc&quot;,&quot;target&quot;:null,&quot;action&quot;:&quot;align&quot;},{&quot;source&quot;:&quot;occ:94c406cdea84&quot;,&quot;target&quot;:null,&quot;action&quot;:&quot;align&quot;},{&quot;source&quot;:&quot;occ:1a9d93d3c9d0&quot;,&quot;target&quot;:null,&quot;action&quot;:&quot;align&quot;}]" data-search="Neighbors with different corner radii (6px / 8px) align-neighbors">
+        <div class="head"><span class="id mono">C2</span><h4>Give neighbours in 1 row(s) the same corner radius (6px / 8px)</h4><span class="pill warn">barely visible</span><span class="pill">approve each</span><span class="pill">S</span><span class="pill status">proposed</span></div>
+        <div class="body"><p>Controls that sit side by side get one radius; the minority adopts the majority.</p><div class="small muted">3 places · 1 screens · 1 files · <a href="#F:SIB-RADIUS:9addcb">F4</a></div>
+        <details><summary class="small">3 changes</summary><ul class="entries plain"><li>occ:be95d66fb3bc → – <span class="faint">· 1 · barely visible</span></li><li>occ:94c406cdea84 → – <span class="faint">· 1 · barely visible</span></li><li>occ:1a9d93d3c9d0 → – <span class="faint">· 1 · barely visible</span></li></ul></details></div>
+        <div class="foot"><button class="btn add" type="button">Add recommendation</button><span class="faint small">align-neighbors</span></div>
+      </article></div>
+    </div></section>
+<section class="chapter" id="delta"><div class="wrap"><div class="band"><h2>12 · Before / after</h2></div><p class="muted">After you apply cards and re-scan (npx design-polish recheck), this chapter shows what changed.</p></div></section>
+<section class="chapter" id="method"><div class="wrap">
+      <div class="band"><h2>13 · Method and limits</h2></div>
+      <dl class="kv"><dt>Coverage</dt><dd>9 of 12 files scanned (git); 0 failed to parse; 0 dynamic class sites; 0 unresolved classes.</dd>
+      <dt>Consistency score</dt><dd>Score per axis = occurrences through tokens or the scale ÷ all occurrences. Composite = count-weighted mean. Components = occurrences that use one of the base component's looks ÷ all.</dd>
+      <dt>Families</dt><dd>Specimens use the fonts installed on this machine; the project's web fonts are substituted when they cannot be embedded.</dd>
+      
+      
+      
+      
+      </dl>
+      <ul class="plain" style="margin-top:18px"><li>Numbers come from scripts, not from a language model.</li><li>Specimens are rendered with the project's own compiled CSS; nothing is imitated.</li><li>Unresolved values are listed, never estimated.</li><li>This report was built offline; it makes no network requests.</li></ul>
+      <footer>design-polish 3.0.0 · 2026-08-21T12:32:32.657Z · vite-router</footer>
+    </div></section>
+</main>
+<aside class="cart" id="cart"><div class="wrap"><span class="sum"></span><button class="btn send" type="button">Send decisions</button><button class="btn ghost copy" type="button">Copy</button><button class="btn ghost save" type="button">Save file</button><button class="btn ghost clear" type="button">Clear</button><span class="warn hidden"></span></div></aside><div class="toast" id="toast"></div>
+<script id="live-css" type="text/plain">/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
+@layer properties {
+  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+    *, :before, :after, ::backdrop {
+      --tw-border-style: solid;
+      --tw-font-weight: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
+    }
+  }
+}
+
+@layer theme {
+  :root, :host {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --color-blue-200: oklch(88.2% .059 254.128);
+    --color-blue-700: oklch(48.8% .243 264.376);
+    --color-gray-50: oklch(98.5% .002 247.839);
+    --color-gray-100: oklch(96.7% .003 264.542);
+    --color-gray-300: oklch(87.2% .01 258.338);
+    --color-white: #fff;
+    --spacing: .25rem;
+    --text-sm: .875rem;
+    --text-sm--line-height: calc(1.25 / .875);
+    --font-weight-medium: 500;
+    --radius-sm: .25rem;
+    --radius-lg: .5rem;
+    --default-transition-duration: .15s;
+    --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+    --color-ink: #1f2937;
+    --color-ink-soft: #6b7280;
+    --color-accent: #2563eb;
+    --color-accent-soft: #dbeafe;
+    --color-line: #e5e7eb;
+    --radius-ctl: 6px;
+  }
+}
+
+@layer base {
+  *, :after, :before, ::backdrop {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::file-selector-button {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, :host {
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    line-height: 1.5;
+    font-family: var(--default-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    -webkit-text-decoration: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+
+  b, strong {
+    font-weight: bolder;
+  }
+
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+
+  small {
+    font-size: 80%;
+  }
+
+  sub, sup {
+    vertical-align: baseline;
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+  }
+
+  sub {
+    bottom: -.25em;
+  }
+
+  sup {
+    top: -.5em;
+  }
+
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  :-moz-focusring:where(:not(iframe)) {
+    outline: auto;
+  }
+
+  progress {
+    vertical-align: baseline;
+  }
+
+  summary {
+    display: list-item;
+  }
+
+  ol, ul, menu {
+    list-style: none;
+  }
+
+  img, svg, video, canvas, audio, iframe, embed, object {
+    vertical-align: middle;
+    display: block;
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button, input, select, optgroup, textarea {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: #0000;
+    border-radius: 0;
+  }
+
+  ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: #0000;
+    border-radius: 0;
+  }
+
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+
+  ::placeholder {
+    opacity: 1;
+  }
+
+  @supports (not ((-webkit-appearance: -apple-pay-button))) or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentColor;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      ::placeholder {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-datetime-edit {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-year-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-month-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-day-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-hour-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-minute-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-second-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-millisecond-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  button, input:where([type="button"], [type="reset"], [type="submit"]) {
+    appearance: button;
+  }
+
+  ::file-selector-button {
+    appearance: button;
+  }
+
+  ::-webkit-inner-spin-button {
+    height: auto;
+  }
+
+  ::-webkit-outer-spin-button {
+    height: auto;
+  }
+
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+
+@layer components;
+
+@layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
+
+  .block {
+    display: block;
+  }
+
+  .inline-flex {
+    display: inline-flex;
+  }
+
+  .size-4 {
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+  }
+
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .rounded-ctl {
+    border-radius: var(--radius-ctl);
+  }
+
+  .rounded-full {
+    border-radius: 3.40282e38px;
+  }
+
+  .rounded-lg {
+    border-radius: var(--radius-lg);
+  }
+
+  .rounded-sm {
+    border-radius: var(--radius-sm);
+  }
+
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+
+  .border-gray-300 {
+    border-color: var(--color-gray-300);
+  }
+
+  .border-line {
+    border-color: var(--color-line);
+  }
+
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+
+  .bg-accent-soft {
+    background-color: var(--color-accent-soft);
+  }
+
+  .bg-white {
+    background-color: var(--color-white);
+  }
+
+  .px-3 {
+    padding-inline: calc(var(--spacing) * 3);
+  }
+
+  .px-4 {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+
+  .font-medium {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .text-ink {
+    color: var(--color-ink);
+  }
+
+  .text-ink-soft {
+    color: var(--color-ink-soft);
+  }
+
+  .text-white {
+    color: var(--color-white);
+  }
+
+  .accent-accent {
+    accent-color: var(--color-accent);
+  }
+
+  .shadow {
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .transition-colors {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .transition-transform {
+    transition-property: transform, translate, scale, rotate;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .placeholder\:text-ink-soft::placeholder {
+    color: var(--color-ink-soft);
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-blue-200:hover {
+      background-color: var(--color-blue-200);
+    }
+
+    .hover\:bg-blue-700:hover {
+      background-color: var(--color-blue-700);
+    }
+
+    .hover\:bg-gray-50:hover {
+      background-color: var(--color-gray-50);
+    }
+
+    .hover\:bg-gray-100:hover {
+      background-color: var(--color-gray-100);
+    }
+  }
+
+  .focus-visible\:outline-2:focus-visible {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
+  }
+
+  .focus-visible\:outline-accent:focus-visible {
+    outline-color: var(--color-accent);
+  }
+
+  .disabled\:opacity-50:disabled {
+    opacity: .5;
+  }
+
+  .data-\[state\=checked\]\:translate-x-4[data-state="checked"] {
+    --tw-translate-x: calc(var(--spacing) * 4);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+}
+
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@layer utilities{.hover\:bg-blue-200[data-sim~="hover"]{background-color:var(--color-blue-200)}}
+@layer utilities{.hover\:bg-blue-700[data-sim~="hover"]{background-color:var(--color-blue-700)}}
+@layer utilities{.hover\:bg-gray-50[data-sim~="hover"]{background-color:var(--color-gray-50)}}
+@layer utilities{.hover\:bg-gray-100[data-sim~="hover"]{background-color:var(--color-gray-100)}}
+@layer utilities{.focus-visible\:outline-2[data-sim~="focus-visible"]{outline-style:var(--tw-outline-style);outline-width:2px}}
+@layer utilities{.focus-visible\:outline-accent[data-sim~="focus-visible"]{outline-color:var(--color-accent)}}</script>
+<script>window.__DP={"runId":"vite-router","inventoryHash":"dc51b1e44cb9bb82","lang":"en","fontStack":"system-ui, sans-serif","i18n":{"curation":{"keep":"Keep","merge":"Merge into","leave":"Leave","target":"Choose target","note":"Note","impact":"{occ} places on {screens} screens","impact_visual":"visual change: {v}","sent":"Decisions sent to the agent","copied":"Decisions copied — paste them into your agent","saved":"Saved decisions.json — hand it to your agent","none":"No decisions yet"},"cart":{"summary":"{n} decisions · {cards} cards · {occ} places · {screens} screens","send":"Send decisions","copy":"Copy","save":"Save file","clear":"Clear","warn_m":"That is a lot for one pass; splitting across two runs keeps each review careful.","warn_l":"Too much for one pass. Start with the safe cards; the rest in a second run.","warn_mixed":"Safe and visible changes are mixed; consider sending the safe ones first."},"cards":{"visual":{"none":"invisible","subtle":"barely visible","visible":"visible"},"status":{"proposed":"proposed","accepted":"accepted","edited":"edited","partial":"partial","rejected":"rejected","untouched":"untouched","applied":"applied"}},"chapter":{"declared":"Declared","used":"In use","findings":"Findings","proposal":"Proposal","decisions":"Your decisions","no_change":"No change proposed: {reason}","undecided":"{n} undecided","decided":"{keep} keep · {merge} merge · {leave} leave"},"misc":{"and_more":"and {n} more","px":"px","uses":"uses","screens":"screens","files":"files","search":"Find a value, token or screen","copy":"Copy","expand":"Show all"},"components":{"h":"08 · Components","none":"Not detected in this codebase.","impl":"{n} implementation(s)","impl_native":"raw \u003c{tag}>","looks":"{looks} looks · {uses} uses","catalog_only":"{n} looks appear only on catalog pages","adhoc":"one-off","base":"base","uses":"{n} uses","screens":"{n} screens","states":{"hover":"hover","focusVisible":"focus","disabled":"disabled","checked":"checked","dark":"dark"},"state_yes":"styled","state_no":"not styled","state_ua":"browser default","state_removed":"removed","diff_h":"Differences between looks","unresolved":"{n} class(es) could not be resolved","render_failed":"Real rendering unavailable ({reason}) — classes shown instead","dynamic":"dynamic classes — look unknown","tabs":{"default":"Default","hover":"Hover","focus-visible":"Focus","disabled":"Disabled","checked":"Checked","dark":"Dark"}}}};</script>
+<script>/* design-polish report — client behaviour. No dependencies, works from file:// and from the local server. */
+(function () {
+  'use strict';
+  var DP = window.__DP || {};
+  var T = DP.i18n || {};
+  var runId = DP.runId || 'run';
+  var served = location.protocol === 'http:' || location.protocol === 'https:';
+  var storeKey = 'dp:' + runId;
+  var $ = function (s, el) { return (el || document).querySelector(s); };
+  var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
+  var fmt = function (s, vars) { return String(s || '').replace(/\{(\w+)\}/g, function (_, k) { return vars && vars[k] != null ? vars[k] : ''; }); };
+
+  /* ---------- scrollspy ---------- */
+  var chips = $$('.topnav .chip');
+  var chapters = $$('.chapter[id]');
+  if ('IntersectionObserver' in window && chapters.length) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) chips.forEach(function (c) { c.classList.toggle('active', c.getAttribute('href') === '#' + e.target.id); }); });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    chapters.forEach(function (c) { io.observe(c); });
+  }
+
+  /* ---------- developer info toggle ---------- */
+  var devToggle = $('#devToggle');
+  try { if (localStorage.getItem('dp:dev') === '1') document.body.classList.add('dev'); } catch (e) {}
+  if (devToggle) { devToggle.checked = document.body.classList.contains('dev'); devToggle.addEventListener('change', function () { document.body.classList.toggle('dev', devToggle.checked); try { localStorage.setItem('dp:dev', devToggle.checked ? '1' : '0'); } catch (e) {} }); }
+
+  /* ---------- search ---------- */
+  var search = $('#search');
+  if (search) {
+    var items = $$('[data-search]');
+    search.addEventListener('input', function () {
+      var q = search.value.trim().toLowerCase();
+      items.forEach(function (el) { el.classList.toggle('hidden', !!q && el.getAttribute('data-search').toLowerCase().indexOf(q) < 0); });
+    });
+  }
+
+  /* ---------- specimens ---------- */
+  var liveCssEl = $('#live-css');
+  var liveCss = liveCssEl ? liveCssEl.textContent : '';
+  var baseCss = 'html,body{margin:0;background:transparent}body{padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-height:28px;font-family:' + (DP.fontStack || 'system-ui,sans-serif') + '}body.dp-dark{color-scheme:dark}';
+  function mountSpecimen(stage) {
+    if (stage.getAttribute('data-mounted')) return;
+    stage.setAttribute('data-mounted', '1');
+    var iframe = stage.querySelector('iframe');
+    var html = stage.getAttribute('data-html') || '';
+    var doc = iframe.contentDocument;
+    if (!doc) return;
+    doc.open();
+    doc.write('<!doctype html><html><head><meta charset="utf-8"><style>' + liveCss + '</style><style>' + baseCss + '</style></head><body class="dp-specimen">' + html + '</body></html>');
+    doc.close();
+    var fit = function () { try { var h = doc.body ? doc.body.scrollHeight : 56; iframe.style.height = Math.max(44, Math.min(h + 2, 600)) + 'px'; } catch (e) {} };
+    fit(); setTimeout(fit, 60); setTimeout(fit, 400);
+    applyState(stage, stage.getAttribute('data-state') || 'default');
+  }
+  function applyState(stage, state) {
+    var iframe = stage.querySelector('iframe');
+    var doc = iframe && iframe.contentDocument;
+    if (!doc || !doc.body) return;
+    var roots = $$('[data-dp-root]', doc);
+    var dark = stage.getAttribute('data-dark') === '1';
+    doc.body.classList.toggle('dark', dark);
+    doc.body.classList.toggle('dp-dark', dark);
+    doc.documentElement.classList.toggle('dark', dark);
+    roots.forEach(function (root) {
+      root.removeAttribute('data-sim');
+      if (root.hasAttribute('data-dp-disabled')) { root.removeAttribute('disabled'); root.removeAttribute('data-disabled'); root.removeAttribute('aria-disabled'); }
+      if (root.hasAttribute('data-dp-checked')) { root.setAttribute('data-state', 'unchecked'); root.removeAttribute('checked'); root.setAttribute('aria-checked', 'false'); $$('[data-state]', root).forEach(function (p) { p.setAttribute('data-state', 'unchecked'); }); if (root.type === 'checkbox' || root.type === 'radio') root.checked = false; }
+      if (state === 'hover' || state === 'focus-visible' || state === 'active') root.setAttribute('data-sim', state);
+      if (state === 'disabled') { root.setAttribute('disabled', ''); root.setAttribute('data-disabled', ''); root.setAttribute('aria-disabled', 'true'); root.setAttribute('data-dp-disabled', '1'); }
+      if (state === 'checked') { root.setAttribute('data-state', 'checked'); root.setAttribute('aria-checked', 'true'); root.setAttribute('data-dp-checked', '1'); $$('[data-state]', root).forEach(function (p) { p.setAttribute('data-state', 'checked'); }); if (root.type === 'checkbox' || root.type === 'radio') root.checked = true; }
+    });
+    stage.setAttribute('data-state', state);
+    stage.classList.toggle('dark-on', dark);
+  }
+  var stages = $$('.stage[data-html]');
+  if ('IntersectionObserver' in window) {
+    var sio = new IntersectionObserver(function (entries) { entries.forEach(function (e) { if (e.isIntersecting) { mountSpecimen(e.target); sio.unobserve(e.target); } }); }, { rootMargin: '300px 0px' });
+    stages.forEach(function (s) { sio.observe(s); });
+  } else stages.forEach(mountSpecimen);
+  $$('.spec .tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var spec = b.closest('.spec'); var stage = $('.stage', spec); var state = b.getAttribute('data-state');
+      if (state === 'dark') { stage.setAttribute('data-dark', stage.getAttribute('data-dark') === '1' ? '0' : '1'); b.classList.toggle('on', stage.getAttribute('data-dark') === '1'); mountSpecimen(stage); applyState(stage, stage.getAttribute('data-state') || 'default'); return; }
+      $$('.tabs button', spec).forEach(function (x) { if (x.getAttribute('data-state') !== 'dark') x.classList.toggle('on', x === b); });
+      mountSpecimen(stage); applyState(stage, state);
+    });
+  });
+
+  /* ---------- curation ---------- */
+  var rows = $$('.row[data-id], .sigrow[data-id]');
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch (e) { state = {}; }
+  var draftTimer = null;
+  function save() {
+    try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (e) {}
+    if (served) { clearTimeout(draftTimer); draftTimer = setTimeout(function () { post(buildDecisions(true)).catch(function () {}); }, 800); }
+  }
+  function rowOf(id) { return rows.find(function (r) { return r.getAttribute('data-id') === id; }); }
+  function entryOf(row) {
+    var id = row.getAttribute('data-id');
+    var e = state[id];
+    return e && e.action ? e : null;
+  }
+  function render(row) {
+    var id = row.getAttribute('data-id');
+    var e = state[id] || {};
+    $$('.seg label', row).forEach(function (l) { l.classList.toggle('on', l.getAttribute('data-action') === e.action); });
+    var sel = $('select', row);
+    if (sel) { sel.classList.toggle('hidden', e.action !== 'merge'); if (e.target) sel.value = e.target; }
+    var note = $('input.note', row); if (note) note.classList.toggle('hidden', !e.action);
+    row.classList.toggle('decided', !!e.action);
+    var imp = $('.impact', row);
+    if (imp) {
+      if (e.action === 'merge' && e.target) {
+        var opt = sel && sel.options[sel.selectedIndex];
+        var visual = opt ? opt.getAttribute('data-visual') : row.getAttribute('data-visual');
+        imp.textContent = fmt(T.curation && T.curation.impact, { occ: row.getAttribute('data-occ'), screens: row.getAttribute('data-screens') }) + ' · ' + fmt(T.curation && T.curation.impact_visual, { v: (T.cards && T.cards.visual && T.cards.visual[visual]) || visual });
+        imp.classList.toggle('visible', visual === 'visible');
+      } else imp.textContent = '';
+    }
+  }
+  rows.forEach(function (row) {
+    var id = row.getAttribute('data-id');
+    $$('.seg label', row).forEach(function (l) {
+      l.addEventListener('click', function () {
+        var action = l.getAttribute('data-action');
+        var cur = state[id] || {};
+        if (cur.action === action) { delete state[id]; } else {
+          cur.action = action;
+          if (action === 'merge' && !cur.target) cur.target = row.getAttribute('data-target') || ($('select', row) && $('select', row).value) || null;
+          if (action !== 'merge') delete cur.target;
+          cur.card = row.getAttribute('data-card') || undefined;
+          state[id] = cur;
+        }
+        render(row); refreshCart(); save();
+      });
+    });
+    var sel = $('select', row);
+    if (sel) sel.addEventListener('change', function () { state[id] = state[id] || { action: 'merge' }; state[id].target = sel.value; render(row); refreshCart(); save(); });
+    var note = $('input.note', row);
+    if (note) note.addEventListener('input', function () { if (state[id]) { state[id].note = note.value; save(); } });
+    render(row);
+  });
+  // cards: add recommendation
+  $$('.card[data-card]').forEach(function (card) {
+    var btn = $('.add', card);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var entries = JSON.parse(card.getAttribute('data-entries') || '[]');
+      entries.forEach(function (en) {
+        var row = rowOf(en.source);
+        if (!row) return;
+        state[en.source] = { action: en.action === 'delete' ? 'delete' : (en.action === 'keep' ? 'keep' : 'merge'), target: en.target || undefined, card: card.getAttribute('data-card') };
+        render(row);
+      });
+      refreshCart(); save();
+    });
+  });
+  function cardStatus(card) {
+    var entries = JSON.parse(card.getAttribute('data-entries') || '[]');
+    if (!entries.length) return 'untouched';
+    var decided = 0, match = 0, leave = 0;
+    entries.forEach(function (en) { var e = state[en.source]; if (!e) return; decided++; if (e.action === 'leave') leave++; else if ((e.action === 'merge' && e.target === en.target) || e.action === en.action || (en.action === 'promote' && e.action === 'merge' && e.target === en.target)) match++; });
+    if (!decided) return 'untouched';
+    if (leave === entries.length) return 'rejected';
+    if (decided < entries.length) return 'partial';
+    return match === entries.length ? 'accepted' : 'edited';
+  }
+  function buildDecisions(draft) {
+    var entries = Object.keys(state).filter(function (id) { return state[id] && state[id].action; }).map(function (id) { var e = state[id]; var o = { id: id, action: e.action }; if (e.target) o.target = e.target; if (e.note) o.note = e.note; if (e.card) o.card = e.card; return o; });
+    var cards = $$('.card[data-card]').map(function (c) { return { id: c.getAttribute('data-card'), status: cardStatus(c) }; });
+    return { schema: 'design-polish.decisions/1', run_id: runId, inventory_hash: DP.inventoryHash || null, decided_at: new Date().toISOString(), via: served ? 'serve' : 'clipboard', draft: !!draft, entries: entries, cards: cards };
+  }
+  var cart = $('#cart');
+  var GRADE_S = 30, GRADE_M = 100; // same thresholds as the proposal: one review stays careful up to ~30 places
+  function refreshCart() {
+    if (!cart) return;
+    var n = 0, occ = 0, screens = {}, cardsSet = {}, visible = 0, safe = 0;
+    rows.forEach(function (row) {
+      var e = entryOf(row); if (!e) return;
+      n++;
+      if (e.action === 'merge' || e.action === 'delete') {
+        occ += Number(row.getAttribute('data-occ') || 0);
+        (row.getAttribute('data-screen-ids') || '').split(' ').filter(Boolean).forEach(function (s) { screens[s] = 1; });
+        var sel = $('select', row); var opt = sel && sel.options[sel.selectedIndex]; var v = opt ? opt.getAttribute('data-visual') : row.getAttribute('data-visual');
+        if (v === 'visible') visible++; else safe++;
+      }
+      if (e.card) cardsSet[e.card] = 1;
+    });
+    $$('.card[data-card]').forEach(function (c) { var st = cardStatus(c); var el = $('.status', c); if (el) { el.textContent = (T.cards && T.cards.status && T.cards.status[st]) || st; el.className = 'pill status ' + (st === 'accepted' ? 'ok' : st === 'untouched' ? '' : 'warn'); } if (st !== 'untouched') cardsSet[c.getAttribute('data-card')] = 1; });
+    cart.classList.toggle('show', n > 0);
+    $('.sum', cart).textContent = fmt(T.cart && T.cart.summary, { n: n, cards: Object.keys(cardsSet).length, occ: occ, screens: Object.keys(screens).length });
+    var warn = $('.warn', cart); var msg = '';
+    if (occ > GRADE_M) msg = T.cart.warn_l; else if (occ > GRADE_S) msg = T.cart.warn_m;
+    if (visible && safe) msg += (msg ? ' ' : '') + T.cart.warn_mixed;
+    warn.textContent = msg; warn.classList.toggle('hidden', !msg);
+    $$('.chapter').forEach(function (ch) { var st = $('.decisions-status', ch); if (!st) return; var ids = $$('.row[data-id], .sigrow[data-id]', ch); var k = 0, m = 0, l = 0; ids.forEach(function (r) { var e = entryOf(r); if (!e) return; if (e.action === 'keep') k++; else if (e.action === 'leave') l++; else m++; }); st.textContent = fmt(T.chapter.decided, { keep: k, merge: m, leave: l }) + ' · ' + fmt(T.chapter.undecided, { n: ids.length - k - m - l }); });
+  }
+  function toast(msg) { var t = $('#toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); setTimeout(function () { t.classList.remove('show'); }, 2400); }
+  function post(decisions) {
+    var base = location.pathname.replace(/[^/]*$/, '');
+    return fetch(base + 'api/decisions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(decisions) }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+    return new Promise(function (res, rej) { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); res(); } catch (e) { rej(e); } document.body.removeChild(ta); });
+  }
+  if (cart) {
+    $('.send', cart).addEventListener('click', function () { var d = buildDecisions(false); if (served) post(d).then(function () { toast(T.curation.sent); }).catch(function () { copyText('design-polish:decisions v1 ' + JSON.stringify(d)).then(function () { toast(T.curation.copied); }); }); else copyText('design-polish:decisions v1 ' + JSON.stringify(d)).then(function () { toast(T.curation.copied); }); });
+    $('.copy', cart).addEventListener('click', function () { copyText('design-polish:decisions v1 ' + JSON.stringify(buildDecisions(false))).then(function () { toast(T.curation.copied); }); });
+    $('.save', cart).addEventListener('click', function () { var blob = new Blob([JSON.stringify(buildDecisions(false), null, 2)], { type: 'application/json' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'decisions.json'; a.click(); toast(T.curation.saved); });
+    $('.clear', cart).addEventListener('click', function () { state = {}; rows.forEach(render); refreshCart(); save(); });
+    if (!served) { $('.send', cart).classList.add('hidden'); }
+  }
+  refreshCart();
+
+  /* ---------- value copy buttons ---------- */
+  $$('[data-copy]').forEach(function (b) { b.addEventListener('click', function () { copyText(b.getAttribute('data-copy')).then(function () { toast(T.misc.copy + ' ✓'); }); }); });
+
+  /* ---------- served: rehydrate draft, poll for reload ---------- */
+  if (served) {
+    var base = location.pathname.replace(/[^/]*$/, '');
+    fetch(base + 'api/state').then(function (r) { return r.ok ? r.json() : null; }).then(function (st) {
+      if (st && st.decisions && st.decisions.entries && !Object.keys(state).length) { st.decisions.entries.forEach(function (en) { state[en.id] = { action: en.action, target: en.target, note: en.note, card: en.card }; }); rows.forEach(render); refreshCart(); }
+      if (st && st.version != null) { var v = st.version; setInterval(function () { fetch(base + 'api/version').then(function (r) { return r.json(); }).then(function (j) { if (j.version !== v) { try { sessionStorage.setItem('dp:scroll', String(window.scrollY)); } catch (e) {} location.reload(); } }).catch(function () {}); }, 3000); }
+    }).catch(function () {});
+    try { var y = sessionStorage.getItem('dp:scroll'); if (y) { sessionStorage.removeItem('dp:scroll'); window.scrollTo(0, Number(y)); } } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>

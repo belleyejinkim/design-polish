@@ -49,10 +49,11 @@ function displayNameOf(index) {
   return { display: null, basis: null };
 }
 
-function discover(indexes, files) {
+function discover(indexes, files, opts = {}) {
   const routes = [];
   let router = 'none';
   const routeFiles = new Map(); // rel -> route
+  const nextProject = opts.next !== false; // `pages/` is a screen only in a Next.js project
   for (const rel of files) {
     const appMatch = APP_FILE_RE.exec(rel);
     if (appMatch) {
@@ -67,7 +68,7 @@ function discover(indexes, files) {
       const route = { id: `route:${idPath}${kind === 'layout' ? '#layout' : ''}`, path: rp.path, kind: kind === 'page' ? 'page' : 'layout', file: rel, group: rp.group, display: display || (kind === 'layout' ? `${rp.group || rp.path} layout` : null), displayBasis: basis, catalogLike: CATALOG_RE.test(rp.path) };
       routes.push(route);
       routeFiles.set(rel, route);
-    } else if (router !== 'next-app' && PAGES_FILE_RE.test(rel)) {
+    } else if (nextProject && router !== 'next-app' && PAGES_FILE_RE.test(rel)) {
       const p = pagesRoutePath(rel);
       if (!p) continue;
       router = 'next-pages';
@@ -78,26 +79,98 @@ function discover(indexes, files) {
     }
   }
   if (router === 'none') {
-    // React Router best effort: <Route path="/x" element={<Comp/>} /> or createBrowserRouter([{ path, element }])
-    for (const index of indexes.values()) {
-      for (const j of index.jsx) {
-        if (j.tag !== 'Route' || !j.attrs.path || j.attrs.path.kind !== 'string') continue;
-        const el = j.attrs.element;
-        let targetRel = index.rel;
-        if (el && el.node && /^<\s*([A-Z][\w.]*)/.test(el.text)) {
-          const name = RegExp.$1.split('.')[0];
-          const imp = index.imports.find((i) => i.local === name);
-          if (imp && index.project) { const r = index.project.resolve(index.rel, imp.spec); if (r.rel) targetRel = r.rel; }
-        }
-        router = 'react-router';
-        const p = j.attrs.path.value.startsWith('/') ? j.attrs.path.value : '/' + j.attrs.path.value;
-        const route = { id: `route:${p}`, path: p, kind: 'page', file: targetRel, group: null, display: null, displayBasis: null, catalogLike: CATALOG_RE.test(p) };
-        if (!routes.some((r) => r.id === route.id)) { routes.push(route); routeFiles.set(targetRel, route); }
+    // React Router: createBrowserRouter([{ path, element, children }]) objects and nested <Route> JSX.
+    const found = reactRouterRoutes(indexes);
+    if (found.length) {
+      router = 'react-router';
+      for (const r of found) {
+        const idx = indexes.get(r.file);
+        const { display, basis } = idx ? displayNameOf(idx) : { display: null, basis: null };
+        const route = { id: `route:${r.path}${r.kind === 'layout' ? '#layout' : ''}`, path: r.path, kind: r.kind, file: r.file, group: null, display: display || (r.kind === 'layout' ? `${r.path} layout` : null), displayBasis: basis, catalogLike: CATALOG_RE.test(r.path), children: r.children };
+        if (!routes.some((x) => x.id === route.id)) { routes.push(route); if (!routeFiles.has(r.file)) routeFiles.set(r.file, route); }
       }
     }
   }
   routes.sort((a, b) => (a.path === b.path ? (a.kind < b.kind ? -1 : 1) : a.path < b.path ? -1 : 1));
   return { router, routes, routeFiles };
+}
+
+const ROUTER_CREATORS = new Set(['createBrowserRouter', 'createHashRouter', 'createMemoryRouter', 'createStaticRouter']);
+
+function joinPath(parent, child) {
+  if (child == null) return parent || '/';
+  if (child.startsWith('/')) return child.replace(/\/+$/, '') || '/';
+  const base = (parent || '/').replace(/\/+$/, '');
+  return (base + '/' + child).replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
+}
+
+/**
+ * Walks every file for React Router route definitions and returns
+ * [{ path, kind: 'page'|'layout', file, children: [route ids] }] with component files resolved through imports.
+ */
+function reactRouterRoutes(indexes) {
+  const out = [];
+  const fileOfComponent = (index, name) => {
+    if (!name) return null;
+    const local = name.split('.')[0];
+    const imp = index.imports.find((i) => i.local === local);
+    if (imp && index.project) { const r = index.project.resolve(index.rel, imp.spec); if (r && r.rel) return r.rel; }
+    if (index.components.some((c) => c.name === local)) return index.rel;
+    return null;
+  };
+  const componentOfJsxText = (text) => { const m = /^<\s*([A-Z][\w.]*)/.exec(String(text || '').trim()); return m ? m[1] : null; };
+  const push = (entry) => { if (!out.some((o) => o.path === entry.path && o.kind === entry.kind)) out.push(entry); return entry; };
+  for (const index of indexes.values()) {
+    const { ts, sf } = index;
+    if (!ts || !sf) continue;
+    // object form
+    const visit = (node) => {
+      if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && ROUTER_CREATORS.has(node.expression.text) && node.arguments[0] && ts.isArrayLiteralExpression(node.arguments[0])) walkArray(node.arguments[0], '/');
+      ts.forEachChild(node, visit);
+    };
+    const walkArray = (arr, parentPath) => {
+      const ids = [];
+      for (const el of arr.elements) {
+        if (!ts.isObjectLiteralExpression(el)) continue;
+        const props = new Map();
+        for (const p of el.properties) if (ts.isPropertyAssignment(p) && (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name))) props.set(p.name.text, p.initializer);
+        const pathNode = props.get('path');
+        const pathStr = pathNode && (ts.isStringLiteral(pathNode) || ts.isNoSubstitutionTemplateLiteral(pathNode)) ? pathNode.text : null;
+        const isIndex = props.has('index') && props.get('index').kind === ts.SyntaxKind.TrueKeyword;
+        const full = isIndex ? (parentPath || '/') : joinPath(parentPath, pathStr);
+        const elNode = props.get('element') || props.get('Component');
+        const compName = elNode ? (ts.isJsxElement(elNode) || ts.isJsxSelfClosingElement(elNode) ? componentOfJsxText(elNode.getText(sf)) : ts.isIdentifier(elNode) ? elNode.text : null) : null;
+        const file = fileOfComponent(index, compName);
+        const children = props.get('children');
+        if (children && ts.isArrayLiteralExpression(children)) {
+          const kids = walkArray(children, full);
+          if (file) push({ path: full, kind: 'layout', file, children: kids });
+          ids.push(...kids);
+        } else if (file) { const r = push({ path: full, kind: 'page', file, children: [] }); ids.push(`route:${r.path}`); }
+      }
+      return ids;
+    };
+    visit(sf);
+    // JSX form: <Route path="/" element={<Shell/>}><Route index element={<Home/>}/></Route>
+    const walkRouteJsx = (j, parentPath) => {
+      const ids = [];
+      for (const child of j.children || []) {
+        if (child.tag !== 'Route') { ids.push(...walkRouteJsx(child, parentPath)); continue; }
+        const pathAttr = child.attrs.path; const pathStr = pathAttr && pathAttr.kind === 'string' ? pathAttr.value : null;
+        const isIndex = !!child.attrs.index;
+        const full = isIndex ? (parentPath || '/') : joinPath(parentPath, pathStr);
+        const el = child.attrs.element || child.attrs.Component;
+        const compName = el ? (el.kind === 'string' ? el.value : componentOfJsxText(el.text) || (el.text || '').trim()) : null;
+        const file = fileOfComponent(index, compName);
+        const kids = walkRouteJsx(child, full);
+        if (kids.length) { if (file) push({ path: full, kind: 'layout', file, children: kids }); ids.push(...kids); }
+        else if (file) { const r = push({ path: full, kind: 'page', file, children: [] }); ids.push(`route:${r.path}`); }
+      }
+      return ids;
+    };
+    for (const j of index.jsx) if ((j.tag === 'Routes' || j.tag === 'BrowserRouter' || j.tag === 'HashRouter' || j.tag === 'Router') && j.children && j.children.length) walkRouteJsx(j, '/');
+  }
+  return out;
 }
 
 /** For every file, the set of routes that (transitively) import it. */
@@ -122,6 +195,7 @@ function attribute(indexes, routeFiles, resolve) {
   const layoutChildren = new Map();
   for (const [file, route] of routeFiles) {
     if (route.kind !== 'layout') continue;
+    if (route.children && route.children.length) { layoutChildren.set(route.id, route.children); continue; } // React Router: explicit nesting
     const dir = path.posix.dirname(file) + '/';
     const kids = [...routeFiles.values()].filter((r) => r.kind === 'page' && (r.file.startsWith(dir) || path.posix.dirname(r.file) + '/' === dir)).map((r) => r.id);
     layoutChildren.set(route.id, kids);

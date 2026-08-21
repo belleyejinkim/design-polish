@@ -163,6 +163,8 @@ function staticValue(node, ctx) {
 /** Evaluate an object literal of string values (const map) into { key: ClassSet }. */
 function objectModel(node, ctx) {
   const { ts, sf } = ctx;
+  // `{...} as const`, `{...} satisfies Record<…>`, parentheses: the literal is inside
+  while (node && (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isNonNullExpression(node) || (ts.isSatisfiesExpression && ts.isSatisfiesExpression(node)) || ts.isTypeAssertionExpression?.(node))) node = node.expression;
   if (!node || !ts.isObjectLiteralExpression(node)) return null;
   const entries = new Map();
   for (const p of node.properties) {

@@ -200,7 +200,11 @@ function expandUsage(jsxInfo, ctx) {
   if (depth >= MAX_WRAPPER_DEPTH) return effective({ tag: null, attrs: staticAttrs, classSet: ownClasses, style, chain: [{ name: component.name, file: defIndex.rel }], unresolvedReason: 'depth', depth });
 
   // Build the env the definition sees: defaults, then what the caller passed.
-  const env = { ...component.params.defaults };
+  // Every named prop exists in the env (undefined when the caller did not pass it), so `className ?? ""` or
+  // `variant && …` resolve to "nothing" instead of "unknown".
+  const env = {};
+  for (const name of component.params.names || []) env[name] = undefined;
+  Object.assign(env, component.params.defaults);
   for (const [k, v] of Object.entries(attrs)) env[k] = v;
   if (!('className' in env) && ownClasses.tokens.length === 0) env.className = undefined;
   // Props the definition does not name fall through `{...props}` onto whichever element spreads them.
