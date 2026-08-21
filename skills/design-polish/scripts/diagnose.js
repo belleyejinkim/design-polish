@@ -112,7 +112,7 @@ function diagnose(inv, T) {
         basis: `ad-hoc looks ≥ ${T.sigSprawl.warn} warn / ≥ ${T.sigSprawl.severe} severe`,
       }));
     }
-    const impls = t.implementations.filter((i) => (i.count > 0 || i.usages > 0) && i.kind !== 'wrapper');
+    const impls = t.implementations.filter((i) => i.count > 0 && i.kind !== 'wrapper');
     if (impls.length >= 2) {
       const subjects = impls.map((i) => i.id);
       const screens = [...new Set(impls.flatMap((i) => i.routes || []))];

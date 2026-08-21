@@ -31,10 +31,10 @@ In Claude Code / Codex / Cursor, say "polish my design" to diagnose, choose and 
   }
   if (cmd === 'check') process.exit(run('baseline.js', argv.slice(1)));
   if (cmd && STEPS[cmd] && cmd !== 'check') process.exit(run(STEPS[cmd], argv.slice(1)));
-  // default: inventory pipeline
-  const target = path.resolve(cmd === 'inventory' ? (argv[1] || '.') : (argv[0] || '.'));
-  const rest = argv.filter((a) => a.startsWith('-'));
-  process.exit(run('inventory.js', [target, ...rest]));
+  // default: inventory pipeline — everything after the optional verb goes through untouched
+  const rest = cmd === 'inventory' ? argv.slice(1) : argv;
+  const hasPath = rest.some((a, i) => !a.startsWith('-') && !(i > 0 && /^--(lang|out|css|project|src|exclude|port)$/.test(rest[i - 1])));
+  process.exit(run('inventory.js', hasPath ? rest : ['.', ...rest]));
 }
 
 main();

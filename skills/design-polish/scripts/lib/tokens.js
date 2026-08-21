@@ -56,7 +56,7 @@ function resolveValue(value, theme, mode) {
 }
 
 function newValueEntry(axis, id, value) {
-  return { id, axis, value, normalized: null, count: 0, hardcodedCount: 0, files: new Set(), routes: new Set(), sites: [], where: new Set(), roles: {}, viaTokens: new Set() };
+  return { id, axis, value, normalized: null, count: 0, hardcodedCount: 0, whereCounts: {}, files: new Set(), routes: new Set(), sites: [], where: new Set(), roles: {}, viaTokens: new Set() };
 }
 
 /** Declared tokens with alias resolution: `--color-primary: var(--primary)` is one logical token named --color-primary. */
@@ -177,6 +177,7 @@ function inventory(input) {
     const role = ROLE_OF_PROP[prop] || prop;
     e.roles[role] = (e.roles[role] || 0) + count;
     e.count += count;
+    e.whereCounts[where] = (e.whereCounts[where] || 0) + count;
     if (HARD_WHERE.has(where)) e.hardcodedCount = (e.hardcodedCount || 0) + count;
     e.files.add(site.file);
     for (const r of site.routes || []) e.routes.add(r);
