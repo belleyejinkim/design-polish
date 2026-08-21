@@ -73,6 +73,8 @@ function collect(root, opts = {}) {
   let rels = listWithGit(root);
   const listSource = rels ? 'git' : 'walk';
   if (!rels) rels = walk(root);
+  // Our own output never counts as part of the project (it would make every re-scan differ).
+  rels = rels.filter((r) => !r.startsWith('.design-polish/'));
   const extraExclude = new Set(opts.excludeDirs || []);
   const skipped = { 'excluded-dir': [], test: [], generated: [], 'too-large': [], 'not-ui': 0, unreadable: [] };
   const files = [];

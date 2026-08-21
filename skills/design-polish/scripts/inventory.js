@@ -29,7 +29,8 @@ async function inventory(rootArg, opts = {}) {
   const root = path.resolve(rootArg);
   const t0 = Date.now();
   const log = (m) => { if (!opts.quiet) process.stderr.write(m + '\n'); };
-  const base = ensureOutputDir(root);
+  // With --out the run lives elsewhere and the target repo is left untouched.
+  const base = opts.out ? null : ensureOutputDir(root);
   const runId = runIdNow();
   const runDir = opts.out || path.join(base, 'runs', runId);
   fs.mkdirSync(runDir, { recursive: true });
@@ -50,7 +51,7 @@ async function inventory(rootArg, opts = {}) {
   const reportPath = path.join(runDir, 'report.html');
   fs.writeFileSync(reportPath, html);
   fs.writeFileSync(path.join(runDir, 'chat-summary.md'), chat + `\n→ ${reportPath}\n`);
-  fs.writeFileSync(path.join(base, 'latest.json'), JSON.stringify({ run: path.basename(runDir), dir: runDir, generatedAt: inv.meta.generatedAt }, null, 2));
+  if (base) fs.writeFileSync(path.join(base, 'latest.json'), JSON.stringify({ run: path.basename(runDir), dir: runDir, generatedAt: inv.meta.generatedAt }, null, 2));
   fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify({ schema: 'design-polish.manifest/1', runId: path.basename(runDir), mode: opts.mode || 'inventory', baselineRun: opts.baseline || null, scannerVersion: inv.meta.scannerVersion, generatedAt: inv.meta.generatedAt, root, lang: opts.lang || 'en', model: false }, null, 2));
   let url = null;
   if (opts.serve) {
