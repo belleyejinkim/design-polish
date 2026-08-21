@@ -1,0 +1,16 @@
+{
+  "_comment": "Every threshold the diagnosis uses, with its reason. Edit here, not in code.",
+  "nearDupDeltaE": { "value": 2.0, "why": "CIEDE2000 2.0: distinguishable only side by side. 1.0 is the just-noticeable difference." },
+  "twinDeltaE": { "value": 1.0, "why": "Below the just-noticeable difference the two colors are the same color." },
+  "sigSprawl": { "warn": 3, "severe": 6, "why": "Ad-hoc looks per component type: 3 already means the base component is being bypassed; 6 means there is no base." },
+  "achromaticSprawl": { "warn": 8, "severe": 15, "why": "A deliberate gray ramp has 5–8 steps; beyond 15 nobody chose them." },
+  "hardcodeBands": { "ok": 0.85, "partial": 0.5, "decorative": 0.2, "why": "Share of occurrences that go through a token: ≥85% working system, 50–85% partial, 20–50% decorative, <20% none (v1 bands)." },
+  "hardcodeMinOccurrences": { "value": 10, "why": "Below 10 occurrences a ratio is noise." },
+  "spacingSteps": { "value": [8, 4, 2], "fit": 0.75, "why": "Try 8, then 4, then 2; a step is the scale when 75% of distinct values land on it." },
+  "siblingMinDiffPx": { "value": 2, "why": "Under 2px is sub-pixel on most displays." },
+  "siblingHighGroups": { "value": 5, "why": "Five mismatched rows is a pattern, not an accident." },
+  "ratioTolerance": { "value": 0.05, "why": "Radius/height ratio within 0.05 of the project's own modal ratio reads as the same shape." },
+  "repeatInlineMin": { "value": 3, "why": "Three identical raw elements is the point where a component would have paid off." },
+  "screensHigh": { "value": 3, "why": "A defect on three or more screens is high severity regardless of count." },
+  "severityWeight": { "high": 3, "medium": 2, "low": 1, "info": 0.5, "why": "Priority = weight × screens ÷ occurrences (cost proxy); used for ordering only." }
+}

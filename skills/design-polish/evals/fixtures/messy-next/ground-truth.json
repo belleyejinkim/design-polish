@@ -1,0 +1,3099 @@
+{
+  "fixture": "messy-next",
+  "schemaVersion": 1,
+  "generatedBy": "hand-derived by construction; every number cross-checked against the source files (see GROUND-TRUTH.md)",
+  "stack": {
+    "framework": "next@16 app-router",
+    "react": "19",
+    "typescript": true,
+    "tailwind": "v4 (@import \"tailwindcss\", @theme inline)",
+    "cssEntry": "src/app/globals.css",
+    "shadcn": {
+      "marker": "components.json",
+      "style": "new-york",
+      "cva": true,
+      "radix": [
+        "@radix-ui/react-checkbox",
+        "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-switch",
+        "@radix-ui/react-slot"
+      ]
+    },
+    "aliases": {
+      "@/*": "./src/*"
+    },
+    "cnHelper": "src/lib/utils.ts#cn = twMerge(clsx(...))",
+    "darkVariant": "@custom-variant dark (&:is(.dark *))",
+    "radiusBase": "--radius: 0.625rem (10px)"
+  },
+  "definitions": {
+    "scannedFiles": "Extensions .tsx/.jsx/.ts/.js/.css under the fixture, excluding node_modules, __tests__/ and *.test.*. The catalog page src/app/design-system/page.tsx IS scanned but its counts go to the `catalog` bucket and are excluded from `counts.total`.",
+    "occurrence": "A JSX element that is a raw HTML control (button, input[type=checkbox|radio|text...], select, textarea) or a usage of a component whose resolved root is one. Render roots inside component definitions are implementations, not occurrences. Elements inside .map() count once. Layout elements count once. Chip's × button counts as a button occurrence per Chip usage. A DropdownMenu (Trigger+Content) is one dropdown-menu occurrence; its asChild trigger Button is additionally a button occurrence (decision D1).",
+    "signature": "Identity = resolved CSS declaration set after expanding cva base+variant+size (+ defaultVariants) and merging className with tailwind-merge semantics, ignoring placement-only classes: m-*, mt-*, mb-*, ml-*, mr-*, mx-*, my-*, w-*, max-w-*, min-w-*, flex-1, shrink-0, absolute, relative, self-*, order-*, col-span-*, z-*.",
+    "types": [
+      "button",
+      "checkbox",
+      "dropdown-menu",
+      "radio",
+      "select",
+      "textarea",
+      "text-field",
+      "toggle",
+      "badge",
+      "tag",
+      "chip"
+    ]
+  },
+  "files": {
+    "scanned": [
+      "next.config.ts",
+      "src/lib/utils.ts",
+      "src/app/globals.css",
+      "src/app/layout.tsx",
+      "src/app/page.tsx",
+      "src/app/(dashboard)/layout.tsx",
+      "src/app/(dashboard)/dashboard/page.tsx",
+      "src/app/(dashboard)/settings/page.tsx",
+      "src/app/(dashboard)/orders/[id]/page.tsx",
+      "src/app/design-system/page.tsx",
+      "src/components/ui/badge.tsx",
+      "src/components/ui/button.tsx",
+      "src/components/ui/checkbox.tsx",
+      "src/components/ui/dropdown-menu.tsx",
+      "src/components/ui/input.tsx",
+      "src/components/ui/radio.tsx",
+      "src/components/ui/select-native.tsx",
+      "src/components/ui/switch.tsx",
+      "src/components/ui/textarea.tsx",
+      "src/components/shared/button-presets.tsx",
+      "src/components/shared/card.tsx",
+      "src/components/shared/chart-legend.tsx",
+      "src/components/shared/chip.tsx",
+      "src/components/shared/dynamic-button.tsx",
+      "src/components/shared/legacy-checkbox.tsx",
+      "src/components/shared/toolbar.tsx",
+      "src/components/shared/unused/old-button.tsx",
+      "src/components/forms/settings-form.tsx"
+    ],
+    "scannedCount": 29,
+    "scannedCatalog": [
+      "src/app/design-system/page.tsx"
+    ],
+    "excluded": [
+      {
+        "file": "src/components/shared/__tests__/button.test.tsx",
+        "reason": "matches __tests__/ and *.test.*"
+      }
+    ],
+    "notScanned": [
+      {
+        "file": "postcss.config.mjs",
+        "reason": ".mjs is not in the scanned extension list"
+      },
+      {
+        "file": "package.json",
+        "reason": "not a source/css file"
+      },
+      {
+        "file": "tsconfig.json",
+        "reason": "not a source/css file"
+      },
+      {
+        "file": "components.json",
+        "reason": "not a source/css file (shadcn marker)"
+      },
+      {
+        "file": "ground-truth.json",
+        "reason": "fixture metadata"
+      },
+      {
+        "file": "GROUND-TRUTH.md",
+        "reason": "fixture metadata"
+      }
+    ]
+  },
+  "routes": {
+    "router": "next-app",
+    "routeGroups": [
+      "(dashboard)"
+    ],
+    "list": [
+      {
+        "path": "/",
+        "page": "src/app/page.tsx",
+        "title": "Home",
+        "layouts": [
+          "src/app/layout.tsx"
+        ],
+        "dynamic": false,
+        "catalog": false
+      },
+      {
+        "path": "/dashboard",
+        "page": "src/app/(dashboard)/dashboard/page.tsx",
+        "title": "Dashboard",
+        "layouts": [
+          "src/app/layout.tsx",
+          "src/app/(dashboard)/layout.tsx"
+        ],
+        "group": "(dashboard)",
+        "dynamic": false,
+        "catalog": false
+      },
+      {
+        "path": "/settings",
+        "page": "src/app/(dashboard)/settings/page.tsx",
+        "title": "Settings",
+        "layouts": [
+          "src/app/layout.tsx",
+          "src/app/(dashboard)/layout.tsx"
+        ],
+        "group": "(dashboard)",
+        "dynamic": false,
+        "catalog": false
+      },
+      {
+        "path": "/orders/[id]",
+        "page": "src/app/(dashboard)/orders/[id]/page.tsx",
+        "title": "Order",
+        "layouts": [
+          "src/app/layout.tsx",
+          "src/app/(dashboard)/layout.tsx"
+        ],
+        "group": "(dashboard)",
+        "dynamic": true,
+        "params": [
+          "id"
+        ],
+        "catalog": false
+      },
+      {
+        "path": "/design-system",
+        "page": "src/app/design-system/page.tsx",
+        "title": "Design System",
+        "layouts": [
+          "src/app/layout.tsx"
+        ],
+        "dynamic": false,
+        "catalog": true
+      }
+    ],
+    "rootMetadataTitle": "Messy",
+    "note": "The (dashboard) group segment is not part of the URL. Titles come from each page's `export const metadata = { title }`.",
+    "occurrencesVisiblePerRoute": {
+      "/": [
+        "occ-01",
+        "occ-02",
+        "occ-03",
+        "occ-04",
+        "occ-21",
+        "occ-22",
+        "occ-24"
+      ],
+      "/dashboard": [
+        "occ-01",
+        "occ-05",
+        "occ-06",
+        "occ-07",
+        "occ-08",
+        "occ-09",
+        "occ-10",
+        "occ-38",
+        "occ-11",
+        "occ-12",
+        "occ-13",
+        "occ-14",
+        "occ-25",
+        "occ-26",
+        "occ-27"
+      ],
+      "/settings": [
+        "occ-01",
+        "occ-05",
+        "occ-06",
+        "occ-07",
+        "occ-08",
+        "occ-09",
+        "occ-10",
+        "occ-38",
+        "occ-15",
+        "occ-16",
+        "occ-17",
+        "occ-28",
+        "occ-29",
+        "occ-30",
+        "occ-31",
+        "occ-32",
+        "occ-33",
+        "occ-34",
+        "occ-35",
+        "occ-36",
+        "occ-37"
+      ],
+      "/orders/[id]": [
+        "occ-01",
+        "occ-05",
+        "occ-06",
+        "occ-07",
+        "occ-08",
+        "occ-09",
+        "occ-10",
+        "occ-38",
+        "occ-18",
+        "occ-19",
+        "occ-20",
+        "occ-23"
+      ],
+      "/design-system": [
+        "occ-01",
+        "cat-01..cat-28"
+      ]
+    }
+  },
+  "counts": {
+    "total": {
+      "occurrences": 38,
+      "signatures": 24,
+      "byType": {
+        "button": {
+          "occurrences": 20,
+          "signatures": 11,
+          "signatureLabels": [
+            "RAW-B",
+            "B1",
+            "B-primary",
+            "B-ghost",
+            "B-outline-sm",
+            "RAW-A",
+            "B-sm",
+            "RAW-C",
+            "CHIP-X",
+            "B-destructive",
+            "B-dangerlink"
+          ],
+          "resolvedOccurrences": 19,
+          "unresolvedOccurrences": 1
+        },
+        "checkbox": {
+          "occurrences": 3,
+          "signatures": 2,
+          "signatureLabels": [
+            "CB-legacy",
+            "CB-radix"
+          ]
+        },
+        "dropdown-menu": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "DDM"
+          ]
+        },
+        "radio": {
+          "occurrences": 3,
+          "signatures": 1,
+          "signatureLabels": [
+            "RADIO"
+          ]
+        },
+        "select": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "SELECT-native"
+          ]
+        },
+        "textarea": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "TEXTAREA"
+          ]
+        },
+        "text-field": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "INPUT"
+          ]
+        },
+        "toggle": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "SWITCH"
+          ]
+        },
+        "badge": {
+          "occurrences": 3,
+          "signatures": 3,
+          "signatureLabels": [
+            "BADGE-default",
+            "BADGE-secondary",
+            "BADGE-destructive"
+          ]
+        },
+        "tag": {
+          "occurrences": 3,
+          "signatures": 1,
+          "signatureLabels": [
+            "TAG"
+          ]
+        },
+        "chip": {
+          "occurrences": 1,
+          "signatures": 1,
+          "signatureLabels": [
+            "CHIP"
+          ]
+        }
+      }
+    },
+    "catalog": {
+      "occurrences": 28,
+      "signatures": 28,
+      "byType": {
+        "button": {
+          "occurrences": 24,
+          "signatures": 24,
+          "signatureLabels": [
+            "B:default/default",
+            "B:default/sm",
+            "B:default/lg",
+            "B:default/icon",
+            "B:destructive/default",
+            "B:destructive/sm",
+            "B:destructive/lg",
+            "B:destructive/icon",
+            "B:outline/default",
+            "B:outline/sm",
+            "B:outline/lg",
+            "B:outline/icon",
+            "B:secondary/default",
+            "B:secondary/sm",
+            "B:secondary/lg",
+            "B:secondary/icon",
+            "B:ghost/default",
+            "B:ghost/sm",
+            "B:ghost/lg",
+            "B:ghost/icon",
+            "B:link/default",
+            "B:link/sm",
+            "B:link/lg",
+            "B:link/icon"
+          ]
+        },
+        "checkbox": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "dropdown-menu": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "radio": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "select": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "textarea": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "text-field": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "toggle": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "badge": {
+          "occurrences": 4,
+          "signatures": 4,
+          "signatureLabels": [
+            "BADGE-default",
+            "BADGE-secondary",
+            "BADGE-destructive",
+            "BADGE-outline"
+          ]
+        },
+        "tag": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        },
+        "chip": {
+          "occurrences": 0,
+          "signatures": 0,
+          "signatureLabels": []
+        }
+      },
+      "sharedWithMainSignatures": [
+        "B1",
+        "B-sm",
+        "B-destructive",
+        "B-outline-sm",
+        "B-ghost",
+        "BADGE-default",
+        "BADGE-secondary",
+        "BADGE-destructive"
+      ],
+      "signaturesOnlyInCatalog": 20
+    },
+    "distinctSignaturesAcrossMainAndCatalog": 44,
+    "buttonOccurrencesExcludingDropdownTrigger": 19
+  },
+  "occurrences": [
+    {
+      "file": "src/app/layout.tsx",
+      "line": 13,
+      "type": "button",
+      "sig": "RAW-B",
+      "owner": "RootLayout",
+      "source": "raw <button>",
+      "label": "Sign out",
+      "layout": "root",
+      "id": "occ-01"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 22,
+      "type": "button",
+      "sig": "B1",
+      "owner": "HomePage",
+      "source": "Button",
+      "props": {},
+      "className": "mt-4",
+      "label": "Get started",
+      "note": "className mt-4 is placement-only -> same signature as plain <Button>",
+      "id": "occ-02"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 26,
+      "type": "button",
+      "sig": "B-primary",
+      "owner": "HomePage",
+      "source": "PrimaryButton -> Button",
+      "label": "Upgrade now",
+      "id": "occ-03"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 31,
+      "type": "button",
+      "sig": "B1",
+      "owner": "HomePage",
+      "source": "Button",
+      "props": {},
+      "className": "w-full",
+      "label": "Continue",
+      "note": "className w-full is placement-only -> same signature as plain <Button>",
+      "id": "occ-04"
+    },
+    {
+      "file": "src/app/(dashboard)/layout.tsx",
+      "line": 9,
+      "type": "button",
+      "sig": "B-ghost",
+      "owner": "DashboardLayout",
+      "source": "Button",
+      "props": {
+        "variant": "ghost"
+      },
+      "label": "Overview",
+      "layout": "(dashboard)",
+      "id": "occ-05"
+    },
+    {
+      "file": "src/app/(dashboard)/layout.tsx",
+      "line": 10,
+      "type": "button",
+      "sig": "B-ghost",
+      "owner": "DashboardLayout",
+      "source": "Button",
+      "props": {
+        "variant": "ghost"
+      },
+      "label": "Orders",
+      "layout": "(dashboard)",
+      "id": "occ-06"
+    },
+    {
+      "file": "src/app/(dashboard)/layout.tsx",
+      "line": 11,
+      "type": "button",
+      "sig": "B-ghost",
+      "owner": "DashboardLayout",
+      "source": "Button",
+      "props": {
+        "variant": "ghost"
+      },
+      "label": "Settings",
+      "layout": "(dashboard)",
+      "id": "occ-07"
+    },
+    {
+      "file": "src/components/shared/toolbar.tsx",
+      "line": 13,
+      "type": "button",
+      "sig": "B-outline-sm",
+      "owner": "Toolbar",
+      "source": "Button",
+      "props": {
+        "variant": "outline",
+        "size": "sm"
+      },
+      "label": "Filter",
+      "reachedVia": "src/app/(dashboard)/layout.tsx:13 <Toolbar />",
+      "layout": "(dashboard)",
+      "id": "occ-08"
+    },
+    {
+      "file": "src/components/shared/toolbar.tsx",
+      "line": 18,
+      "type": "button",
+      "sig": "B-outline-sm",
+      "owner": "Toolbar",
+      "source": "DropdownMenuTrigger asChild -> Button",
+      "props": {
+        "variant": "outline",
+        "size": "sm"
+      },
+      "label": "Export",
+      "reachedVia": "src/app/(dashboard)/layout.tsx:13 <Toolbar />",
+      "layout": "(dashboard)",
+      "dropdownTrigger": true,
+      "note": "Also the trigger of the dropdown-menu occurrence at toolbar.tsx:16 (see decisions[0])",
+      "id": "occ-09"
+    },
+    {
+      "file": "src/components/shared/toolbar.tsx",
+      "line": 30,
+      "type": "button",
+      "sig": "RAW-A",
+      "owner": "Toolbar",
+      "source": "raw <button>",
+      "label": "Refresh",
+      "reachedVia": "src/app/(dashboard)/layout.tsx:13 <Toolbar />",
+      "layout": "(dashboard)",
+      "id": "occ-10"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 40,
+      "type": "button",
+      "sig": "B-sm",
+      "owner": "DashboardPage",
+      "source": "Button",
+      "props": {
+        "size": "sm"
+      },
+      "label": "View",
+      "inMap": true,
+      "note": "inside orders.map() -> counts once",
+      "id": "occ-11"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 46,
+      "type": "button",
+      "sig": "RAW-C",
+      "owner": "DashboardPage",
+      "source": "raw <button>",
+      "label": "Create order",
+      "id": "occ-12"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 52,
+      "type": "button",
+      "sig": "DYN",
+      "owner": "DashboardPage",
+      "source": "DynamicButton -> raw <button> with template-literal className",
+      "label": "Sync",
+      "unresolved": true,
+      "id": "occ-13"
+    },
+    {
+      "file": "src/components/shared/chip.tsx",
+      "line": 7,
+      "type": "button",
+      "sig": "CHIP-X",
+      "owner": "Chip",
+      "source": "raw <button> inside Chip root tree",
+      "label": "×",
+      "reachedVia": "src/app/(dashboard)/dashboard/page.tsx:30 <Chip>",
+      "note": "counted once per Chip usage (1 usage)",
+      "id": "occ-14"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 21,
+      "type": "button",
+      "sig": "RAW-A",
+      "owner": "SettingsForm",
+      "source": "raw <button>",
+      "label": "Reset",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-15"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 32,
+      "type": "button",
+      "sig": "B1",
+      "owner": "SettingsForm",
+      "source": "Button",
+      "props": {},
+      "label": "Save",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-16"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 80,
+      "type": "button",
+      "sig": "B-destructive",
+      "owner": "SettingsForm",
+      "source": "Button",
+      "props": {
+        "variant": "destructive"
+      },
+      "label": "Delete account",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-17"
+    },
+    {
+      "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+      "line": 20,
+      "type": "button",
+      "sig": "B-destructive",
+      "owner": "OrderPage",
+      "source": "Button",
+      "props": {
+        "variant": "destructive"
+      },
+      "label": "Cancel order",
+      "id": "occ-18"
+    },
+    {
+      "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+      "line": 21,
+      "type": "button",
+      "sig": "B-dangerlink",
+      "owner": "OrderPage",
+      "source": "DangerLink -> Button",
+      "label": "Report a problem",
+      "id": "occ-19"
+    },
+    {
+      "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+      "line": 23,
+      "type": "button",
+      "sig": "RAW-A",
+      "owner": "OrderPage",
+      "source": "raw <button>",
+      "label": "Refresh",
+      "id": "occ-20"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 15,
+      "type": "badge",
+      "sig": "BADGE-default",
+      "owner": "HomePage",
+      "source": "Badge",
+      "props": {},
+      "label": "New",
+      "id": "occ-21"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 16,
+      "type": "badge",
+      "sig": "BADGE-secondary",
+      "owner": "HomePage",
+      "source": "Badge",
+      "props": {
+        "variant": "secondary"
+      },
+      "label": "v0.1",
+      "id": "occ-22"
+    },
+    {
+      "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+      "line": 16,
+      "type": "badge",
+      "sig": "BADGE-destructive",
+      "owner": "OrderPage",
+      "source": "Badge",
+      "props": {
+        "variant": "destructive"
+      },
+      "label": "Overdue",
+      "id": "occ-23"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "line": 17,
+      "type": "tag",
+      "sig": "TAG",
+      "owner": "HomePage",
+      "source": "Tag",
+      "label": "Beta",
+      "id": "occ-24"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 22,
+      "type": "tag",
+      "sig": "TAG",
+      "owner": "DashboardPage",
+      "source": "Tag",
+      "label": "Beta",
+      "id": "occ-25"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 38,
+      "type": "tag",
+      "sig": "TAG",
+      "owner": "DashboardPage",
+      "source": "Tag",
+      "label": "{order.status}",
+      "inMap": true,
+      "note": "inside orders.map() -> counts once",
+      "id": "occ-26"
+    },
+    {
+      "file": "src/app/(dashboard)/dashboard/page.tsx",
+      "line": 30,
+      "type": "chip",
+      "sig": "CHIP",
+      "owner": "DashboardPage",
+      "source": "Chip",
+      "label": "Status: paid",
+      "note": "its × remove button is the CHIP-X button occurrence",
+      "id": "occ-27"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 31,
+      "type": "text-field",
+      "sig": "INPUT",
+      "owner": "SettingsForm",
+      "source": "Input -> <input> (no type attr = text)",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-28"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 39,
+      "type": "checkbox",
+      "sig": "CB-legacy",
+      "owner": "SettingsForm",
+      "source": "LegacyCheckbox -> <input type=\"checkbox\">",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-29"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 43,
+      "type": "checkbox",
+      "sig": "CB-legacy",
+      "owner": "SettingsForm",
+      "source": "LegacyCheckbox -> <input type=\"checkbox\">",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-30"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 47,
+      "type": "checkbox",
+      "sig": "CB-radix",
+      "owner": "SettingsForm",
+      "source": "Checkbox -> @radix-ui/react-checkbox Root",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-31"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 54,
+      "type": "toggle",
+      "sig": "SWITCH",
+      "owner": "SettingsForm",
+      "source": "Switch -> @radix-ui/react-switch Root",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-32"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 61,
+      "type": "textarea",
+      "sig": "TEXTAREA",
+      "owner": "SettingsForm",
+      "source": "Textarea -> <textarea>",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-33"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 68,
+      "type": "select",
+      "sig": "SELECT-native",
+      "owner": "SettingsForm",
+      "source": "SelectNative -> <select>",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-34"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 75,
+      "type": "radio",
+      "sig": "RADIO",
+      "owner": "SettingsForm",
+      "source": "Radio -> <label> wrapping <input type=\"radio\">",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-35"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 76,
+      "type": "radio",
+      "sig": "RADIO",
+      "owner": "SettingsForm",
+      "source": "Radio -> <label> wrapping <input type=\"radio\">",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-36"
+    },
+    {
+      "file": "src/components/forms/settings-form.tsx",
+      "line": 77,
+      "type": "radio",
+      "sig": "RADIO",
+      "owner": "SettingsForm",
+      "source": "Radio -> <label> wrapping <input type=\"radio\">",
+      "reachedVia": "src/app/(dashboard)/settings/page.tsx:11 <SettingsForm />",
+      "id": "occ-37"
+    },
+    {
+      "file": "src/components/shared/toolbar.tsx",
+      "line": 16,
+      "type": "dropdown-menu",
+      "sig": "DDM",
+      "owner": "Toolbar",
+      "source": "DropdownMenu (Root toolbar.tsx:16, Trigger :17, Content :22, 3 Items :23,:24,:26, Separator :25)",
+      "label": "Export",
+      "reachedVia": "src/app/(dashboard)/layout.tsx:13 <Toolbar />",
+      "layout": "(dashboard)",
+      "note": "Trigger + Content = one occurrence; its asChild trigger Button is ALSO the button occurrence at toolbar.tsx:18",
+      "id": "occ-38"
+    }
+  ],
+  "catalogOccurrences": [
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 17,
+      "type": "button",
+      "sig": "B:default/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "default",
+        "size": "default"
+      },
+      "id": "cat-01",
+      "alsoInMainAs": "B1"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 18,
+      "type": "button",
+      "sig": "B:default/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "default",
+        "size": "sm"
+      },
+      "id": "cat-02",
+      "alsoInMainAs": "B-sm"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 19,
+      "type": "button",
+      "sig": "B:default/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "default",
+        "size": "lg"
+      },
+      "id": "cat-03"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 20,
+      "type": "button",
+      "sig": "B:default/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "default",
+        "size": "icon"
+      },
+      "id": "cat-04"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 27,
+      "type": "button",
+      "sig": "B:destructive/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "destructive",
+        "size": "default"
+      },
+      "id": "cat-05",
+      "alsoInMainAs": "B-destructive"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 28,
+      "type": "button",
+      "sig": "B:destructive/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "destructive",
+        "size": "sm"
+      },
+      "id": "cat-06"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 29,
+      "type": "button",
+      "sig": "B:destructive/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "destructive",
+        "size": "lg"
+      },
+      "id": "cat-07"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 30,
+      "type": "button",
+      "sig": "B:destructive/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "destructive",
+        "size": "icon"
+      },
+      "id": "cat-08"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 37,
+      "type": "button",
+      "sig": "B:outline/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "outline",
+        "size": "default"
+      },
+      "id": "cat-09"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 38,
+      "type": "button",
+      "sig": "B:outline/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "outline",
+        "size": "sm"
+      },
+      "id": "cat-10",
+      "alsoInMainAs": "B-outline-sm"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 39,
+      "type": "button",
+      "sig": "B:outline/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "outline",
+        "size": "lg"
+      },
+      "id": "cat-11"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 40,
+      "type": "button",
+      "sig": "B:outline/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "outline",
+        "size": "icon"
+      },
+      "id": "cat-12"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 47,
+      "type": "button",
+      "sig": "B:secondary/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "secondary",
+        "size": "default"
+      },
+      "id": "cat-13"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 48,
+      "type": "button",
+      "sig": "B:secondary/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "secondary",
+        "size": "sm"
+      },
+      "id": "cat-14"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 49,
+      "type": "button",
+      "sig": "B:secondary/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "secondary",
+        "size": "lg"
+      },
+      "id": "cat-15"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 50,
+      "type": "button",
+      "sig": "B:secondary/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "secondary",
+        "size": "icon"
+      },
+      "id": "cat-16"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 57,
+      "type": "button",
+      "sig": "B:ghost/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "ghost",
+        "size": "default"
+      },
+      "id": "cat-17",
+      "alsoInMainAs": "B-ghost"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 58,
+      "type": "button",
+      "sig": "B:ghost/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "ghost",
+        "size": "sm"
+      },
+      "id": "cat-18"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 59,
+      "type": "button",
+      "sig": "B:ghost/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "ghost",
+        "size": "lg"
+      },
+      "id": "cat-19"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 60,
+      "type": "button",
+      "sig": "B:ghost/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "ghost",
+        "size": "icon"
+      },
+      "id": "cat-20"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 67,
+      "type": "button",
+      "sig": "B:link/default",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "link",
+        "size": "default"
+      },
+      "id": "cat-21"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 68,
+      "type": "button",
+      "sig": "B:link/sm",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "link",
+        "size": "sm"
+      },
+      "id": "cat-22"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 69,
+      "type": "button",
+      "sig": "B:link/lg",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "link",
+        "size": "lg"
+      },
+      "id": "cat-23"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 70,
+      "type": "button",
+      "sig": "B:link/icon",
+      "owner": "DesignSystemPage",
+      "source": "Button",
+      "props": {
+        "variant": "link",
+        "size": "icon"
+      },
+      "id": "cat-24"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 77,
+      "type": "badge",
+      "sig": "BADGE-default",
+      "owner": "DesignSystemPage",
+      "source": "Badge",
+      "props": {
+        "variant": "default"
+      },
+      "id": "cat-25"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 78,
+      "type": "badge",
+      "sig": "BADGE-secondary",
+      "owner": "DesignSystemPage",
+      "source": "Badge",
+      "props": {
+        "variant": "secondary"
+      },
+      "id": "cat-26"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 79,
+      "type": "badge",
+      "sig": "BADGE-destructive",
+      "owner": "DesignSystemPage",
+      "source": "Badge",
+      "props": {
+        "variant": "destructive"
+      },
+      "id": "cat-27"
+    },
+    {
+      "file": "src/app/design-system/page.tsx",
+      "line": 80,
+      "type": "badge",
+      "sig": "BADGE-outline",
+      "owner": "DesignSystemPage",
+      "source": "Badge",
+      "props": {
+        "variant": "outline"
+      },
+      "id": "cat-28"
+    }
+  ],
+  "signatures": {
+    "B1": {
+      "type": "button",
+      "source": "Button variant=default size=default",
+      "mergedClasses": "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 16,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "background": "var(--primary)",
+        "color": "var(--primary-foreground)",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "var(--primary) @ 90%",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 3
+    },
+    "B-primary": {
+      "type": "button",
+      "source": "PrimaryButton = Button + className \"bg-[#222222] text-white hover:bg-[#333333]\"",
+      "mergeNote": "twMerge drops bg-primary, text-primary-foreground, hover:bg-primary/90",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 16,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "background": "#222222",
+        "color": "#ffffff",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "#333333",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 1
+    },
+    "B-ghost": {
+      "type": "button",
+      "source": "Button variant=ghost size=default",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 16,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "background": "transparent",
+        "color": "inherit",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "var(--accent)",
+        "hoverColor": "var(--accent-foreground)",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring"
+      },
+      "occurrences": 3
+    },
+    "B-outline-sm": {
+      "type": "button",
+      "source": "Button variant=outline size=sm",
+      "mergeNote": "size sm gap-1.5 overrides base gap-2; rounded-md repeated",
+      "resolved": {
+        "heightPx": 32,
+        "paddingXPx": 12,
+        "gapPx": 6,
+        "radiusPx": 8,
+        "border": "1px solid var(--border)",
+        "background": "var(--background)",
+        "color": "inherit",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "var(--accent)",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 2
+    },
+    "B-sm": {
+      "type": "button",
+      "source": "Button variant=default size=sm",
+      "resolved": {
+        "heightPx": 32,
+        "paddingXPx": 12,
+        "gapPx": 6,
+        "radiusPx": 8,
+        "background": "var(--primary)",
+        "color": "var(--primary-foreground)",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "var(--primary) @ 90%",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 1
+    },
+    "B-destructive": {
+      "type": "button",
+      "source": "Button variant=destructive size=default",
+      "mergeNote": "focus-visible:ring-destructive/20 replaces focus-visible:ring-ring/50",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 16,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "background": "var(--destructive)",
+        "color": "#ffffff (text-white)",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "hoverBackground": "var(--destructive) @ 90%",
+        "focusVisible": "ring 3px var(--destructive)/20 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 2
+    },
+    "B-dangerlink": {
+      "type": "button",
+      "source": "DangerLink = Button variant=link + className \"text-[#d93025]\"",
+      "mergeNote": "twMerge drops text-primary",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 16,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "background": "transparent",
+        "color": "#d93025",
+        "fontSizePx": 14,
+        "fontWeight": 500,
+        "textDecoration": "hover:underline, underline-offset 4px",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring"
+      },
+      "occurrences": 1
+    },
+    "RAW-A": {
+      "type": "button",
+      "source": "raw <button className=\"rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50\">",
+      "resolved": {
+        "heightPx": "auto (≈34: 20 line-height + 12 padding + 2 border)",
+        "paddingXPx": 12,
+        "paddingYPx": 6,
+        "radiusPx": 6,
+        "border": "1px solid var(--border)",
+        "background": "transparent",
+        "color": "inherit",
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "hoverBackground": "gray-50 (oklch(0.985 0.002 247.839))",
+        "focusVisible": "NONE"
+      },
+      "occurrences": 3,
+      "repeatedInline": true
+    },
+    "RAW-B": {
+      "type": "button",
+      "source": "raw <button className=\"text-sm text-gray-500 hover:text-gray-900 focus-visible:focus-ring\">",
+      "resolved": {
+        "heightPx": "auto",
+        "paddingXPx": 0,
+        "paddingYPx": 0,
+        "radiusPx": 0,
+        "background": "transparent",
+        "color": "gray-500",
+        "fontSizePx": 14,
+        "fontWeight": 400,
+        "hoverColor": "gray-900",
+        "focusVisible": "outline-none + ring 2px var(--ring)/50 (via @utility focus-ring)"
+      },
+      "occurrences": 1
+    },
+    "RAW-C": {
+      "type": "button",
+      "source": "raw <button className=\"rounded-lg bg-brand p-[18px] text-white\">",
+      "resolved": {
+        "heightPx": "auto (≈56: 20 line-height + 36 padding)",
+        "paddingPx": 18,
+        "radiusPx": 10,
+        "background": "var(--brand) = #1AA44D",
+        "color": "#ffffff (text-white)",
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "hover": "NONE",
+        "focusVisible": "NONE"
+      },
+      "occurrences": 1,
+      "offScale": [
+        "p-[18px]"
+      ]
+    },
+    "CHIP-X": {
+      "type": "button",
+      "source": "raw <button aria-label=\"remove\" className=\"rounded-full hover:bg-gray-200\"> inside Chip",
+      "resolved": {
+        "heightPx": "auto",
+        "paddingPx": 0,
+        "radiusPx": 9999,
+        "background": "transparent",
+        "color": "inherit (gray-700 from Chip)",
+        "fontSizePx": 12,
+        "hoverBackground": "gray-200",
+        "focusVisible": "NONE"
+      },
+      "occurrences": 1
+    },
+    "DYN": {
+      "type": "button",
+      "source": "DynamicButton root <button> whose className is the template literal \"btn btn-${kind}\" (dynamic-button.tsx:9)",
+      "resolved": null,
+      "unresolved": true,
+      "occurrences": 1,
+      "note": "Not a signature. Reported under dynamicClassSites; must not be invented (e.g. as btn-primary)."
+    },
+    "OLD": {
+      "type": "button",
+      "source": "OldButton root <button className=\"rounded-none bg-black px-4 py-2 text-white\">",
+      "resolved": {
+        "radiusPx": 0,
+        "background": "#000000 (bg-black)",
+        "color": "#ffffff",
+        "paddingXPx": 16,
+        "paddingYPx": 8
+      },
+      "occurrences": 0,
+      "unreached": true,
+      "note": "Implementation only; never used -> not a signature in counts."
+    },
+    "BADGE-default": {
+      "type": "badge",
+      "source": "Badge variant=default",
+      "resolved": {
+        "radiusPx": 8,
+        "paddingXPx": 8,
+        "paddingYPx": 2,
+        "fontSizePx": 12,
+        "fontWeight": 500,
+        "border": "1px solid transparent",
+        "background": "var(--primary)",
+        "color": "var(--primary-foreground)"
+      },
+      "occurrences": 1
+    },
+    "BADGE-secondary": {
+      "type": "badge",
+      "source": "Badge variant=secondary",
+      "resolved": {
+        "radiusPx": 8,
+        "paddingXPx": 8,
+        "paddingYPx": 2,
+        "fontSizePx": 12,
+        "fontWeight": 500,
+        "border": "1px solid transparent",
+        "background": "var(--secondary)",
+        "color": "var(--secondary-foreground)"
+      },
+      "occurrences": 1
+    },
+    "BADGE-destructive": {
+      "type": "badge",
+      "source": "Badge variant=destructive",
+      "resolved": {
+        "radiusPx": 8,
+        "paddingXPx": 8,
+        "paddingYPx": 2,
+        "fontSizePx": 12,
+        "fontWeight": 500,
+        "border": "1px solid transparent",
+        "background": "var(--destructive)",
+        "color": "#ffffff (text-white)"
+      },
+      "occurrences": 1
+    },
+    "BADGE-outline": {
+      "type": "badge",
+      "source": "Badge variant=outline",
+      "resolved": {
+        "radiusPx": 8,
+        "paddingXPx": 8,
+        "paddingYPx": 2,
+        "fontSizePx": 12,
+        "fontWeight": 500,
+        "border": "1px solid var(--border)",
+        "background": "transparent",
+        "color": "var(--foreground)"
+      },
+      "occurrences": 0,
+      "catalogOnly": true
+    },
+    "TAG": {
+      "type": "tag",
+      "source": "Tag <span className=\"rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700\">",
+      "resolved": {
+        "radiusPx": 8,
+        "paddingXPx": 8,
+        "paddingYPx": 2,
+        "fontSizePx": 11,
+        "fontWeight": 500,
+        "background": "blue-50",
+        "color": "blue-700"
+      },
+      "occurrences": 3,
+      "offScale": [
+        "text-[11px]"
+      ]
+    },
+    "CHIP": {
+      "type": "chip",
+      "source": "Chip <span className=\"inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-700\">",
+      "resolved": {
+        "radiusPx": 9999,
+        "paddingXPx": 10,
+        "paddingYPx": 2,
+        "gapPx": 4,
+        "fontSizePx": 12,
+        "fontWeight": 400,
+        "background": "gray-100",
+        "color": "gray-700"
+      },
+      "occurrences": 1
+    },
+    "INPUT": {
+      "type": "text-field",
+      "source": "Input -> <input> h-9 rounded-sm border px-3 py-1 text-sm ...",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 12,
+        "paddingYPx": 4,
+        "radiusPx": 6,
+        "border": "1px solid var(--input)",
+        "background": "transparent",
+        "fontSizePx": 14,
+        "placeholderColor": "var(--muted-foreground)",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 1
+    },
+    "CB-radix": {
+      "type": "checkbox",
+      "source": "Checkbox -> CheckboxPrimitive.Root size-4 rounded-[4px] border border-input ...",
+      "resolved": {
+        "sizePx": 16,
+        "radiusPx": 4,
+        "border": "1px solid var(--input)",
+        "checkedBackground": "var(--primary)",
+        "checkedBorder": "var(--primary)",
+        "checkedColor": "var(--primary-foreground)",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 1
+    },
+    "CB-legacy": {
+      "type": "checkbox",
+      "source": "LegacyCheckbox -> <input type=\"checkbox\" className=\"h-5 w-5 rounded border-gray-300\" style={{ accentColor: \"#1AA44D\" }}>",
+      "resolved": {
+        "sizePx": 20,
+        "radiusPx": 4,
+        "borderColor": "gray-300",
+        "accentColor": "#1AA44D (inline style; twin of --brand)",
+        "focusVisible": "browser default only"
+      },
+      "occurrences": 2
+    },
+    "SWITCH": {
+      "type": "toggle",
+      "source": "Switch -> SwitchPrimitive.Root h-5 w-9 rounded-full border-2 ... data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+      "resolved": {
+        "heightPx": 20,
+        "widthPx": 36,
+        "radiusPx": 9999,
+        "border": "2px solid transparent",
+        "checkedBackground": "var(--primary)",
+        "uncheckedBackground": "var(--input)",
+        "thumbSizePx": 16,
+        "focusVisible": "ring 2px var(--ring) + offset 2px"
+      },
+      "occurrences": 1
+    },
+    "TEXTAREA": {
+      "type": "textarea",
+      "source": "Textarea -> <textarea> min-h-16 rounded-md border px-3 py-2 text-base md:text-sm ...",
+      "resolved": {
+        "minHeightPx": 64,
+        "paddingXPx": 12,
+        "paddingYPx": 8,
+        "radiusPx": 8,
+        "border": "1px solid var(--input)",
+        "background": "transparent",
+        "fontSizePx": "16 (14 at md+)",
+        "focusVisible": "ring 3px var(--ring)/50 + border-ring",
+        "shadow": "shadow-xs"
+      },
+      "occurrences": 1
+    },
+    "SELECT-native": {
+      "type": "select",
+      "source": "SelectNative -> <select className=\"h-9 rounded-md border px-3 text-sm\">",
+      "resolved": {
+        "heightPx": 36,
+        "paddingXPx": 12,
+        "radiusPx": 8,
+        "border": "1px solid var(--border)",
+        "fontSizePx": 14,
+        "focusVisible": "NONE (browser default)"
+      },
+      "occurrences": 1
+    },
+    "RADIO": {
+      "type": "radio",
+      "source": "Radio -> <label class=\"flex items-center gap-2 text-sm\"> wrapping <input type=\"radio\" className=\"size-4 accent-brand\">",
+      "resolved": {
+        "sizePx": 16,
+        "accentColor": "var(--brand)",
+        "focusVisible": "browser default only"
+      },
+      "occurrences": 3,
+      "resolution": "root is a <label> that wraps exactly one control; classify by the nested control"
+    },
+    "DDM": {
+      "type": "dropdown-menu",
+      "source": "DropdownMenu (Radix) — Content: bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md; Item: rounded-sm px-2 py-1.5 text-sm focus:bg-accent ...",
+      "resolved": {
+        "content": {
+          "radiusPx": 8,
+          "paddingPx": 4,
+          "border": "1px solid var(--border)",
+          "background": "var(--popover)",
+          "minWidthPx": 128,
+          "shadow": "shadow-md"
+        },
+        "item": {
+          "radiusPx": 6,
+          "paddingXPx": 8,
+          "paddingYPx": 6,
+          "fontSizePx": 14,
+          "focusBackground": "var(--accent)"
+        },
+        "trigger": "asChild -> B-outline-sm"
+      },
+      "occurrences": 1
+    }
+  },
+  "implementations": {
+    "button": {
+      "count": 4,
+      "items": [
+        {
+          "name": "Button",
+          "file": "src/components/ui/button.tsx",
+          "root": {
+            "line": 51,
+            "element": "Comp = Slot | \"button\""
+          },
+          "kind": "component",
+          "style": "cva buttonVariants (6 variants × 4 sizes) + cn()",
+          "mainOccurrencesResolvingHere": 13,
+          "note": "11 direct usages + 2 via wrappers (PrimaryButton, DangerLink)"
+        },
+        {
+          "name": "DynamicButton",
+          "file": "src/components/shared/dynamic-button.tsx",
+          "root": {
+            "line": 9,
+            "element": "button"
+          },
+          "kind": "component",
+          "style": "template-literal className (dynamic)",
+          "mainOccurrencesResolvingHere": 1
+        },
+        {
+          "name": "OldButton",
+          "file": "src/components/shared/unused/old-button.tsx",
+          "root": {
+            "line": 6,
+            "element": "button"
+          },
+          "kind": "component",
+          "style": "static classes",
+          "mainOccurrencesResolvingHere": 0,
+          "unreached": true
+        },
+        {
+          "name": "native <button>",
+          "kind": "raw",
+          "sites": [
+            "src/app/layout.tsx:13",
+            "src/components/shared/toolbar.tsx:30",
+            "src/components/forms/settings-form.tsx:21",
+            "src/app/(dashboard)/orders/[id]/page.tsx:23",
+            "src/app/(dashboard)/dashboard/page.tsx:46",
+            "src/components/shared/chip.tsx:7"
+          ],
+          "mainOccurrencesResolvingHere": 6
+        }
+      ],
+      "wrappers": [
+        {
+          "name": "PrimaryButton",
+          "file": "src/components/shared/button-presets.tsx",
+          "line": 7,
+          "wraps": "Button",
+          "adds": "bg-[#222222] text-white hover:bg-[#333333]"
+        },
+        {
+          "name": "DangerLink",
+          "file": "src/components/shared/button-presets.tsx",
+          "line": 11,
+          "wraps": "Button",
+          "adds": "variant=link + text-[#d93025]"
+        }
+      ]
+    },
+    "checkbox": {
+      "count": 2,
+      "items": [
+        {
+          "name": "Checkbox",
+          "file": "src/components/ui/checkbox.tsx",
+          "root": {
+            "line": 14,
+            "element": "CheckboxPrimitive.Root (@radix-ui/react-checkbox)"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        },
+        {
+          "name": "LegacyCheckbox",
+          "file": "src/components/shared/legacy-checkbox.tsx",
+          "root": {
+            "line": 6,
+            "element": "input[type=checkbox]"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 2
+        }
+      ]
+    },
+    "dropdown-menu": {
+      "count": 1,
+      "items": [
+        {
+          "name": "DropdownMenu",
+          "file": "src/components/ui/dropdown-menu.tsx",
+          "root": {
+            "line": 11,
+            "element": "DropdownMenuPrimitive.Root (@radix-ui/react-dropdown-menu)"
+          },
+          "parts": {
+            "Trigger": 18,
+            "Content": 32,
+            "Item": 50,
+            "Separator": 66
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        }
+      ]
+    },
+    "radio": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Radio",
+          "file": "src/components/ui/radio.tsx",
+          "root": {
+            "line": 9,
+            "element": "label"
+          },
+          "control": {
+            "line": 10,
+            "element": "input[type=radio]"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 3
+        }
+      ]
+    },
+    "select": {
+      "count": 1,
+      "items": [
+        {
+          "name": "SelectNative",
+          "file": "src/components/ui/select-native.tsx",
+          "root": {
+            "line": 11,
+            "element": "select"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        }
+      ]
+    },
+    "textarea": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Textarea",
+          "file": "src/components/ui/textarea.tsx",
+          "root": {
+            "line": 7,
+            "element": "textarea"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        }
+      ]
+    },
+    "text-field": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Input",
+          "file": "src/components/ui/input.tsx",
+          "root": {
+            "line": 7,
+            "element": "input"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        }
+      ]
+    },
+    "toggle": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Switch",
+          "file": "src/components/ui/switch.tsx",
+          "root": {
+            "line": 13,
+            "element": "SwitchPrimitive.Root (@radix-ui/react-switch)"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1
+        }
+      ]
+    },
+    "badge": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Badge",
+          "file": "src/components/ui/badge.tsx",
+          "root": {
+            "line": 38,
+            "element": "Comp = Slot | \"span\""
+          },
+          "kind": "component",
+          "style": "cva badgeVariants (4 variants)",
+          "mainOccurrencesResolvingHere": 3
+        }
+      ]
+    },
+    "tag": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Tag",
+          "file": "src/components/shared/chip.tsx",
+          "root": {
+            "line": 16,
+            "element": "span"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 3
+        }
+      ]
+    },
+    "chip": {
+      "count": 1,
+      "items": [
+        {
+          "name": "Chip",
+          "file": "src/components/shared/chip.tsx",
+          "root": {
+            "line": 5,
+            "element": "span"
+          },
+          "kind": "component",
+          "mainOccurrencesResolvingHere": 1,
+          "containsControl": "button at line 7 (CHIP-X)"
+        }
+      ]
+    },
+    "variantsDefinedButUnusedOutsideCatalog": [
+      "Button.variant.secondary",
+      "Button.size.lg",
+      "Button.size.icon",
+      "Badge.variant.outline"
+    ]
+  },
+  "hardcodedColors": {
+    "code": {
+      "count": 7,
+      "distinctValues": 7,
+      "items": [
+        {
+          "value": "#222222",
+          "file": "src/components/shared/button-presets.tsx",
+          "line": 7,
+          "via": "class bg-[#222222]",
+          "property": "background-color",
+          "component": "PrimaryButton"
+        },
+        {
+          "value": "#333333",
+          "file": "src/components/shared/button-presets.tsx",
+          "line": 7,
+          "via": "class hover:bg-[#333333]",
+          "property": "background-color (hover)",
+          "component": "PrimaryButton"
+        },
+        {
+          "value": "#d93025",
+          "file": "src/components/shared/button-presets.tsx",
+          "line": 11,
+          "via": "class text-[#d93025]",
+          "property": "color",
+          "component": "DangerLink"
+        },
+        {
+          "value": "#1AA44D",
+          "file": "src/components/shared/legacy-checkbox.tsx",
+          "line": 9,
+          "via": "style={{ accentColor }}",
+          "property": "accent-color",
+          "component": "LegacyCheckbox",
+          "twinOf": "--brand"
+        },
+        {
+          "value": "#4F46E5",
+          "file": "src/components/shared/chart-legend.tsx",
+          "line": 5,
+          "via": "style={{ background }}",
+          "property": "background",
+          "component": "ChartLegend",
+          "note": "chart tokens --chart-1..3 exist but are not used"
+        },
+        {
+          "value": "#22C55E",
+          "file": "src/components/shared/chart-legend.tsx",
+          "line": 9,
+          "via": "style={{ background }}",
+          "property": "background",
+          "component": "ChartLegend",
+          "note": "chart tokens --chart-1..3 exist but are not used"
+        },
+        {
+          "value": "rgba(0,0,0,0.06)",
+          "file": "src/components/shared/card.tsx",
+          "line": 5,
+          "via": "class shadow-[0_1px_2px_rgba(0,0,0,0.06)]",
+          "property": "box-shadow color",
+          "component": "Card"
+        }
+      ],
+      "byFormat": {
+        "hex": 6,
+        "rgba": 1,
+        "oklch": 0
+      },
+      "excludedLiterals": [
+        {
+          "value": "#ff0000",
+          "file": "src/components/shared/__tests__/button.test.tsx",
+          "lines": [
+            8,
+            9
+          ],
+          "reason": "test file excluded"
+        },
+        {
+          "value": "#00ff00",
+          "file": "src/components/shared/toolbar.tsx",
+          "line": 29,
+          "reason": "inside a JSX comment {/* ... */}"
+        }
+      ],
+      "nearDuplicateHints": [
+        {
+          "literal": "#222222",
+          "nearestToken": "--primary (light) oklch(0.205 0 0) ≈ #171717",
+          "relation": "near, NOT an exact twin"
+        },
+        {
+          "literal": "#d93025",
+          "nearestToken": "--destructive (light) oklch(0.577 0.245 27.325)",
+          "relation": "near, NOT an exact twin"
+        }
+      ]
+    },
+    "css": {
+      "file": "src/app/globals.css",
+      "count": 43,
+      "byFormat": {
+        "hex": 3,
+        "oklch": 40
+      },
+      "distinctValues": 21,
+      "hex": [
+        {
+          "value": "#1AA44D",
+          "line": 23,
+          "token": "--brand",
+          "scope": ":root"
+        },
+        {
+          "value": "#E8F6EC",
+          "line": 24,
+          "token": "--brand-soft",
+          "scope": ":root"
+        },
+        {
+          "value": "#1AA44D",
+          "line": 48,
+          "token": "--brand",
+          "scope": ".dark"
+        }
+      ],
+      "oklchLines": {
+        ":root": [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          25,
+          26,
+          27,
+          28
+        ],
+        ".dark": [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          49,
+          50,
+          51,
+          52
+        ]
+      }
+    }
+  },
+  "paletteClassSites": {
+    "note": "Tailwind default-palette color utilities that bypass the project tokens. Not literals, listed for the token inventory. `white` (#ffffff) happens to equal --background in light mode; not counted as a twin because it is not a literal.",
+    "count": 17,
+    "distinctColors": [
+      "gray-50",
+      "gray-100",
+      "gray-200",
+      "gray-300",
+      "gray-500",
+      "gray-700",
+      "gray-900",
+      "blue-50",
+      "blue-700",
+      "white",
+      "black"
+    ],
+    "items": [
+      {
+        "class": "text-gray-500",
+        "file": "src/app/layout.tsx",
+        "line": 13
+      },
+      {
+        "class": "hover:text-gray-900",
+        "file": "src/app/layout.tsx",
+        "line": 13
+      },
+      {
+        "class": "text-white",
+        "file": "src/app/(dashboard)/dashboard/page.tsx",
+        "line": 46
+      },
+      {
+        "class": "hover:bg-gray-50",
+        "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+        "line": 23
+      },
+      {
+        "class": "text-white",
+        "file": "src/components/ui/button.tsx",
+        "line": 15,
+        "note": "destructive variant"
+      },
+      {
+        "class": "text-white",
+        "file": "src/components/ui/badge.tsx",
+        "line": 17,
+        "note": "destructive variant"
+      },
+      {
+        "class": "hover:bg-gray-50",
+        "file": "src/components/forms/settings-form.tsx",
+        "line": 21
+      },
+      {
+        "class": "hover:bg-gray-50",
+        "file": "src/components/shared/toolbar.tsx",
+        "line": 30
+      },
+      {
+        "class": "border-gray-300",
+        "file": "src/components/shared/legacy-checkbox.tsx",
+        "line": 8
+      },
+      {
+        "class": "bg-gray-100",
+        "file": "src/components/shared/chip.tsx",
+        "line": 5
+      },
+      {
+        "class": "text-gray-700",
+        "file": "src/components/shared/chip.tsx",
+        "line": 5
+      },
+      {
+        "class": "hover:bg-gray-200",
+        "file": "src/components/shared/chip.tsx",
+        "line": 7
+      },
+      {
+        "class": "bg-blue-50",
+        "file": "src/components/shared/chip.tsx",
+        "line": 16
+      },
+      {
+        "class": "text-blue-700",
+        "file": "src/components/shared/chip.tsx",
+        "line": 16
+      },
+      {
+        "class": "text-white",
+        "file": "src/components/shared/button-presets.tsx",
+        "line": 7
+      },
+      {
+        "class": "bg-black",
+        "file": "src/components/shared/unused/old-button.tsx",
+        "line": 6,
+        "unreached": true
+      },
+      {
+        "class": "text-white",
+        "file": "src/components/shared/unused/old-button.tsx",
+        "line": 6,
+        "unreached": true
+      }
+    ]
+  },
+  "twins": [
+    {
+      "literal": "#1AA44D",
+      "file": "src/components/shared/legacy-checkbox.tsx",
+      "line": 9,
+      "token": "--brand",
+      "tokenValue": "#1AA44D",
+      "tokenLines": {
+        ":root": 23,
+        ".dark": 48
+      },
+      "exact": true
+    }
+  ],
+  "declaredTokens": {
+    "colors": [
+      {
+        "name": "--color-background",
+        "var": "--background",
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(0.145 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-foreground",
+        "var": "--foreground",
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-popover",
+        "var": "--popover",
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(0.205 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-popover-foreground",
+        "var": "--popover-foreground",
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-primary",
+        "var": "--primary",
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.922 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-primary-foreground",
+        "var": "--primary-foreground",
+        "light": "oklch(0.985 0 0)",
+        "dark": "oklch(0.205 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-secondary",
+        "var": "--secondary",
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-secondary-foreground",
+        "var": "--secondary-foreground",
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.985 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-muted",
+        "var": "--muted",
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-muted-foreground",
+        "var": "--muted-foreground",
+        "light": "oklch(0.556 0 0)",
+        "dark": "oklch(0.708 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-accent",
+        "var": "--accent",
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-accent-foreground",
+        "var": "--accent-foreground",
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.985 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-destructive",
+        "var": "--destructive",
+        "light": "oklch(0.577 0.245 27.325)",
+        "dark": "oklch(0.704 0.191 22.216)",
+        "used": true
+      },
+      {
+        "name": "--color-border",
+        "var": "--border",
+        "light": "oklch(0.922 0 0)",
+        "dark": "oklch(1 0 0 / 10%)",
+        "used": true
+      },
+      {
+        "name": "--color-input",
+        "var": "--input",
+        "light": "oklch(0.922 0 0)",
+        "dark": "oklch(1 0 0 / 15%)",
+        "used": true
+      },
+      {
+        "name": "--color-ring",
+        "var": "--ring",
+        "light": "oklch(0.708 0 0)",
+        "dark": "oklch(0.556 0 0)",
+        "used": true
+      },
+      {
+        "name": "--color-brand",
+        "var": "--brand",
+        "light": "#1AA44D",
+        "dark": "#1AA44D",
+        "used": true,
+        "usedBy": [
+          "bg-brand (dashboard/page.tsx:46)",
+          "accent-brand (ui/radio.tsx:10)"
+        ]
+      },
+      {
+        "name": "--color-brand-soft",
+        "var": "--brand-soft",
+        "light": "#E8F6EC",
+        "dark": null,
+        "used": true,
+        "usedBy": [
+          "bg-brand-soft (dashboard/page.tsx:25)"
+        ],
+        "darkMissing": true
+      },
+      {
+        "name": "--color-chart-1",
+        "var": "--chart-1",
+        "light": "oklch(0.646 0.222 41.116)",
+        "dark": "oklch(0.488 0.243 264.376)",
+        "used": false
+      },
+      {
+        "name": "--color-chart-2",
+        "var": "--chart-2",
+        "light": "oklch(0.6 0.118 184.704)",
+        "dark": "oklch(0.696 0.17 162.48)",
+        "used": false
+      },
+      {
+        "name": "--color-chart-3",
+        "var": "--chart-3",
+        "light": "oklch(0.398 0.07 227.392)",
+        "dark": "oklch(0.769 0.188 70.08)",
+        "used": false
+      },
+      {
+        "name": "--color-sidebar-accent",
+        "var": "--sidebar-accent",
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)",
+        "used": false
+      }
+    ],
+    "radius": [
+      {
+        "name": "--radius",
+        "value": "0.625rem",
+        "px": 10,
+        "line": 6
+      },
+      {
+        "name": "--radius-sm",
+        "value": "calc(var(--radius) - 4px)",
+        "px": 6,
+        "line": 78,
+        "used": true,
+        "usedBy": [
+          "rounded-sm (ui/input.tsx:12, ui/dropdown-menu.tsx:53)"
+        ]
+      },
+      {
+        "name": "--radius-md",
+        "value": "calc(var(--radius) - 2px)",
+        "px": 8,
+        "line": 79,
+        "used": true
+      },
+      {
+        "name": "--radius-lg",
+        "value": "var(--radius)",
+        "px": 10,
+        "line": 80,
+        "used": true,
+        "usedBy": [
+          "rounded-lg (dashboard/page.tsx:46, (dashboard)/layout.tsx:8)"
+        ]
+      },
+      {
+        "name": "--radius-xl",
+        "value": "calc(var(--radius) + 4px)",
+        "px": 14,
+        "line": 81,
+        "used": true,
+        "usedBy": [
+          "rounded-xl (dashboard/page.tsx:25)"
+        ]
+      }
+    ],
+    "utilities": [
+      {
+        "name": "focus-ring",
+        "line": 93,
+        "body": "@apply outline-none ring-2 ring-ring/50",
+        "used": true,
+        "usedBy": [
+          "focus-visible:focus-ring (src/app/layout.tsx:13)"
+        ]
+      }
+    ],
+    "customVariants": [
+      {
+        "name": "dark",
+        "line": 3
+      }
+    ],
+    "colorTokenCount": 22,
+    "colorTokenUsedCount": 18,
+    "colorTokenDeadCount": 4
+  },
+  "deadTokens": {
+    "count": 4,
+    "items": [
+      {
+        "name": "--color-sidebar-accent",
+        "var": "--sidebar-accent",
+        "lines": {
+          "theme": 77,
+          ":root": 28,
+          ".dark": 52
+        },
+        "reason": "declared, referenced by no utility anywhere"
+      },
+      {
+        "name": "--color-chart-1",
+        "var": "--chart-1",
+        "lines": {
+          "theme": 74,
+          ":root": 25,
+          ".dark": 49
+        },
+        "reason": "declared but unused; chart colors are hardcoded in chart-legend.tsx instead"
+      },
+      {
+        "name": "--color-chart-2",
+        "var": "--chart-2",
+        "lines": {
+          "theme": 75,
+          ":root": 26,
+          ".dark": 50
+        },
+        "reason": "declared but unused; chart colors are hardcoded in chart-legend.tsx instead"
+      },
+      {
+        "name": "--color-chart-3",
+        "var": "--chart-3",
+        "lines": {
+          "theme": 76,
+          ":root": 27,
+          ".dark": 51
+        },
+        "reason": "declared but unused; chart colors are hardcoded in chart-legend.tsx instead"
+      }
+    ]
+  },
+  "darkMissing": {
+    "count": 1,
+    "items": [
+      {
+        "var": "--brand-soft",
+        "lightLine": 24,
+        "themeLine": 73,
+        "usedAt": "src/app/(dashboard)/dashboard/page.tsx:25 (bg-brand-soft)",
+        "note": ".dark block (lines 31-53) has no --brand-soft"
+      }
+    ]
+  },
+  "offScaleSpacing": {
+    "count": 1,
+    "items": [
+      {
+        "class": "p-[18px]",
+        "px": 18,
+        "file": "src/app/(dashboard)/dashboard/page.tsx",
+        "line": 46,
+        "signature": "RAW-C",
+        "nearestScale": [
+          "p-4 (16px)",
+          "p-5 (20px)"
+        ]
+      }
+    ]
+  },
+  "offScaleOther": {
+    "typography": [
+      {
+        "class": "text-[11px]",
+        "px": 11,
+        "file": "src/components/shared/chip.tsx",
+        "line": 16,
+        "signature": "TAG",
+        "nearestScale": "text-xs (12px)"
+      }
+    ],
+    "radius": [
+      {
+        "class": "rounded-[6px]",
+        "px": 6,
+        "sites": [
+          "src/components/shared/toolbar.tsx:30",
+          "src/components/forms/settings-form.tsx:21",
+          "src/app/(dashboard)/orders/[id]/page.tsx:23"
+        ],
+        "equalsToken": "--radius-sm (6px)",
+        "note": "arbitrary value that twins a token"
+      },
+      {
+        "class": "rounded-[4px]",
+        "px": 4,
+        "sites": [
+          "src/components/ui/checkbox.tsx:17"
+        ],
+        "equalsToken": null,
+        "note": "equals Tailwind default `rounded` (0.25rem) but no project radius token is 4px"
+      }
+    ],
+    "sizing": [
+      {
+        "class": "min-w-[8rem]",
+        "px": 128,
+        "sites": [
+          "src/components/ui/dropdown-menu.tsx:36"
+        ],
+        "onScaleEquivalent": "min-w-32",
+        "placementOnly": true
+      }
+    ],
+    "ringWidth": [
+      {
+        "class": "focus-visible:ring-[3px]",
+        "px": 3,
+        "sites": [
+          "src/components/ui/button.tsx:8",
+          "src/components/ui/badge.tsx:8",
+          "src/components/ui/checkbox.tsx:17",
+          "src/components/ui/input.tsx:12",
+          "src/components/ui/textarea.tsx:10"
+        ],
+        "note": "standard shadcn new-york; not spacing"
+      }
+    ],
+    "shadow": [
+      {
+        "class": "shadow-[0_1px_2px_rgba(0,0,0,0.06)]",
+        "sites": [
+          "src/components/shared/card.tsx:5"
+        ],
+        "note": "arbitrary shadow with an rgba literal (also listed in hardcodedColors.code)"
+      }
+    ],
+    "colors": [
+      {
+        "class": "bg-[#222222]",
+        "site": "src/components/shared/button-presets.tsx:7"
+      },
+      {
+        "class": "hover:bg-[#333333]",
+        "site": "src/components/shared/button-presets.tsx:7"
+      },
+      {
+        "class": "text-[#d93025]",
+        "site": "src/components/shared/button-presets.tsx:11"
+      }
+    ],
+    "allOnScaleSpacingNote": "Every other spacing utility (gap-1.5, px-2.5, py-0.5, py-1.5, p-1, -mx-1, my-1 ...) is a multiple of 0.25rem and therefore on scale."
+  },
+  "invalidClasses": {
+    "count": 1,
+    "items": [
+      {
+        "class": "rounded-card",
+        "file": "src/components/shared/card.tsx",
+        "line": 5,
+        "component": "Card",
+        "reason": "no utility, no @utility, no token --radius-card"
+      }
+    ],
+    "notInvalid": [
+      {
+        "class": "peer",
+        "sites": [
+          "src/components/ui/checkbox.tsx:17",
+          "src/components/ui/switch.tsx:16"
+        ],
+        "reason": "marker class (like `group`): emits no CSS but is valid"
+      },
+      {
+        "class": "focus-visible:focus-ring",
+        "sites": [
+          "src/app/layout.tsx:13"
+        ],
+        "reason": "project @utility focus-ring (globals.css:93) used with a variant; compiles"
+      },
+      {
+        "class": "btn / btn-${kind}",
+        "sites": [
+          "src/components/shared/dynamic-button.tsx:9"
+        ],
+        "reason": "inside a dynamic template literal; reported under dynamicClassSites, not as invalid classes"
+      }
+    ],
+    "verifiedWith": "tailwindcss 4.x compile of every static class candidate (206 candidates): only rounded-card and the marker `peer` produced no CSS"
+  },
+  "dynamicClassSites": {
+    "count": 1,
+    "items": [
+      {
+        "file": "src/components/shared/dynamic-button.tsx",
+        "line": 9,
+        "component": "DynamicButton",
+        "expression": "className={`btn btn-${kind}`}",
+        "staticPart": "btn",
+        "dynamicPart": "btn-${kind}",
+        "usedAt": [
+          "src/app/(dashboard)/dashboard/page.tsx:52 <DynamicButton kind=\"primary\">"
+        ],
+        "expected": "occurrence reported with signature=unresolved; do NOT synthesize btn-primary from the call-site prop"
+      }
+    ]
+  },
+  "unreachedComponents": {
+    "count": 1,
+    "items": [
+      {
+        "name": "OldButton",
+        "file": "src/components/shared/unused/old-button.tsx",
+        "definitionLine": 4,
+        "rootLine": 6,
+        "type": "button",
+        "reason": "exported but imported by no scanned file (reverse-import BFS from the routes never reaches it)"
+      }
+    ],
+    "note": "Every other component is reachable from a route: see routes.occurrencesVisiblePerRoute."
+  },
+  "hoverWithoutFocusVisible": {
+    "rule": "interactive element whose resolved classes contain a hover: variant and no focus-visible: variant",
+    "count": 4,
+    "bySignature": {
+      "RAW-A": 3,
+      "CHIP-X": 1
+    },
+    "items": [
+      {
+        "file": "src/components/shared/toolbar.tsx",
+        "line": 30,
+        "signature": "RAW-A",
+        "hover": "hover:bg-gray-50"
+      },
+      {
+        "file": "src/components/forms/settings-form.tsx",
+        "line": 21,
+        "signature": "RAW-A",
+        "hover": "hover:bg-gray-50"
+      },
+      {
+        "file": "src/app/(dashboard)/orders/[id]/page.tsx",
+        "line": 23,
+        "signature": "RAW-A",
+        "hover": "hover:bg-gray-50"
+      },
+      {
+        "file": "src/components/shared/chip.tsx",
+        "line": 7,
+        "signature": "CHIP-X",
+        "hover": "hover:bg-gray-200",
+        "note": "Chip remove button, reached via dashboard/page.tsx:30"
+      }
+    ],
+    "notFlagged": [
+      {
+        "file": "src/app/layout.tsx",
+        "line": 13,
+        "signature": "RAW-B",
+        "reason": "has focus-visible:focus-ring"
+      },
+      {
+        "file": "src/app/(dashboard)/dashboard/page.tsx",
+        "line": 46,
+        "signature": "RAW-C",
+        "reason": "no hover: at all (see noFocusVisibleAtAll)"
+      },
+      {
+        "file": "src/components/shared/unused/old-button.tsx",
+        "line": 6,
+        "signature": "OLD",
+        "reason": "no hover:, and unreached"
+      }
+    ],
+    "noFocusVisibleAtAll": {
+      "note": "informational superset: interactive elements with no focus-visible: classes (native inputs fall back to browser focus rings)",
+      "items": [
+        "RAW-A ×3",
+        "RAW-C",
+        "CHIP-X",
+        "CB-legacy ×2 (native)",
+        "RADIO ×3 (native)",
+        "SELECT-native ×1 (native)"
+      ]
+    }
+  },
+  "siblingRadiusMismatch": {
+    "rule": "row/grid container with ≥ 2 direct control children whose resolved border-radius differ",
+    "count": 2,
+    "items": [
+      {
+        "container": {
+          "file": "src/components/forms/settings-form.tsx",
+          "line": 30,
+          "classes": "flex gap-2"
+        },
+        "members": [
+          {
+            "occ": "occ-28",
+            "label": "Input",
+            "radiusPx": 6,
+            "heightPx": 36
+          },
+          {
+            "occ": "occ-16",
+            "label": "Button Save (B1)",
+            "radiusPx": 8,
+            "heightPx": 36
+          }
+        ],
+        "radii": [
+          6,
+          8
+        ],
+        "headline": true,
+        "note": "same height (h-9), different radius: rounded-sm vs rounded-md"
+      },
+      {
+        "container": {
+          "file": "src/components/shared/toolbar.tsx",
+          "line": 12,
+          "classes": "flex items-center gap-2"
+        },
+        "members": [
+          {
+            "occ": "occ-08",
+            "label": "Button outline sm",
+            "radiusPx": 8,
+            "heightPx": 32
+          },
+          {
+            "occ": "occ-09",
+            "label": "Button outline sm (dropdown trigger)",
+            "radiusPx": 8,
+            "heightPx": 32
+          },
+          {
+            "occ": "occ-10",
+            "label": "RAW-A",
+            "radiusPx": 6,
+            "heightPx": "≈34"
+          }
+        ],
+        "radii": [
+          8,
+          8,
+          6
+        ],
+        "headline": false,
+        "note": "RAW-A rounded-[6px] next to rounded-md buttons; the DropdownMenu root renders no box of its own"
+      }
+    ]
+  },
+  "siblingGroups": {
+    "note": "All containers with ≥ 2 direct control-like children, for completeness (mismatch=false groups must not be flagged).",
+    "items": [
+      {
+        "container": "src/components/forms/settings-form.tsx:30 flex gap-2",
+        "members": [
+          "occ-28 Input 6px",
+          "occ-16 Button 8px"
+        ],
+        "radiusMismatch": true
+      },
+      {
+        "container": "src/components/shared/toolbar.tsx:12 flex items-center gap-2",
+        "members": [
+          "occ-08 8px",
+          "occ-09 8px",
+          "occ-10 RAW-A 6px"
+        ],
+        "radiusMismatch": true
+      },
+      {
+        "container": "src/app/(dashboard)/layout.tsx:8 nav flex gap-1",
+        "members": [
+          "occ-05",
+          "occ-06",
+          "occ-07"
+        ],
+        "radii": [
+          8,
+          8,
+          8
+        ],
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/app/(dashboard)/orders/[id]/page.tsx:19 flex items-center gap-3",
+        "members": [
+          "occ-18 B-destructive 8px",
+          "occ-19 B-dangerlink 8px"
+        ],
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/components/forms/settings-form.tsx:74 fieldset flex gap-4",
+        "members": [
+          "occ-35",
+          "occ-36",
+          "occ-37"
+        ],
+        "note": "three identical Radio",
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/app/page.tsx:13 flex items-center gap-2",
+        "members": [
+          "occ-21 Badge 8px",
+          "occ-22 Badge 8px",
+          "occ-24 Tag 8px"
+        ],
+        "note": "badge-like members only",
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/components/forms/settings-form.tsx:36 fieldset space-y-2 (column, each control wrapped in a <label>)",
+        "members": [
+          "occ-29 CB-legacy 20px/4px",
+          "occ-30 CB-legacy 20px/4px",
+          "occ-31 CB-radix 16px/4px"
+        ],
+        "note": "not a row; radii equal (4px) but SIZE differs 20 vs 16 — informational",
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/app/(dashboard)/dashboard/page.tsx:35 li flex (inside .map)",
+        "members": [
+          "occ-11 Button sm"
+        ],
+        "note": "Tag is nested inside a <span>, so only one direct control",
+        "radiusMismatch": false
+      },
+      {
+        "container": "src/app/design-system/page.tsx rows (catalog bucket)",
+        "members": [
+          "4 Buttons per row, all rounded-md"
+        ],
+        "radiusMismatch": false
+      }
+    ]
+  },
+  "layoutScoped": {
+    "items": [
+      {
+        "layout": "src/app/layout.tsx",
+        "scope": "root",
+        "occurrences": [
+          "occ-01"
+        ],
+        "routes": [
+          "/",
+          "/dashboard",
+          "/settings",
+          "/orders/[id]",
+          "/design-system"
+        ],
+        "note": "RAW-B Sign out appears on every screen; counted once"
+      },
+      {
+        "layout": "src/app/(dashboard)/layout.tsx",
+        "scope": "route group (dashboard)",
+        "occurrences": [
+          "occ-05",
+          "occ-06",
+          "occ-07",
+          "occ-08",
+          "occ-09",
+          "occ-10",
+          "occ-38"
+        ],
+        "routes": [
+          "/dashboard",
+          "/settings",
+          "/orders/[id]"
+        ],
+        "note": "3 ghost nav buttons + everything inside <Toolbar /> (toolbar.tsx:13); counted once"
+      }
+    ]
+  },
+  "repeatedInline": {
+    "count": 1,
+    "items": [
+      {
+        "classes": "rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50",
+        "signature": "RAW-A",
+        "occurrences": 3,
+        "files": 3,
+        "sites": [
+          "src/components/shared/toolbar.tsx:30",
+          "src/components/forms/settings-form.tsx:21",
+          "src/app/(dashboard)/orders/[id]/page.tsx:23"
+        ],
+        "note": "byte-identical className string copy-pasted across three files"
+      }
+    ]
+  },
+  "catalog": {
+    "page": "src/app/design-system/page.tsx",
+    "route": "/design-system",
+    "title": "Design System",
+    "counts": {
+      "button": {
+        "occurrences": 24,
+        "signatures": 24,
+        "lines": "17-20, 27-30, 37-40, 47-50, 57-60, 67-70"
+      },
+      "badge": {
+        "occurrences": 4,
+        "signatures": 4,
+        "lines": "77-80"
+      },
+      "total": {
+        "occurrences": 28,
+        "signatures": 28
+      }
+    },
+    "overlapWithMain": {
+      "button": [
+        "B1 (line 17)",
+        "B-sm (line 18)",
+        "B-destructive (line 27)",
+        "B-outline-sm (line 38)",
+        "B-ghost (line 57)"
+      ],
+      "badge": [
+        "BADGE-default (77)",
+        "BADGE-secondary (78)",
+        "BADGE-destructive (79)"
+      ]
+    },
+    "catalogOnlySignatures": {
+      "button": 19,
+      "badge": 1
+    },
+    "detectionHints": [
+      "route segment name design-system",
+      "occurrences == signatures (28/28, every look used exactly once)",
+      "renders 100% of Button variant×size combos and 100% of Badge variants",
+      "one page holds more button signatures (24) than the rest of the app combined (11)"
+    ],
+    "expectation": "report separately; exclude from counts.total; do not let it inflate per-signature usage counts"
+  },
+  "excluded": {
+    "files": [
+      {
+        "file": "src/components/shared/__tests__/button.test.tsx",
+        "reason": "__tests__ + *.test.*",
+        "contains": [
+          "bg-[#ff0000] (lines 8, 9)",
+          "<Button> usage (line 8) — must not be an occurrence"
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "file": "src/components/shared/toolbar.tsx",
+        "line": 29,
+        "text": "{/* <button className=\"bg-[#00ff00]\">old</button> */}",
+        "reason": "JSX comment — not an element, not a color literal"
+      }
+    ]
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "topic": "Dropdown trigger Button",
+      "decision": "The asChild <Button> inside <DropdownMenuTrigger> counts as a button occurrence (toolbar.tsx:18, signature B-outline-sm) AND the DropdownMenu counts as one dropdown-menu occurrence (toolbar.tsx:16). counts.buttonOccurrencesExcludingDropdownTrigger (19) is provided if the scanner chooses not to double-list it."
+    },
+    {
+      "id": "D2",
+      "topic": "DynamicButton usage",
+      "decision": "DynamicButton is used once (dashboard/page.tsx:52) so that it is not also an unreached component. Its occurrence is counted in button.occurrences (20) but has no signature (button.signatures = 11 counts resolved looks only)."
+    },
+    {
+      "id": "D3",
+      "topic": "hoverWithoutFocusVisible scope",
+      "decision": "Applied the rule mechanically: RAW-A ×3 plus the Chip × button (chip.tsx:7), which also has hover: without focus-visible:. RAW-B was given focus-visible:focus-ring (using the project @utility) so it is deliberately NOT flagged."
+    },
+    {
+      "id": "D4",
+      "topic": "Extra tokens beyond the brief",
+      "decision": "Added --secondary-foreground, --accent-foreground, --popover, --popover-foreground so the vendored shadcn classes (text-secondary-foreground, hover:text-accent-foreground, bg-popover ...) resolve. All four are used; dead tokens remain exactly sidebar-accent + chart-1..3."
+    },
+    {
+      "id": "D5",
+      "topic": "Radio / LegacyCheckbox shapes",
+      "decision": "LegacyCheckbox root IS the <input type=checkbox> (label lives at the usage site). Radio root is a <label> wrapping exactly one <input type=radio>; each <Radio /> usage is one radio occurrence (single-control wrapper resolution)."
+    },
+    {
+      "id": "D6",
+      "topic": "Sibling mismatch count",
+      "decision": "Two groups mismatch, not one: the brief's toolbar (RAW-A rounded-[6px] beside rounded-md buttons) necessarily mismatches too. The settings-form Input/Button row is marked headline:true (same 36px height)."
+    },
+    {
+      "id": "D7",
+      "topic": "Switch markup",
+      "decision": "Used the classic shadcn switch (h-5 w-9, thumb size-4, translate-x-4) instead of the newer h-[1.15rem] version so the only off-scale spacing value in the fixture is p-[18px]."
+    },
+    {
+      "id": "D8",
+      "topic": "Catalog written out literally",
+      "decision": "The 24 Button and 4 Badge elements are literal JSX (no .map over variant arrays) so each is a distinct, resolvable occurrence; a .map would count once and be unresolvable."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "design-polish",
+  "displayName": "Design Polish",
+  "version": "0.1.0",
+  "description": "Inventory every color, type size, spacing, radius, shadow and form control in an AI-built web app, show them at real size on one HTML page, let the user pick what stays, apply only the approved cards (one commit each), re-count, and keep future generations from drifting. 코딩 에이전트로 만든 앱의 디자인을 전수조사·정리·재발 방지.",
+  "author": {
+    "name": "Yejin Kim",
+    "email": "yejin@newmean.ai",
+    "url": "https://github.com/yejin-newmean"
+  },
+  "homepage": "https://github.com/yejin-newmean/design-polish",
+  "repository": "https://github.com/yejin-newmean/design-polish",
+  "license": "MIT",
+  "keywords": ["design-tokens", "design-system", "design-audit", "interface-inventory", "tailwind", "shadcn", "vibe-coding", "ui-consistency"]
+}

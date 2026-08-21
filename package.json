@@ -1,0 +1,44 @@
+{
+  "name": "design-polish",
+  "version": "0.1.0",
+  "description": "See every button style, gray, radius and form control in your AI-built app on one page, keep what you want, and let your coding agent fix the rest — safely. Agent skill for Claude Code, Codex and Cursor, plus a zero-AI CLI.",
+  "license": "MIT",
+  "author": {
+    "name": "Yejin Kim",
+    "email": "yejin@newmean.ai",
+    "url": "https://github.com/yejin-newmean"
+  },
+  "homepage": "https://github.com/yejin-newmean/design-polish",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yejin-newmean/design-polish.git"
+  },
+  "bugs": "https://github.com/yejin-newmean/design-polish/issues",
+  "keywords": [
+    "design-tokens", "design-system", "design-audit", "interface-inventory", "tailwind", "shadcn",
+    "vibe-coding", "claude-code", "agent-skills", "codex", "cursor", "ui-consistency"
+  ],
+  "bin": {
+    "design-polish": "skills/design-polish/scripts/cli.js"
+  },
+  "files": [
+    "skills/design-polish/**",
+    "README.md",
+    "README_KO.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "validate": "claude plugin validate --strict .",
+    "sync-agents": "node tests/sync-agents.js --write"
+  },
+  "devDependencies": {
+    "@tailwindcss/node": "^4.1.18",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
+  }
+}

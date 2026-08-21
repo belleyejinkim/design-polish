@@ -1,0 +1,76 @@
+{
+  "$id": "design-polish.inventory/1",
+  "type": "object",
+  "required": ["schema", "meta", "routes", "components", "occurrences", "relationships", "tokens", "classes", "coverage", "scores"],
+  "properties": {
+    "schema": { "const": "design-polish.inventory/1" },
+    "meta": {
+      "type": "object",
+      "required": ["scannerVersion", "generatedAt", "root", "mode", "parser", "css", "files", "router"],
+      "properties": {
+        "scannerVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "root": { "type": "string" },
+        "mode": { "enum": ["ast", "regex", "solo"] },
+        "parser": { "type": ["object", "null"] },
+        "css": { "type": "object", "required": ["engine", "entry"], "properties": { "engine": { "enum": ["tailwind4", "tailwind3", "plain", "none"] }, "entry": { "type": ["string", "null"] }, "error": { "type": ["string", "null"] }, "darkStrategy": { "enum": ["class", "media", "data-attr", "none"] } } },
+        "files": { "type": "object", "required": ["listSource", "listed", "scanned", "parseFailed", "skipped"], "properties": { "listSource": { "enum": ["git", "walk"] }, "listed": { "type": "integer", "minimum": 0 }, "scanned": { "type": "integer", "minimum": 0 }, "parseFailed": { "type": "array" } } },
+        "router": { "enum": ["next-app", "next-pages", "react-router", "none"] }
+      }
+    },
+    "routes": { "type": "array", "items": { "type": "object", "required": ["id", "path", "kind", "file", "catalogLike"], "properties": { "id": { "type": "string", "pattern": "^route:" }, "path": { "type": "string" }, "kind": { "enum": ["page", "layout", "template"] }, "file": { "type": "string" }, "display": { "type": ["string", "null"] }, "catalogLike": { "type": "boolean" } } } },
+    "components": {
+      "type": "object",
+      "required": ["button", "checkbox", "dropdown-menu", "radio", "select", "textarea", "text-field", "toggle", "badge", "tag", "chip"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["total", "catalog", "implementations", "signatures"],
+        "properties": {
+          "total": { "type": "integer", "minimum": 0 },
+          "catalog": { "type": "integer", "minimum": 0 },
+          "implementations": { "type": "array", "items": { "type": "object", "required": ["id", "type", "kind", "name", "count"], "properties": { "id": { "type": "string", "pattern": "^impl:" }, "kind": { "enum": ["native", "local-component", "wrapper", "library"] }, "count": { "type": "integer", "minimum": 0 }, "reachability": { "enum": ["reached", "unreached", "no-router"] } } } },
+          "signatures": { "type": "array", "items": { "$ref": "#/definitions/signature" } }
+        }
+      }
+    },
+    "occurrences": { "type": "array", "items": { "$ref": "#/definitions/occurrence" } },
+    "relationships": { "type": "object", "required": ["status", "siblingGroups"], "properties": { "status": { "enum": ["ok", "unavailable"] }, "siblingGroups": { "type": "array", "items": { "type": "object", "required": ["id", "file", "line", "layout", "members", "mismatch"], "properties": { "id": { "type": "string", "pattern": "^grp:" }, "layout": { "enum": ["row", "grid", "col", "unknown"] }, "members": { "type": "array", "minItems": 2, "items": { "type": "string", "pattern": "^occ:" } }, "mismatch": { "type": "object", "required": ["radius", "height"] } } } } } },
+    "tokens": { "type": "object", "required": ["declared", "colors", "typography", "spacing", "radius", "border", "shadows", "axes", "scores"] },
+    "classes": { "type": "object", "required": ["unique", "resolved", "unresolved", "dynamicSites"] },
+    "coverage": { "type": "object", "required": ["unreachedFiles", "inlineStyleCount", "jsLiteralCount"] },
+    "scores": { "type": "object", "required": ["composite"] }
+  },
+  "definitions": {
+    "signature": {
+      "type": "object",
+      "required": ["id", "type", "idBasis", "count", "catalogCount", "adHoc", "implIds", "spelling", "computed", "states", "routes", "occurrences"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^sig:[a-z-]+:[0-9a-f]{12}$" },
+        "idBasis": { "enum": ["decl", "tokens"] },
+        "count": { "type": "integer", "minimum": 0 },
+        "catalogCount": { "type": "integer", "minimum": 0 },
+        "adHoc": { "type": "boolean" },
+        "implIds": { "type": "array", "items": { "type": "string", "pattern": "^impl:" } },
+        "spelling": { "type": "string" },
+        "computed": { "type": "object", "required": ["heightPx", "radiusPx", "paddingX", "paddingY", "fontSizePx", "bg", "fg", "border"] },
+        "states": { "type": "object", "required": ["hover", "focusVisible", "disabled", "dark"] },
+        "routes": { "type": "array", "items": { "type": "string" } },
+        "occurrences": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^occ:" } }
+      }
+    },
+    "occurrence": {
+      "type": "object",
+      "required": ["id", "sigId", "type", "implId", "file", "line", "col", "tag", "classes", "adHoc", "routes", "reachability", "catalog", "computed", "states"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^occ:[0-9a-f]{12}$" },
+        "sigId": { "type": "string", "pattern": "^sig:" },
+        "type": { "enum": ["button", "checkbox", "dropdown-menu", "radio", "select", "textarea", "text-field", "toggle", "badge", "tag", "chip"] },
+        "line": { "type": "integer", "minimum": 1 },
+        "col": { "type": "integer", "minimum": 1 },
+        "tag": { "type": ["string", "null"] },
+        "reachability": { "enum": ["reached", "unreached", "no-router"] },
+        "catalog": { "type": "boolean" }
+      }
+    }
+  }
+}

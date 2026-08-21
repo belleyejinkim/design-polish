@@ -1,0 +1,17 @@
+{
+  "name": "design-polish",
+  "owner": {
+    "name": "Yejin Kim",
+    "url": "https://github.com/yejin-newmean"
+  },
+  "plugins": [
+    {
+      "name": "design-polish",
+      "source": "./",
+      "description": "Inventory, curate and safely consolidate the design of an AI-built web app: tokens (color, type, spacing, radius, shadow) and 11 form components, one HTML report, one commit per approved card. 디자인 전수조사·정리·재발 방지.",
+      "version": "0.1.0",
+      "category": "design",
+      "tags": ["design-tokens", "design-system", "audit", "tailwind", "shadcn", "vibe-coding"]
+    }
+  ]
+}

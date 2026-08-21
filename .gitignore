@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+*.log
+.design-polish/runs/
+.design-polish/serve.json
+.design-polish/*.draft.json
+tests/.tmp/
+skills/design-polish/evals/fixtures/*/node_modules/
+skills/design-polish/evals/fixtures/*/.design-polish/
+skills/design-polish/evals/fixtures/*/.next/

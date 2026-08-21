@@ -1,0 +1,27 @@
+{
+  "$id": "design-polish.findings/1",
+  "type": "object",
+  "required": ["schema", "generatedAt", "thresholds", "findings", "okAxes", "summary"],
+  "properties": {
+    "schema": { "const": "design-polish.findings/1" },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "num", "rule", "axis", "severity", "title", "summary", "subjects", "counts", "screens", "evidence", "basis", "priority"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^F:[A-Z-]+:[0-9a-f]{6}$" },
+          "num": { "type": "integer", "minimum": 1 },
+          "severity": { "enum": ["high", "medium", "low", "info"] },
+          "subjects": { "type": "array", "items": { "type": "string" } },
+          "screens": { "type": "array", "items": { "type": "string" } },
+          "evidence": { "type": "object", "required": ["kind", "refs"] },
+          "recommendation": { "type": ["object", "null"] },
+          "needsUserConfirmation": { "type": "boolean" }
+        }
+      }
+    },
+    "okAxes": { "type": "array" },
+    "summary": { "type": "object", "required": ["high", "medium", "low", "info"] }
+  }
+}
