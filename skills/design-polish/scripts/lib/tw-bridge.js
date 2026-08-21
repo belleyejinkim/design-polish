@@ -28,14 +28,22 @@ function tryResolve(spec, paths) {
 
 /** Locate the project's Tailwind engine. Returns { kind, version, nodeApi, coreApi, from } or null. */
 function locateEngine(root) {
-  const paths = [...ancestors(root), path.join(__dirname, '..', '..', '..', '..')];
+  // search order: the project and its ancestors → DESIGN_POLISH_TW (a directory whose node_modules holds Tailwind)
+  // → this checkout's own dev dependencies (the repository; absent in the npm package) → the global npm root
+  const paths = [...ancestors(root)];
+  if (process.env.DESIGN_POLISH_TW) paths.push(process.env.DESIGN_POLISH_TW);
+  paths.push(path.join(__dirname, '..', '..', '..', '..'));
   // pnpm nests @tailwindcss/node under the postcss/vite/cli package; realpath gets us there.
   const hosts = ['@tailwindcss/postcss', '@tailwindcss/vite', '@tailwindcss/cli'];
   for (const host of hosts) {
     const pkgJson = tryResolve(`${host}/package.json`, paths);
     if (pkgJson) paths.unshift(fs.realpathSync(path.dirname(pkgJson)));
   }
-  const corePkg = tryResolve('tailwindcss/package.json', paths);
+  let corePkg = tryResolve('tailwindcss/package.json', paths);
+  if (!corePkg) {
+    // last resort, only when nothing closer exists (spawning npm costs ~100 ms)
+    try { const g = require('child_process').execFileSync('npm', ['root', '-g'], { encoding: 'utf8', timeout: 5000 }).trim(); if (g) { paths.push(path.dirname(g)); corePkg = tryResolve('tailwindcss/package.json', paths); } } catch (_) { /* no npm on PATH */ }
+  }
   if (!corePkg) return null;
   const version = JSON.parse(fs.readFileSync(corePkg, 'utf8')).version || '0';
   const major = parseInt(version.split('.')[0], 10);
@@ -189,6 +197,11 @@ async function create(root, opts = {}) {
     bridge.version = engine.version;
     bridge.from = engine.from;
     bridge.error = 'Tailwind v3 resolution is not supported yet (planned for 1.1); classes are counted but not resolved to values';
+  } else if ((opts.cssFiles || []).some((f) => /@import\s+["']tailwindcss|@tailwind\s+(base|utilities)|@config\s/.test(f.text))) {
+    // A Tailwind stylesheet without a reachable engine: classes cannot be compiled. Say so instead of
+    // pretending the project is plain CSS (which would call every utility "invalid").
+    bridge.engine = 'none';
+    bridge.error = 'Tailwind stylesheet found but no Tailwind engine: run `npm install` in the project (or pass DESIGN_POLISH_TW=<dir with node_modules/@tailwindcss/node>)';
   } else if (opts.cssFiles && opts.cssFiles.length) {
     bridge.engine = 'plain';
   }

@@ -7,10 +7,10 @@
   "author": {
     "name": "Yejin Kim",
     "email": "yejin@newmean.ai",
-    "url": "https://github.com/yejin-newmean"
+    "url": "https://github.com/belleyejinkim"
   },
-  "homepage": "https://github.com/yejin-newmean/design-polish",
-  "repository": "https://github.com/yejin-newmean/design-polish",
+  "homepage": "https://github.com/belleyejinkim/design-polish",
+  "repository": "https://github.com/belleyejinkim/design-polish",
   "license": "MIT",
   "keywords": ["design-tokens", "design-system", "design-audit", "interface-inventory", "tailwind", "shadcn", "vibe-coding", "ui-consistency"]
 }

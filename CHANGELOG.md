@@ -7,7 +7,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
-- Zero-AI inventory (`npx design-polish`): TypeScript-based element attribution, values compiled by the project's own Tailwind v4 engine (borrowed engine when the target has no `node_modules`), 11 form controls, 5 token axes, screens, sibling rows, catalog pages counted apart, vendored `components/ui` counted apart.
+- Zero-AI inventory (`npx design-polish`): TypeScript-based element attribution, values compiled by the project's own Tailwind v4 engine (an engine found in an ancestor directory or the repository's dev dependencies is borrowed when the target has no `node_modules`), 11 form controls, 5 token axes, screens, sibling rows, catalog pages counted apart, vendored `components/ui` counted apart.
 - Single-file HTML report: 13 chapters, real-size specimens with hover/focus/disabled/checked/dark simulation, curation rows, cart with size warnings, decisions hand-off (local server / clipboard / file), developer-info toggle, `en` and `ko`.
 - Diagnosis (`diagnose.js`, 18 rules with stable ids) and proposal cards (`propose.js`) with three visual-change labels; mode-varying tokens are never safe merge targets; shadcn base-set tokens are never proposed for deletion.
 - Apply loop: `apply.js` (mechanical plans, two-phase writes, typecheck with automatic revert, one commit per card, vendored skip), `diff-runs.js` + `recheck` with the before/after chapter, `baseline.js` (`design-polish check`).

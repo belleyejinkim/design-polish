@@ -479,7 +479,9 @@ ${dataScript}
 
   // chat summary (≤5 lines; numbers from the same data)
   const lowest = ['color', 'typography', 'spacing', 'radius', 'shadow', 'component'].filter((a) => scores[a] != null).sort((a, b) => scores[a] - scores[b])[0];
+  const noEngine = inv.meta.css.engine === 'none' || inv.meta.css.error;
   const chat = [
+    ...(noEngine ? [lang === 'ko' ? `주의: Tailwind 엔진을 찾지 못해 클래스 값을 컴파일하지 못했습니다${inv.meta.css.error ? ` (${inv.meta.css.error})` : ''} — 색·여백·모서리 점수는 비어 있고 모양은 클래스 이름으로만 구분합니다` : `Note: no Tailwind engine was found, so class values were not compiled${inv.meta.css.error ? ` (${inv.meta.css.error})` : ''} — colour/spacing/corner scores are empty and looks are keyed by class names`] : []),
     lang === 'ko' ? `일관성 점수 ${scores.composite ?? '–'} · 가장 낮은 축: ${al[lowest] || '–'} ${scores[lowest] ?? ''}` : `Consistency ${scores.composite ?? '–'} · lowest axis: ${al[lowest] || '–'} ${scores[lowest] ?? ''}`,
     lang === 'ko' ? `컴포넌트 모양 ${totalLooks}가지(${typesPresent}종) · 일회성 ${adHocLooks} · 직접 쓴 색 ${hardcodedColors}종` : `${totalLooks} component looks across ${typesPresent} types · ${adHocLooks} one-off · ${hardcodedColors} raw colors`,
     ...topFindings.slice(0, 2).map((f) => `F${f.num} ${(narrative && narrative.findings && narrative.findings[f.id] && narrative.findings[f.id].title) || ruleTitle(f)}`),

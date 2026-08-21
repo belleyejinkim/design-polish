@@ -4,9 +4,9 @@
 
 Works in Claude Code · Codex · Cursor · the inventory needs no AI · MIT
 
-[Open an example report →](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) · [한국어](README_KO.md)
+[Open an example report →](https://belleyejinkim.github.io/design-polish/examples/messy-next/report.html) · [한국어](README_KO.md)
 
-Made by [Yejin Kim](https://github.com/yejin-newmean).
+Made by [Yejin Kim](https://github.com/belleyejinkim).
 
 ---
 
@@ -32,7 +32,7 @@ design-polish reads the code for you: every colour, text size, spacing, corner, 
 
 ## Three live reports
 
-| [Messy app](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [Clean app](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) | [No cva, no shadcn](https://yejin-newmean.github.io/design-polish/examples/vite-router/report.html) |
+| [Messy app](https://belleyejinkim.github.io/design-polish/examples/messy-next/report.html) | [Clean app](https://belleyejinkim.github.io/design-polish/examples/clean-shadcn/report.html) | [No cva, no shadcn](https://belleyejinkim.github.io/design-polish/examples/vite-router/report.html) |
 |---|---|---|
 | Next.js, 28 files, 11 button looks, a legacy checkbox, a toolbar whose corners disagree, dead tokens, a missing dark value | 12 files of tidy shadcn/ui. Nothing to fix — and the report says so instead of inventing work | Vite + React Router, a const-map button; one hand-written button breaks a row |
 
@@ -41,13 +41,13 @@ All three are synthetic fixtures from `skills/design-polish/evals/fixtures`; no 
 ## Install
 
 ```bash
-npx skills add yejin-newmean/design-polish        # Claude Code, Codex, Cursor, … (re-run to update)
+npx skills add belleyejinkim/design-polish        # Claude Code, Codex, Cursor, … (re-run to update)
 ```
 
 Claude Code plugin (adds the three subagent types):
 
 ```
-/plugin marketplace add yejin-newmean/design-polish
+/plugin marketplace add belleyejinkim/design-polish
 /plugin install design-polish@design-polish
 ```
 

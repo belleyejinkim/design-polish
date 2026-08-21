@@ -6,17 +6,27 @@
   "author": {
     "name": "Yejin Kim",
     "email": "yejin@newmean.ai",
-    "url": "https://github.com/yejin-newmean"
+    "url": "https://github.com/belleyejinkim"
   },
-  "homepage": "https://github.com/yejin-newmean/design-polish",
+  "homepage": "https://github.com/belleyejinkim/design-polish#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yejin-newmean/design-polish.git"
+    "url": "git+https://github.com/belleyejinkim/design-polish.git"
   },
-  "bugs": "https://github.com/yejin-newmean/design-polish/issues",
+  "bugs": "https://github.com/belleyejinkim/design-polish/issues",
   "keywords": [
-    "design-tokens", "design-system", "design-audit", "interface-inventory", "tailwind", "shadcn",
-    "vibe-coding", "claude-code", "agent-skills", "codex", "cursor", "ui-consistency"
+    "design-tokens",
+    "design-system",
+    "design-audit",
+    "interface-inventory",
+    "tailwind",
+    "shadcn",
+    "vibe-coding",
+    "claude-code",
+    "agent-skills",
+    "codex",
+    "cursor",
+    "ui-consistency"
   ],
   "bin": {
     "design-polish": "skills/design-polish/scripts/cli.js"
@@ -34,11 +44,15 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "validate": "claude plugin validate --strict .",
-    "sync-agents": "node tests/sync-agents.js --write"
+    "sync-agents": "node tools/sync-agents.js",
+    "prepublishOnly": "npm test && node tools/sync-agents.js --check"
   },
   "devDependencies": {
     "@tailwindcss/node": "^4.1.18",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

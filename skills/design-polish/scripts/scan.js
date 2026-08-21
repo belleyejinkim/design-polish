@@ -557,7 +557,8 @@ async function scan(rootArg, opts = {}) {
     impl.count += o.count;
     impl.catalogCount = (impl.catalogCount || 0) + o.catalogCount;
     impl.signatures.add(sig.id);
-    const resolvedLook = Object.keys(sig.canonical).length > 0 || (eff.classSet.tokens.length === 0 && eff.classSet.unknown.length === 0);
+    // With no CSS engine nothing compiles; looks are then keyed by their class tokens and still counted (the cover says "values not compiled").
+    const resolvedLook = Object.keys(sig.canonical).length > 0 || (eff.classSet.tokens.length === 0 && eff.classSet.unknown.length === 0) || (bridge.engine === 'none' && eff.classSet.unknown.length === 0);
     if (!sigMap.has(sig.id)) sigMap.set(sig.id, { ...sig, type: det.type, resolved: resolvedLook, implIds: new Set(), occurrences: [], spellings: new Set(), computed, states: occ.states, scopes, labels: new Set(), routes: new Set(), layoutScopes: new Set(), variantProps: occ.variantProps, adHoc: false, unresolvedClasses: new Set(unresolved), catalogCount: 0, count: 0, tag: eff.tag, role: eff.role, subtype: det.subtype || null, attrs: occ.attrs, itemClasses: occ.itemClasses, skeleton: occ.skeleton, asChild: eff.asChild });
     const s = sigMap.get(sig.id);
     s.implIds.add(implKey);
@@ -629,6 +630,7 @@ async function scan(rootArg, opts = {}) {
   const mainN = occMain.reduce((n, o) => n + o.count, 0);
   const adHocN = occMain.filter((o) => o.adHoc).reduce((n, o) => n + o.count, 0);
   inventory.scores.component = mainN ? Math.round(((mainN - adHocN) / mainN) * 1000) / 10 : null;
+  if (bridge.engine === 'none' || bridge.error) for (const k of ['color', 'typography', 'spacing', 'radius', 'shadow']) inventory.scores[k] = null; // class values were not compiled: no honest score
   const axesForComposite = ['color', 'typography', 'spacing', 'radius', 'shadow', 'component'];
   const weights = { color: tokenInv.axes.color.onToken + tokenInv.axes.color.hardcoded, typography: tokenInv.axes.typography.onToken + tokenInv.axes.typography.hardcoded, spacing: tokenInv.axes.spacing.onScale + tokenInv.axes.spacing.offScale, radius: tokenInv.axes.radius.onToken + tokenInv.axes.radius.hardcoded, shadow: tokenInv.axes.shadow.onToken + tokenInv.axes.shadow.hardcoded, component: mainN };
   let wsum = 0, acc = 0;

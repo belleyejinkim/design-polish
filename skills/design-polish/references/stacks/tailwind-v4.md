@@ -1,8 +1,9 @@
 # Tailwind v4 (full support)
 
 - Engine: the project's own `@tailwindcss/node` (found via `tailwindcss`, `@tailwindcss/postcss`, `@tailwindcss/vite`
-  or `@tailwindcss/cli`, pnpm realpaths included). When the target has no `node_modules`, the skill's bundled engine is
-  borrowed and `@import "tailwindcss"` is resolved to it.
+  or `@tailwindcss/cli`, pnpm realpaths included). When the target has no `node_modules`, an engine is looked for in
+  ancestor directories and in the design-polish checkout's own dev dependencies (the repository, not the npm package),
+  and `@import "tailwindcss"` is resolved to it; with no engine anywhere the cover says "values not compiled".
 - Entry: the CSS file containing `@import "tailwindcss"` (`app/globals.css`, `src/app/globals.css`, `styles/globals.css`
   …); override with `--css <file>` or `config.json { "css": "…" }`.
 - Values: every candidate class we count is compiled with `candidatesToCss`; wrapper-selector utilities

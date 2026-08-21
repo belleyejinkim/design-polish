@@ -4,9 +4,9 @@
 
 Claude Code · Codex · Cursor에서 동작 · 인벤토리는 AI 없이 · MIT
 
-[예시 리포트 열기 →](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) · [English](README.md)
+[예시 리포트 열기 →](https://belleyejinkim.github.io/design-polish/examples/messy-next/report.html) · [English](README.md)
 
-만든 사람: [Yejin Kim](https://github.com/yejin-newmean)
+만든 사람: [Yejin Kim](https://github.com/belleyejinkim)
 
 ---
 
@@ -32,7 +32,7 @@ design-polish가 대신 코드를 읽습니다. 색·글자 크기·여백·모�
 
 ## 살아 있는 리포트 세 개
 
-| [어지러운 앱](https://yejin-newmean.github.io/design-polish/examples/messy-next/report.html) | [깨끗한 앱](https://yejin-newmean.github.io/design-polish/examples/clean-shadcn/report.html) | [cva도 shadcn도 없는 앱](https://yejin-newmean.github.io/design-polish/examples/vite-router/report.html) |
+| [어지러운 앱](https://belleyejinkim.github.io/design-polish/examples/messy-next/report.html) | [깨끗한 앱](https://belleyejinkim.github.io/design-polish/examples/clean-shadcn/report.html) | [cva도 shadcn도 없는 앱](https://belleyejinkim.github.io/design-polish/examples/vite-router/report.html) |
 |---|---|---|
 | Next.js, 파일 28개, 버튼 모양 11가지, 옛날 체크박스, 모서리가 서로 다른 툴바, 죽은 토큰, 다크 값 누락 | 파일 12개, 정돈된 shadcn/ui. 고칠 게 없고, 리포트가 일을 만들어내는 대신 그렇다고 말합니다 | Vite + React Router, const-map 버튼. 손으로 적은 버튼 하나가 한 줄을 어긋나게 합니다 |
 
@@ -41,13 +41,13 @@ design-polish가 대신 코드를 읽습니다. 색·글자 크기·여백·모�
 ## 설치
 
 ```bash
-npx skills add yejin-newmean/design-polish        # Claude Code, Codex, Cursor … (다시 실행하면 업데이트)
+npx skills add belleyejinkim/design-polish        # Claude Code, Codex, Cursor … (다시 실행하면 업데이트)
 ```
 
 Claude Code 플러그인(서브에이전트 타입 3개 포함):
 
 ```
-/plugin marketplace add yejin-newmean/design-polish
+/plugin marketplace add belleyejinkim/design-polish
 /plugin install design-polish@design-polish
 ```
 

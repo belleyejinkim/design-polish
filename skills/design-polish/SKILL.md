@@ -16,7 +16,7 @@ compatibility: Node.js 18+ and git in the target. Full support for Tailwind v4 (
 metadata:
   author: Yejin Kim
   version: 0.1.0
-  homepage: https://github.com/yejin-newmean/design-polish
+  homepage: https://github.com/belleyejinkim/design-polish
 ---
 
 # design-polish
