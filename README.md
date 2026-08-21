@@ -70,6 +70,7 @@ At most four questions, all of them yours to answer (a look-alike pair, which ca
 | Tailwind v4 + shadcn/ui, Radix, cva, Next.js app router | full: values compiled by the project's own Tailwind, element-level attribution, screens, siblings |
 | Next.js pages router, Vite + React Router | full, with weaker screen attribution |
 | Tailwind v3, CSS Modules | partial: looks and counts, no compiled values (1.1) |
+| Server-rendered templates (Freemarker, Thymeleaf, ERB, Blade, plain HTML) | CSS-only: colours, spacing, corners, shadows from stylesheets and `<style>` blocks; no components or screens |
 | styled-components / emotion | not yet — the report says so on the cover |
 | Vue, Svelte, Angular | out of scope |
 

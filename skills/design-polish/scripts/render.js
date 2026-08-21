@@ -118,7 +118,7 @@ function build(runDir, opts = {}) {
     <h1>${esc(project)}</h1>
     <p class="sub">${esc(T.subtitle)}</p>
     <div class="meta"><span>${fmt(T.cover.scanned, { files: n(inv.meta.files.code, 'meta.files.code'), routes: n(inv.routes.filter((r) => r.kind === 'page').length, 'routes.pages'), classes: n(inv.classes.unique, 'classes.unique') })}</span><span>${esc(fmt(T.cover.generated, { date: inv.meta.generatedAt.slice(0, 10), run: runId }))}</span></div>
-    <div class="badges">${inv.meta.mode === 'ast' ? `<span class="badge">${esc(T.cover.mode_ast)}</span>` : `<span class="badge warn">${esc(T.cover.mode_regex)}</span>`}${inv.meta.css.engine !== 'none' ? `<span class="badge">${esc(fmt(T.cover.css_engine, { engine: `${inv.meta.css.engine}${inv.meta.css.version ? ' ' + inv.meta.css.version : ''}` }))}</span>` : `<span class="badge warn">${esc(T.cover.no_engine)}</span>`}${inv.meta.css.darkStrategy !== 'none' ? `<span class="badge">${esc(fmt(T.cover.dark, { strategy: inv.meta.css.darkStrategy }))}</span>` : ''}${specimens && specimens.status === 'failed' ? `<span class="badge warn">${esc(fmt(T.components.render_failed, { reason: specimens.reason }))}</span>` : ''}</div>
+    <div class="badges">${inv.meta.mode === 'ast' ? `<span class="badge">${esc(T.cover.mode_ast)}</span>` : inv.meta.mode === 'css-only' ? `<span class="badge warn">${esc(fmt(T.cover.mode_css_only, { css: inv.meta.files.css, templates: inv.meta.templates || 0 }))}</span>` : `<span class="badge warn">${esc(T.cover.mode_regex)}</span>`}${inv.meta.css.engine !== 'none' ? `<span class="badge">${esc(fmt(T.cover.css_engine, { engine: `${inv.meta.css.engine}${inv.meta.css.version ? ' ' + inv.meta.css.version : ''}` }))}</span>` : `<span class="badge warn">${esc(T.cover.no_engine)}</span>`}${inv.meta.css.darkStrategy !== 'none' ? `<span class="badge">${esc(fmt(T.cover.dark, { strategy: inv.meta.css.darkStrategy }))}</span>` : ''}${specimens && specimens.status === 'failed' ? `<span class="badge warn">${esc(fmt(T.components.render_failed, { reason: specimens.reason }))}</span>` : ''}</div>
   </div></header>`);
   if (noModel) parts.push(`<div class="banner"><div class="wrap">${esc(T.cover.no_model)}</div></div>`);
   // nav
@@ -360,7 +360,7 @@ function build(runDir, opts = {}) {
     parts.push(`<section class="chapter" id="components"><div class="wrap">
       <div class="band"><h2>${esc(T.components.h)}</h2>${chapterStats([[T.summary.tiles.looks, n(totalLooks, 'components.looks')], [T.summary.tiles.adhoc, n(adHocLooks, 'components.adhoc')], [T.summary.axes.component, scores.component == null ? '–' : n(scores.component + '%', 'scores.component')]])}</div>
       ${chapterSummary('components')}
-      ${sections}
+      ${inv.meta.mode === 'css-only' ? `<p class="help">${esc(T.components.css_only)}</p>` : sections}
       ${findingsBlock(findingsFor((f) => f.axis.startsWith('component') || f.axis === 'classes'))}
       ${decisionsBlock()}
     </div></section>`);
@@ -480,7 +480,9 @@ ${dataScript}
   // chat summary (≤5 lines; numbers from the same data)
   const lowest = ['color', 'typography', 'spacing', 'radius', 'shadow', 'component'].filter((a) => scores[a] != null).sort((a, b) => scores[a] - scores[b])[0];
   const noEngine = inv.meta.css.engine === 'none' || inv.meta.css.error;
+  const cssOnly = inv.meta.mode === 'css-only';
   const chat = [
+    ...(cssOnly ? [lang === 'ko' ? `CSS만 조사했습니다: React/JSX 코드가 없어 스타일시트 ${inv.meta.files.css}개${inv.meta.templates ? `(템플릿 <style> ${inv.meta.templates}개 포함)` : ''}의 색·여백·모서리·그림자만 셌고, 컴포넌트와 화면은 조사하지 않았습니다` : `CSS-only inventory: no React/JSX code, so colours, spacing, corners and shadows come from ${inv.meta.files.css} stylesheet(s)${inv.meta.templates ? ` (including <style> blocks in ${inv.meta.templates} templates)` : ''}; components and screens were not inventoried`] : []),
     ...(noEngine ? [lang === 'ko' ? `주의: Tailwind 엔진을 찾지 못해 클래스 값을 컴파일하지 못했습니다${inv.meta.css.error ? ` (${inv.meta.css.error})` : ''} — 색·여백·모서리 점수는 비어 있고 모양은 클래스 이름으로만 구분합니다` : `Note: no Tailwind engine was found, so class values were not compiled${inv.meta.css.error ? ` (${inv.meta.css.error})` : ''} — colour/spacing/corner scores are empty and looks are keyed by class names`] : []),
     lang === 'ko' ? `일관성 점수 ${scores.composite ?? '–'} · 가장 낮은 축: ${al[lowest] || '–'} ${scores[lowest] ?? ''}` : `Consistency ${scores.composite ?? '–'} · lowest axis: ${al[lowest] || '–'} ${scores[lowest] ?? ''}`,
     lang === 'ko' ? `컴포넌트 모양 ${totalLooks}가지(${typesPresent}종) · 일회성 ${adHocLooks} · 직접 쓴 색 ${hardcodedColors}종` : `${totalLooks} component looks across ${typesPresent} types · ${adHocLooks} one-off · ${hardcodedColors} raw colors`,

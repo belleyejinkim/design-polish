@@ -25,7 +25,8 @@
     "no_model": "인벤토리만 — 진단과 제안은 에이전트에서 /design-polish 를 실행하세요",
     "generated": "{date} 생성 · 런 {run}",
     "dark": "다크 테마: {strategy}",
-    "no_engine": "값을 컴파일하지 못함 — Tailwind v4 엔진이 없어 모양은 클래스 이름으로만 구분"
+    "no_engine": "값을 컴파일하지 못함 — Tailwind v4 엔진이 없어 모양은 클래스 이름으로만 구분",
+    "mode_css_only": "CSS만 조사 — React/JSX 코드 없음: 스타일시트 {css}개(템플릿 <style> {templates}개)에서 값만 셈, 컴포넌트·화면은 조사 안 함"
   },
   "summary": {
     "h": "01 · 요약",
@@ -192,7 +193,8 @@
       "disabled": "Disabled",
       "checked": "Checked",
       "dark": "다크"
-    }
+    },
+    "css_only": "React/JSX 코드가 없어 컨트롤은 조사하지 못했습니다. 위의 색·여백·모서리·그림자는 스타일시트에서 센 값입니다."
   },
   "relations": {
     "h": "09 · 나란히 놓인 것",

@@ -61,6 +61,9 @@ Ask nothing before the report exists in the ordinary case. Per card, show the pl
 1. `node --version` ≥ 18; `git -C "$TARGET" rev-parse` succeeds (if not: inventory still runs, but say that apply needs git).
 2. `git -C "$TARGET" ls-files | wc -l` is > 0 (0 → stop: "nothing tracked to scan").
 3. Look for several `package.json` under `apps/*` or `packages/*` → gate 0. CSS-in-JS only (styled-components, emotion, no Tailwind, no plain CSS) → gate 0 with "low confidence".
+   No React/JSX code at all (server-rendered templates, plain HTML, Spring/Rails/Laravel): **no gate** — the inventory
+   runs in CSS-only mode (colours, spacing, corners, shadows from stylesheets and `<style>` blocks in templates);
+   say in one sentence that components and screens are not inventoried for this stack, then continue.
 4. Note `TARGET/.design-polish/config.json` if present (css entry, excludes); pass through as flags.
 
 ### P1 · scan and render specimens  `[agent: scanner]`
@@ -153,7 +156,8 @@ Then continue with **apply**.
 
 | Situation | Do |
 |---|---|
-| `no-typescript` from the scanner | tell the user the project has no `typescript` dependency; `npm i -D typescript` enables element attribution; stop (regex mode is not shipped yet) |
+| `no-typescript` from the scanner (React code present, no TypeScript anywhere) | tell the user `npm i -D typescript` enables element attribution; stop (regex mode is not shipped yet). Projects with no React code do not hit this: they run CSS-only |
+| the scan lists the skill's own files (`.claude/skills/…`, `.agents/skills/…`) | it must not — tooling folders and dot-directories are skipped by `files.js`; if you see them, report the bug instead of scanning the fixture |
 | `css.error` (Tailwind failed to compile) | scanner retries with `--css <entry>`; if still failing the report says "values unresolved"; proceed, do not apply |
 | Specimens `failed` | the report shows classes instead of live controls; say so in one line |
 | `verify` failures after two fixes | present with the failures visible; do not apply cards that depend on the failed check |

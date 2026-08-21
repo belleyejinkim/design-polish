@@ -11,7 +11,7 @@
         "scannerVersion": { "type": "string" },
         "generatedAt": { "type": "string" },
         "root": { "type": "string" },
-        "mode": { "enum": ["ast", "regex", "solo"] },
+        "mode": { "enum": ["ast", "regex", "solo", "css-only"] },
         "parser": { "type": ["object", "null"] },
         "css": { "type": "object", "required": ["engine", "entry"], "properties": { "engine": { "enum": ["tailwind4", "tailwind3", "plain", "none"] }, "entry": { "type": ["string", "null"] }, "error": { "type": ["string", "null"] }, "darkStrategy": { "enum": ["class", "media", "data-attr", "none"] } } },
         "files": { "type": "object", "required": ["listSource", "listed", "scanned", "parseFailed", "skipped"], "properties": { "listSource": { "enum": ["git", "walk"] }, "listed": { "type": "integer", "minimum": 0 }, "scanned": { "type": "integer", "minimum": 0 }, "parseFailed": { "type": "array" } } },

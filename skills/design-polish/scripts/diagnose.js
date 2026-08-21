@@ -215,7 +215,7 @@ function diagnose(inv, T) {
     const ratio = on / total;
     const band = bands(ratio);
     if (band === 'ok') continue;
-    const vals = tok[axis === 'shadow' ? 'shadows' : axis].values.filter((v) => !v.where.every((w) => w === 'token' || w === 'scale') && (v.ownHardcodedCount == null || v.ownHardcodedCount > 0 || (v.hardcodedCount === 0)));
+    const vals = tok[axis === 'shadow' ? 'shadows' : axis === 'color' ? 'colors' : axis].values.filter((v) => !v.where.every((w) => w === 'token' || w === 'scale') && (v.ownHardcodedCount == null || v.ownHardcodedCount > 0 || (v.hardcodedCount === 0)));
     const subjects = vals.map((v) => v.id);
     findings.push(make('HARDCODE', axis, subjects, {
       severity: band === 'partial' ? 'medium' : 'high', title: `${Math.round((1 - ratio) * 100)}% of ${axis} values bypass tokens`,

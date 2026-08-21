@@ -181,7 +181,9 @@ function propose(inv, findings) {
   const dead = findingsBy('DEAD-TOKEN')[0];
   if (dead) {
     // shadcn base-set tokens stay: a later `shadcn add` expects them
-    const removable = dead.subjects.filter((s) => { const d = declaredById.get(s); return d && !d.librarySet; });
+    // kept: shadcn base-set tokens, and tokens that a raw value in use will be promoted to (they stop being dead)
+    const twinned = new Set(tok.colors.values.filter((v) => v.twinOf && (v.ownHardcodedCount == null ? v.hardcodedCount : v.ownHardcodedCount) > 0).map((v) => v.twinOf));
+    const removable = dead.subjects.filter((s) => { const d = declaredById.get(s); return d && !d.librarySet && !twinned.has(s); });
     if (removable.length) mk('delete-dead-tokens', 'tokens', removable.map((s) => ({ source: s, target: null, action: 'delete', occurrences: 0, files: [], screens: [], visualChange: 'none', metric: {}, basis: dead.id })), { title: `${removable.length} declared token${removable.length > 1 ? 's are' : ' is'} never used`, summary: `${removable.length} project token${removable.length > 1 ? 's' : ''} referenced nowhere${dead.subjects.length > removable.length ? `; ${dead.subjects.length - removable.length} unused shadcn base-set token${dead.subjects.length - removable.length > 1 ? 's are' : ' is'} kept` : ''}.`, findings: [dead.id], safety: 'none' });
   }
   // ad-hoc looks → align-signature (design-level)

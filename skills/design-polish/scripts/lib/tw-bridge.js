@@ -136,8 +136,15 @@ function looksLikeUtility(cls) {
  * @param {string} root absolute project root
  * @param {{ cssEntry: string|null, cssFiles: Array<{rel, text}> }} opts
  */
+function projectUsesTailwind(root, cssFiles) {
+  if ((cssFiles || []).some((f) => /@import\s+["']tailwindcss|@tailwind\s+(base|utilities|components)|@config\s|@plugin\s/.test(f.text))) return true;
+  try { const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')); return !!((pkg.dependencies || {}).tailwindcss || (pkg.devDependencies || {}).tailwindcss); } catch (_) { return false; }
+}
+
 async function create(root, opts = {}) {
-  const engine = locateEngine(root);
+  // A Tailwind engine is used only for a project that uses Tailwind; plain CSS stays plain even when an engine
+  // happens to be reachable (an ancestor workspace, a global install).
+  const engine = projectUsesTailwind(root, opts.cssFiles) ? locateEngine(root) : null;
   const bridge = { engine: 'none', version: null, from: null, entry: opts.cssEntry || null, error: null, executedConfig: false };
   const projectCss = new Map(); // class → decls from the project's own CSS (any engine)
   for (const f of opts.cssFiles || []) {

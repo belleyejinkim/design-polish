@@ -70,6 +70,7 @@ CLI만 쓰려면 `npm i -g design-polish` 또는 프로젝트 안에서 `npx des
 | Tailwind v4 + shadcn/ui, Radix, cva, Next.js app router | 완전: 프로젝트 자신의 Tailwind로 값 컴파일, 요소 단위 귀속, 화면, 이웃 비교 |
 | Next.js pages router, Vite + React Router | 완전, 화면 귀속은 약함 |
 | Tailwind v3, CSS Modules | 부분: 모양과 개수는 나오지만 컴파일된 값은 없음 (1.1) |
+| 서버 렌더링 템플릿(Freemarker, Thymeleaf, ERB, Blade, 순수 HTML) | CSS만: 스타일시트와 `<style>` 블록의 색·여백·모서리·그림자. 컴포넌트·화면은 없음 |
 | styled-components / emotion | 아직 — 리포트 표지에 그렇다고 표시 |
 | Vue, Svelte, Angular | 범위 밖 |
 

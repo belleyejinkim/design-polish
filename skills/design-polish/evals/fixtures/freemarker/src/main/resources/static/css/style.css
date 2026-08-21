@@ -1,0 +1,3 @@
+:root { --brand: #1aa44d; --radius: 8px; }
+.chip { background: #1aa44d; border-radius: var(--radius); font-size: 13px; }
+.input { border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px; }

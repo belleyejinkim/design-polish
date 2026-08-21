@@ -74,6 +74,22 @@ function detectVendored(root, files) {
   return { dirs: list, isVendored, files: files.filter(isVendored).length, basis: fs.existsSync(cj) ? 'components.json' : list.length ? 'components/ui' : 'none' };
 }
 
+// Keeps line numbers: everything outside <style> blocks becomes blank lines, so file:line citations stay right.
+function styleBlocksOf(text) {
+  const out = [];
+  let last = 0;
+  const re = /<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi;
+  let m;
+  while ((m = re.exec(text))) {
+    const before = text.slice(last, m.index + m[0].indexOf(m[1]));
+    out.push(before.replace(/[^\n]/g, ''));
+    out.push(m[1]);
+    last = m.index + m[0].indexOf(m[1]) + m[1].length;
+  }
+  out.push(text.slice(last).replace(/[^\n]/g, ''));
+  return out.join('');
+}
+
 function detectCssEntry(cssFiles, explicit) {
   if (explicit) return explicit;
   const score = (f) => {
@@ -240,15 +256,19 @@ async function scan(rootArg, opts = {}) {
   const collected = files.collect(root, { includeTests: opts.includeTests, includeDirs: opts.src, excludeDirs: opts.exclude });
   const codeFiles = collected.files.filter((f) => ['tsx', 'jsx', 'ts', 'js'].includes(f.kind));
   const vendored = detectVendored(root, codeFiles.map((f) => f.rel));
-  const cssFiles = collected.files.filter((f) => f.kind.includes('css') || f.kind.includes('scss'));
-  log(`files: ${collected.listed} listed (${collected.listSource}), ${codeFiles.length} code + ${cssFiles.length} css scanned`);
+  // Server-rendered templates (.ftl, .html, .erb …) contribute the CSS inside their <style> blocks when they ARE the
+  // product (no React code). In a React project, stray .html files (email templates, static exports) are not the UI.
+  const templateCss = codeFiles.length ? [] : collected.files.filter((f) => f.kind === 'template').map((f) => ({ ...f, kind: 'css', text: styleBlocksOf(f.text) })).filter((f) => f.text.trim());
+  const cssFiles = collected.files.filter((f) => f.kind.includes('css') || f.kind.includes('scss')).concat(templateCss);
+  log(`files: ${collected.listed} listed (${collected.listSource}), ${codeFiles.length} code + ${cssFiles.length} css scanned${templateCss.length ? ` (${templateCss.length} templates with <style>)` : ''}`);
 
-  // 2. parser
+  // 2. parser — optional when there is no React/JS code: the CSS-only inventory still runs
   const tsInfo = opts.mode === 'regex' ? null : tsLoader.load(root);
-  if (!tsInfo) {
+  if (!tsInfo && codeFiles.length) {
     return { error: 'no-typescript', message: 'TypeScript not found in the project; regex mode is not implemented in this build yet', meta: { mode: 'regex' } };
   }
-  const ts = tsInfo.ts;
+  const ts = tsInfo ? tsInfo.ts : null;
+  const cssOnly = codeFiles.length === 0;
 
   // 3. indexes
   const indexes = new Map();
@@ -257,7 +277,7 @@ async function scan(rootArg, opts = {}) {
     try { const idx = parseFile(ts, f); indexes.set(f.rel, idx); if (idx.parseDiagnostics) parseFailed.push({ file: f.rel, error: `${idx.parseDiagnostics} parse diagnostics` }); }
     catch (e) { parseFailed.push({ file: f.rel, error: e.message }); }
   }
-  const tsconfig = readTsconfig(root, ts);
+  const tsconfig = ts ? readTsconfig(root, ts) : { paths: {}, baseUrl: null };
   const fileSet = new Set(collected.files.map((f) => f.rel));
   const resolve = (from, spec) => resolveImport(from, spec, { files: fileSet, ...tsconfig });
   const project = { indexes, resolve };
@@ -609,7 +629,8 @@ async function scan(rootArg, opts = {}) {
     schema: 'design-polish.inventory/1',
     meta: {
       scannerVersion: SCANNER_VERSION, generatedAt: nowIso(), root, durationMs: Date.now() - t0,
-      mode: 'ast', parser: { name: 'typescript', version: tsInfo.version, source: tsInfo.source },
+      mode: cssOnly ? 'css-only' : 'ast', parser: tsInfo ? { name: 'typescript', version: tsInfo.version, source: tsInfo.source } : { name: null, version: null, source: null },
+      templates: templateCss.length,
       css: { engine: bridge.engine, version: bridge.version, entry: cssEntry, error: bridge.error, darkStrategy: theme.darkStrategy, darkSelector: theme.darkSelector, executedConfig: bridge.executedConfig },
       files: { listSource: collected.listSource, listed: collected.listed, scanned: collected.files.length, code: codeFiles.length, css: cssFiles.length, parseFailed, skipped: Object.fromEntries(Object.entries(collected.skipped).map(([k, v]) => [k, Array.isArray(v) ? { count: v.length, samples: v.slice(0, 5) } : { count: v }])) },
       router: discovered.router,

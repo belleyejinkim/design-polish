@@ -25,7 +25,8 @@
     "no_model": "Inventory only — diagnosis and proposals need an agent: run /design-polish",
     "generated": "Generated {date} · run {run}",
     "dark": "dark theme: {strategy}",
-    "no_engine": "values not compiled — no Tailwind v4 engine found; looks are keyed by class names"
+    "no_engine": "values not compiled — no Tailwind v4 engine found; looks are keyed by class names",
+    "mode_css_only": "CSS-only: no React/JSX code — values from {css} stylesheets ({templates} templates with <style>); components and screens not inventoried"
   },
   "summary": {
     "h": "01 · Summary",
@@ -192,7 +193,8 @@
       "disabled": "Disabled",
       "checked": "Checked",
       "dark": "Dark"
-    }
+    },
+    "css_only": "No React/JSX code was found, so controls could not be inventoried. Colours, spacing, corners and shadows above come from the stylesheets."
   },
   "relations": {
     "h": "09 · Side by side",

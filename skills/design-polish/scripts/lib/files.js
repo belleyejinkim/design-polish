@@ -18,12 +18,27 @@ const EXCLUDE_FILE_RE = /(\.(test|spec|stories|story|cy|e2e)\.[cm]?[jt]sx?$)|(\.
 const MAX_FILE_BYTES = 1.5 * 1024 * 1024;
 const CODE_EXT = { '.tsx': 'tsx', '.jsx': 'jsx', '.ts': 'ts', '.js': 'js', '.mjs': 'js', '.cjs': 'js' };
 const STYLE_EXT = { '.css': 'css', '.scss': 'scss', '.pcss': 'css' };
+// Server-rendered templates carry CSS in <style> blocks; those blocks are read as stylesheets (markup is not scanned).
+const TEMPLATE_EXT = new Set(['.html', '.htm', '.ftl', '.ftlh', '.hbs', '.ejs', '.erb', '.twig', '.njk', '.jsp', '.php', '.mustache', '.liquid']);
 
 function kindOf(rel) {
   const ext = path.extname(rel).toLowerCase();
   if (CODE_EXT[ext]) return CODE_EXT[ext];
   if (STYLE_EXT[ext]) return rel.endsWith('.module.css') || rel.endsWith('.module.scss') ? 'module.' + STYLE_EXT[ext] : STYLE_EXT[ext];
+  if (TEMPLATE_EXT.has(ext)) return 'template';
   return null;
+}
+
+// An installed skill or plugin folder (ours or anyone's) is tooling, not the product: skip it wherever it sits
+// (.claude/skills, .agents/skills, skills/, .cursor/…), and skip every dot-directory (.github, .moai, .gstack…).
+function isToolingDir(root, relDir, cache) {
+  if (cache.has(relDir)) return cache.get(relDir);
+  let tooling = false;
+  const parts = relDir.split('/');
+  if (parts.some((p) => p.startsWith('.') && p !== '.')) tooling = true;
+  else { try { tooling = fs.existsSync(path.join(root, relDir, 'SKILL.md')) || fs.existsSync(path.join(root, relDir, '.claude-plugin', 'plugin.json')); } catch (_) { tooling = false; } }
+  cache.set(relDir, tooling);
+  return tooling;
 }
 
 function listWithGit(root) {
@@ -78,9 +93,14 @@ function collect(root, opts = {}) {
   const extraExclude = new Set(opts.excludeDirs || []);
   const skipped = { 'excluded-dir': [], test: [], generated: [], 'too-large': [], 'not-ui': 0, unreadable: [] };
   const files = [];
+  const toolingCache = new Map();
   for (const rel of rels) {
     const parts = rel.split('/');
     if (parts.some((p) => EXCLUDE_DIRS.has(p) || extraExclude.has(p))) { skipped['excluded-dir'].push(rel); continue; }
+    // any ancestor directory that is a dot-dir or holds a SKILL.md / plugin manifest
+    let tooling = false;
+    for (let i = 1; i < parts.length; i++) { if (isToolingDir(root, parts.slice(0, i).join('/'), toolingCache)) { tooling = true; break; } }
+    if (tooling) { skipped['excluded-dir'].push(rel); continue; }
     if (opts.includeDirs && opts.includeDirs.length && !opts.includeDirs.some((d) => rel === d || rel.startsWith(d.replace(/\/$/, '') + '/'))) { skipped['excluded-dir'].push(rel); continue; }
     const kind = kindOf(rel);
     if (!kind) { skipped['not-ui']++; continue; }
@@ -99,4 +119,4 @@ function collect(root, opts = {}) {
   return { root, listSource, listed: rels.length, files, skipped };
 }
 
-module.exports = { collect, kindOf, EXCLUDE_DIRS, EXCLUDE_FILE_RE, MAX_FILE_BYTES };
+module.exports = { collect, kindOf, EXCLUDE_DIRS, EXCLUDE_FILE_RE, MAX_FILE_BYTES, TEMPLATE_EXT };
