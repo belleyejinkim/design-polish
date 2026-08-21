@@ -1,0 +1,28 @@
+{
+  "skill_name": "design-polish",
+  "notes": "Run in a fresh session with the skill installed; record which prompts invoked /design-polish. Target ≥ 90% on both lists.",
+  "should_trigger": [
+    "Polish my design",
+    "Why do my buttons all look slightly different?",
+    "Can you audit the design consistency of this app?",
+    "Clean up the colours and corner radii across the app",
+    "We have like five shades of gray, make it one system",
+    "디자인 정리해줘",
+    "버튼 모양 좀 통일해줘",
+    "디자인 토큰 정리하고 싶어",
+    "이 앱 디자인 감사 좀 해줘",
+    "apply C1 and C3 from the design report"
+  ],
+  "should_not_trigger": [
+    "Redesign the landing page to feel more premium",
+    "Write the copy for the empty state",
+    "Make this page accessible (WCAG AA)",
+    "Export our tokens to Figma",
+    "Add a dark mode toggle to the header",
+    "Fix the TypeScript error in button.tsx",
+    "Generate a Storybook for our components",
+    "Lint the CSS files",
+    "디자인 시안 새로 만들어줘",
+    "이 버튼 색을 파란색으로 바꿔줘"
+  ]
+}
