@@ -448,7 +448,7 @@ function build(runDir, opts = {}) {
       ${narrative && narrative.limits && narrative.limits.length ? `<dt>limits</dt><dd><ul class="plain">${narrative.limits.map((l) => `<li>${esc(l)}</li>`).join('')}</ul></dd>` : ''}
       </dl>
       <ul class="plain" style="margin-top:18px">${T.method.honesty.map((h) => `<li>${esc(h)}</li>`).join('')}</ul>
-      <footer>design-polish ${esc(inv.meta.scannerVersion)} · ${esc(inv.meta.generatedAt)} · ${esc(inv.meta.root)}</footer>
+      <footer>design-polish ${esc(inv.meta.scannerVersion)} · ${esc(inv.meta.generatedAt)} · ${esc(project)}</footer>
     </div></section>`);
   }
   parts.push('</main>');

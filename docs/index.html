@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>design-polish</title>
+<style>
+  :root{--paper:#FBFAF7;--ink:#1C1D1B;--ink-2:#55564F;--hair:#E5E2D8;--card:#fff}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 'Pretendard Variable',Pretendard,Inter,'Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:860px;margin:0 auto;padding:72px 24px}
+  h1{font-size:44px;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  .tag{font-size:20px;color:var(--ink-2);margin:0 0 28px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:28px 0}
+  a.card{display:block;background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:18px 20px;text-decoration:none;color:inherit}
+  a.card:hover{border-color:#bdb9ac}
+  a.card b{display:block;font-size:18px;margin-bottom:6px}
+  a.card span{color:var(--ink-2);font-size:14px}
+  code{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.9em;background:#F3F1E9;padding:2px 6px;border-radius:4px}
+  p.small{color:var(--ink-2);font-size:14px}
+</style>
+<main>
+  <h1>design-polish</h1>
+  <p class="tag">See every button style, gray and corner radius in your AI-built app on one page. Keep what you want. Let your agent fix the rest — one commit per card.</p>
+  <p><code>npx skills add yejin-newmean/design-polish</code> &nbsp;·&nbsp; <code>npx design-polish</code></p>
+  <div class="grid">
+    <a class="card" href="examples/messy-next/report.html"><b>Messy app</b><span>28 files · 11 button looks · a legacy checkbox · a toolbar whose corners disagree · dead tokens · a missing dark value</span></a>
+    <a class="card" href="examples/clean-shadcn/report.html"><b>Clean app</b><span>12 files of tidy shadcn/ui. Nothing to fix — and the report says so.</span></a>
+  </div>
+  <p class="small">Both reports are generated from synthetic fixtures that ship with the repository; no real product code is published. Each page is a single self-contained HTML file: no network requests, opens from <code>file://</code>.</p>
+  <p><a href="https://github.com/yejin-newmean/design-polish">GitHub</a> · <a href="https://github.com/yejin-newmean/design-polish/blob/main/docs/evals.md">Evals</a> · <a href="https://github.com/yejin-newmean/design-polish/blob/main/README_KO.md">한국어</a></p>
+</main>
