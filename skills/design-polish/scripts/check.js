@@ -79,7 +79,7 @@ function crossCheck(kind, value, dir) {
   if (kind === 'narrative') {
     const json = JSON.stringify(value);
     // The model may not write numbers: every digit sequence outside ids/keys is suspicious.
-    const stripped = JSON.stringify(value, (k, v) => (k === 'run_id' || k === 'schema' ? undefined : v)).replace(/"(?:F:|C\d|sig:|occ:|tok|route:|cl:|grp:|impl:)[^"]*"/g, '""');
+    const stripped = JSON.stringify(value, (k, v) => (k === 'run_id' || k === 'schema' ? undefined : v)).replace(/"(?:F:|C\d|sig:|occ:|tok|route:|cl:|grp:|impl:|typo:)[^"]*"/g, '""');
     const nums = stripped.match(/\d+(?:[.,]\d+)?/g) || [];
     if (nums.length) errors.push(`narrative contains ${nums.length} numeric literal(s): ${[...new Set(nums)].slice(0, 8).join(', ')} — numbers come from the inventory, not the model`);
     void json;

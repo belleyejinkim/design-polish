@@ -45,7 +45,8 @@
     "test": "node --test tests/*.test.js",
     "validate": "claude plugin validate --strict .",
     "sync-agents": "node tools/sync-agents.js",
-    "prepublishOnly": "npm test && node tools/sync-agents.js --check"
+    "prepublishOnly": "npm test && node tools/sync-agents.js --check",
+    "report:dev": "node tools/report-dev.js messy-next --lang ko"
   },
   "devDependencies": {
     "@tailwindcss/node": "^4.1.18",

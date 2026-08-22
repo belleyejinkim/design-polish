@@ -8,3 +8,4 @@ tests/.tmp/
 skills/design-polish/evals/fixtures/*/node_modules/
 skills/design-polish/evals/fixtures/*/.design-polish/
 skills/design-polish/evals/fixtures/*/.next/
+.dev/

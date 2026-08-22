@@ -1,0 +1,38 @@
+{
+  "schema": "design-polish.narrative/1",
+  "run_id": "sample",
+  "lang": "en",
+  "headline": "Consistent at the core, frayed at the edges",
+  "lede": "Almost everything goes through the project's tokens (a named value defined once). What stands out is a handful of buttons styled by hand on the dashboard and order screens, and a toolbar whose corners disagree.",
+  "screens": { "route:/(dashboard)#layout": "Dashboard frame", "route:/#layout": "App frame", "route:/": "Home", "route:/dashboard/(dashboard)": "Dashboard", "route:/orders/[id]/(dashboard)": "Order detail", "route:/settings/(dashboard)": "Settings", "route:/design-system": "Design-system catalog" },
+  "samples": { "typo:14": { "text": "Pending orders this week" }, "typo:12": { "text": "Last synced five minutes ago" }, "typo:20": { "text": "Settings" }, "typo:24": { "text": "Dashboard" } },
+  "chapters": {
+    "color": { "summary": "The brand green exists as a token, yet the legacy checkbox types the value by hand; grays mix the project's neutral tokens with the Tailwind palette. The soft brand colour has no dark value." },
+    "typography": { "summary": "Text sizes follow the scale.", "no_change_reason": "no size is typed by hand" },
+    "spacing": { "summary": "Spacing follows the grid, except one hand-typed padding." },
+    "radius": { "summary": "Corners use tokens, but two rows put buttons with different radii side by side." },
+    "shadow": { "summary": "Shadows all come from the scale.", "no_change_reason": "no shadow is typed by hand" },
+    "components": { "summary": "Buttons exist in three implementations, with a few one-off buttons styled by hand next to the base one. An old checkbox implementation is still around." }
+  },
+  "findings": {
+    "F:SIB-RADIUS:2171e7": { "title": "The toolbar mixes corner radii", "explanation": "The filter and sort buttons sit in one row with the refresh button, which is squarer.", "cause": "the refresh button was written by hand instead of using the base button" },
+    "F:SIB-RADIUS:0f045f": { "title": "The settings form's input and button corners differ", "explanation": "An input and the save button of the same height sit side by side with different rounding.", "cause": "input and button use different radius tokens" },
+    "F:SIG-SPRAWL:41d379": { "title": "Several buttons are styled by hand", "explanation": "Although a base button exists, the dashboard, order and settings screens have buttons with their own classes.", "cause": "each generation made a new button" },
+    "F:DUP-IMPL:41d379": { "title": "Buttons have several implementations", "explanation": "Besides the base Button, raw button tags and a DynamicButton act as buttons." },
+    "F:DUP-IMPL:0be687": { "title": "Two checkbox implementations", "explanation": "The settings form uses the shadcn checkbox while a LegacyCheckbox remains in one place.", "cause": "the old implementation was never removed" },
+    "F:DARK-GAP:6dd0fe": { "title": "The soft brand colour has no dark value", "explanation": "In dark mode the places that use it keep the light value." },
+    "F:TOKEN-TWIN:6dd0fe": { "title": "The brand green is typed by hand in one place", "explanation": "The legacy checkbox types the exact token value; switching to the token changes nothing on screen." },
+    "F:PALETTE-GRAYS:6dd0fe": { "title": "Grays come from two systems", "explanation": "The project's neutral tokens and Tailwind palette grays appear on the same screens." },
+    "F:DEAD-TOKEN:339143": { "title": "Some tokens are declared but never used", "explanation": "Two chart colours belong to the shadcn base set and stay; the other two can go." },
+    "F:INVALID-CLASS:1adaa8": { "title": "A class has no effect", "explanation": "The card-corner class is defined nowhere, so it does nothing." },
+    "F:OFF-SCALE:7561d7": { "title": "One padding is off the grid", "explanation": "The green button on Home uses a padding between grid steps." },
+    "F:UNREACHED:c212f0": { "title": "A button component is used by no screen", "explanation": "OldButton remains in the code but nothing renders it." }
+  },
+  "cards": {
+    "C1": { "title": "Use the radius token where the same value was typed by hand", "why": "Nothing changes on screen; the value gets a name the next generation will reuse." },
+    "C2": { "title": "Use the brand token in the legacy checkbox", "why": "The typed value equals the token, so nothing changes." },
+    "C5": { "title": "Give neighbours in one row the same corners", "why": "In the toolbar and the settings form the minority follows the majority. Almost invisible." },
+    "C8": { "title": "Bring hand-styled buttons back to the base button", "why": "A visible design decision; check each screen and pick." }
+  },
+  "limits": ["Specimens use the fonts installed on this machine.", "Catalog-page looks were counted apart and never used as evidence."]
+}

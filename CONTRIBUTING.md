@@ -17,3 +17,27 @@ npm install          # dev dependencies for fixtures only
 npm test
 npm run validate     # claude plugin validate --strict
 ```
+
+## Working on the report template
+
+You do not need to re-scan anything to change the report. The renderer is a pure function of a run directory:
+
+```
+npm run report:dev                                   # messy-next fixture, Korean UI
+node tools/report-dev.js clean-shadcn --lang en      # another fixture / language
+node tools/report-dev.js --target ~/Codes/my-app     # a real project (scanned once into .dev/report/<name>)
+```
+
+It scans once into `.dev/report/<name>/` (git-ignored), serves the report on `127.0.0.1`, opens it, and then
+re-renders (~100 ms) whenever `skills/design-polish/templates/**` (`report.css`, `report.js`, `i18n/*.json`),
+`scripts/render.js`, `scripts/render-specimens.js` or `scripts/lib/**` change. The open tab reloads itself within
+three seconds and keeps its scroll position. `verify.js --quick` runs after each render and prints any `FAIL` line,
+so a template change that breaks a `data-metric` binding shows up immediately.
+
+A fixture can ship `narrative.sample.<lang>.json` next to it (messy-next does); the dev loop copies it into the run so
+the template shows the "with model" state — headline, lede, finding titles, card text. Pass `--no-narrative` for the
+zero-AI look, `--fresh` to re-scan.
+
+Template rules are in `skills/design-polish/references/report-spec.md`: one measure, paper/ink palette, no left accent
+bars, no remote assets, every number wrapped in `data-metric`.
+
