@@ -8,7 +8,11 @@
 borders) · `07 shadow` · `08 components` · `09 relations` (side by side) · `10 proposal` · `11 cards` · `12 delta`
 (before / after) · `13 method`.
 
-Chapters 03–07 have five parts: A declared · B in use (inventory rows with keep / merge / leave controls) · C findings
+Chapter 03 (colour) is one table: a row per colour the app shows — project tokens (used or not), values typed by hand,
+Tailwind palette values, library-only values — sorted problems first, with columns *comes from · uses · status · action ·
+your decision* and filter chips (all / needs attention / tokens / typed by hand / palette / library). Look-alike pairs are
+shown as two touching swatches in the status column. Findings (F#, evidence) and decisions follow the table.
+Chapters 04–07 have five parts: A declared · B in use (inventory rows with keep / merge / leave controls) · C findings
 (F#, screens, visual evidence, developer details) · D proposal or "no change proposed: <reason>" · E your decisions.
 
 ## Numbers

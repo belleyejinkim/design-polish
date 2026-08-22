@@ -234,3 +234,24 @@ footer{padding:40px 0 120px;color:var(--ink-3);font-size:13px}
 .tile b.same{color:var(--ink-2)}
 .t .ok{color:var(--ok)}
 .t .warn{color:var(--amber)}
+/* 03 · one colour table */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.filters .chip{border:1px solid var(--hair-2);background:var(--card);cursor:pointer}
+.filters .chip b{font-weight:600;color:var(--ink);margin-left:2px}
+.filters .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filters .chip.active b{color:#fff}
+table.ctable{table-layout:auto}
+table.ctable tr.row{display:table-row;padding:0;background:var(--card)}
+table.ctable tr.row.decided{background:#FDFCF8}
+table.ctable tr.row.hidden{display:none}
+table.ctable td{vertical-align:middle}
+table.ctable .val{font-family:var(--mono);font-size:13px;font-weight:600}
+table.ctable .meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px;color:var(--ink-2);margin-top:2px}
+table.ctable .ctl{justify-self:start}
+table.ctable .impact{font-size:12px;color:var(--ink-2);margin-top:4px}
+table.ctable .impact.visible{color:var(--amber)}
+table.ctable td:nth-child(5){min-width:250px}
+table.ctable td:nth-child(5) .pill{white-space:normal;line-height:1.35}
+table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
+.pair{display:inline-flex;vertical-align:middle;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.pair i{display:block;width:18px;height:22px}

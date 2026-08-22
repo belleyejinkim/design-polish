@@ -172,6 +172,21 @@
     var cards = $$('.card[data-card]').map(function (c) { return { id: c.getAttribute('data-card'), status: cardStatus(c) }; });
     return { schema: 'design-polish.decisions/1', run_id: runId, inventory_hash: DP.inventoryHash || null, decided_at: new Date().toISOString(), via: served ? 'serve' : 'clipboard', draft: !!draft, entries: entries, cards: cards };
   }
+  // table filters (chapter tables with data-filter-for)
+  $$('.filters[data-filter-for]').forEach(function (bar) {
+    var table = document.getElementById(bar.getAttribute('data-filter-for'));
+    if (!table) return;
+    $$('.chip', bar).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var show = btn.getAttribute('data-show');
+        $$('.chip', bar).forEach(function (b) { b.classList.toggle('active', b === btn); });
+        $$('tr.row', table).forEach(function (tr) {
+          var ok = show === 'all' || (show === 'issues' ? tr.getAttribute('data-issue') === '1' : tr.getAttribute('data-kind') === show);
+          tr.classList.toggle('hidden', !ok);
+        });
+      });
+    });
+  });
   var cart = $('#cart');
   var GRADE_S = 30, GRADE_M = 100; // same thresholds as the proposal: one review stays careful up to ~30 places
   function refreshCart() {

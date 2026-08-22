@@ -103,7 +103,9 @@ function build(runDir, opts = {}) {
     const recTarget = rec ? rec.target : (targets[0] && targets[0].id) || '';
     const options = targets.map((t) => `<option value="${esc(t.id)}" data-visual="${esc(t.visual || 'visible')}"${t.id === recTarget ? ' selected' : ''}>${esc(t.label)}</option>`).join('');
     const recoText = rec ? (rec.action === 'new-token' ? (lang === 'ko' ? `${rec.occurrences}곳에서 쓰여 토큰으로 등록할 만함 — 제안 이름 <b>${esc(nameOf(rec.target))}</b> (자동, 바꿀 수 있음)` : `Used ${rec.occurrences} times — worth a token; suggested name <b>${esc(nameOf(rec.target))}</b> (automatic, rename freely)`) : rec.action === 'promote' ? (lang === 'ko' ? `<b>${esc(nameOf(rec.target))}</b>와 같은 값 — 토큰으로 바꿔도 화면은 그대로` : `Same as <b>${esc(nameOf(rec.target))}</b> — switching to the token changes nothing on screen`) : rec.action === 'merge' ? (lang === 'ko' ? `<b>${esc(nameOf(rec.target))}</b>와 ΔE ${rec.metric.deltaE ?? ''} — 합치면 ${T.cards.visual[rec.visualChange]}` : `ΔE ${rec.metric.deltaE ?? ''} from <b>${esc(nameOf(rec.target))}</b> — merging is ${T.cards.visual[rec.visualChange]}`) : rec.action === 'round' ? (lang === 'ko' ? `스케일의 <b>${esc(nameOf(rec.target))}</b>로 맞추면 ${Math.abs(rec.metric.px || 0)}px 차이` : `${Math.abs(rec.metric.px || 0)}px from <b>${esc(nameOf(rec.target))}</b> on the scale`) : '') : (opts2.reco || '');
-    const seg = `<span class="seg" role="radiogroup"><label data-action="keep">${esc(T.curation.keep)}</label><label data-action="merge">${esc(T.curation.merge)}</label><label data-action="leave" class="leave">${esc(T.curation.leave)}</label></span>`;
+    const actions = opts2.actions || ['keep', 'merge', 'leave'];
+    const labelOf = { keep: opts2.keepLabel || T.curation.keep, merge: T.curation.merge, leave: T.curation.leave };
+    const seg = `<span class="seg" role="radiogroup">${actions.map((a) => `<label data-action="${a}"${a === 'leave' ? ' class="leave"' : ''}>${esc(labelOf[a])}</label>`).join('')}</span>`;
     const select = targets.length ? `<select class="hidden" aria-label="${esc(T.curation.target)}">${options}</select>` : '';
     return { recoText, controls: `<div class="ctl">${seg}${select}</div><div class="impact"></div>`, attrs: ` data-id="${esc(id)}" data-target="${esc(recTarget)}" data-visual="${esc(rec ? rec.visualChange : 'visible')}" data-card="${esc(card ? card.id : '')}"` };
   }
@@ -219,11 +221,6 @@ function build(runDir, opts = {}) {
     const declaredColors = tok.declared.filter((d) => d.axis === 'color' && d.source === 'project');
     const groups = { brand: [], semantic: [], neutral: [], unclassified: [] };
     for (const d of declaredColors) (groups[d.role] || groups.unclassified).push(d);
-    const declaredTable = declaredColors.length ? `<div class="tablewrap"><table class="t"><thead><tr>${T.color.cols_declared.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${['brand', 'semantic', 'neutral', 'unclassified'].flatMap((g) => groups[g].map((d) => `<tr data-search="${esc(d.name + ' ' + (d.hex || ''))}"><td>${d.hex ? swatch(d.hex) : ''}${d.darkHex ? swatch(d.darkHex) : ''}</td><td class="mono">${esc(d.name)}${d.rawVar ? ` <span class="faint">← ${esc(d.rawVar)}</span>` : ''}</td><td class="mono small">${esc(d.hex || d.light || '–')}</td><td class="mono small">${esc(d.darkHex || d.dark || '–')}${d.darkMissing ? ` <span class="pill warn">${esc(T.color.dark_missing)}</span>` : ''}</td><td class="r">${d.refs.total ? d.refs.total : `<span class="pill bad">${esc(T.color.dead)}</span>`}</td><td><span class="pill">${esc(T.color.groups[d.role] || d.role)}</span></td></tr>`)).join('')}</tbody></table></div>` : '';
-    const hardRows = tok.colors.values.filter((v) => ownHard(v) > 0).sort((a, b) => ownHard(b) - ownHard(a));
-    const vendoredRows = tok.colors.values.filter((v) => v.hardcodedCount > 0 && ownHard(v) === 0).sort((a, b) => b.hardcodedCount - a.hardcodedCount);
-    const paletteRows = tok.colors.values.filter((v) => !v.hardcodedCount && v.where.includes('palette')).sort((a, b) => b.count - a.count);
-    const viaRows = tok.colors.values.filter((v) => !v.hardcodedCount && !v.where.includes('palette'));
     const colorMod = require('./lib/color');
     const colorTargets = (v) => {
       const m = mappingBySource.get(v.id);
@@ -234,28 +231,72 @@ function build(runDir, opts = {}) {
       for (const { d, de } of ranked) if (!out.some((o) => o.id === d.id)) out.push({ id: d.id, label: `${d.name} · ΔE ${Math.round(de * 10) / 10}`, visual: de < 1 ? 'none' : de < 2 ? 'subtle' : 'visible' });
       return out.slice(0, 24);
     };
-    const valueRow = (v, kind) => {
-      const c = curationControls(v.id, { targets: colorTargets(v) });
-      const cluster = tok.colors.clusters.find((cl) => cl.members.includes(v.id));
-      const twin = v.twinOf ? `<span class="pill ok">${esc(fmt(T.color.twin, { token: nameOf(v.twinOf) }))}</span>` : '';
-      const near = cluster && !v.twinOf ? `<span class="pill warn">ΔE ${cluster.maxDeltaE} · ${esc(nameOf(cluster.dominant || cluster.members[0]))}</span>` : '';
-      const count = kind === 'hard' ? ownHard(v) : kind === 'vendored' ? v.hardcodedCount : kind === 'palette' ? ((v.whereCounts || {}).palette || v.count) : v.count;
-      const libNote = kind === 'hard' && v.vendoredCount ? `<span class="faint">${esc(fmt(T.color.in_library, { n: v.vendoredCount }))}</span>` : '';
-      return `<div class="row"${c.attrs} data-occ="${count}" data-screens="${v.routes.length}" data-screen-ids="${esc(v.routes.join(' '))}" data-search="${esc(v.value + ' ' + v.routes.map(screenName).join(' '))}">
-        <div class="key">${swatch(v.value, 'lg')}</div>
-        <div><div class="val">${esc(v.value)} <button class="pill" data-copy="${esc(v.value)}">${esc(T.misc.copy)}</button></div><div class="meta"><span>${count} ${esc(T.misc.uses)}</span><span>${v.routes.length} ${esc(T.misc.screens)}</span><span>${v.fileCount} ${esc(T.misc.files)}</span>${libNote}<span class="faint">${esc(v.where.join(' · '))}</span>${twin}${near}</div>${c.recoText ? `<div class="reco">${c.recoText}</div>` : ''}<div class="tags small">${screenChips(v.routes, 3)}</div><details class="dev devonly"><summary>${esc(T.dev.sites)}</summary><ul>${(v.sites || []).slice(0, 8).map((s) => `<li>${esc(s.file)}:${s.line} ${esc(s.raw || '')}</li>`).join('')}</ul></details></div>
-        ${c.controls}</div>`;
-    };
-    const clusterStrips = tok.colors.clusters.length ? `<div class="part"><h3>${esc(T.color.clusters_h)} <span class="n">${tok.colors.clusters.length}</span></h3><p class="help">${esc(T.color.cluster_help)}</p><div class="tags">${tok.colors.clusters.map((cl) => `<div class="pill" style="padding:6px 10px;gap:10px"><span class="strip">${cl.members.map((id) => { const h = (colorById.get(id) || {}).value || (declaredById.get(id) || {}).hex; return h ? `<i style="background:${esc(h)}" title="${esc(nameOf(id))}"></i>` : ''; }).join('')}</span><span class="small">${cl.members.map(nameOf).map(esc).join(' · ')} <b>ΔE ${cl.maxDeltaE}</b></span></div>`).join('')}</div></div>` : '';
+    const TC = T.color;
+    const hexOf = (id) => { const d = declaredById.get(id); if (d) return d.hex; const v = colorById.get(id); return v ? v.value : null; };
+    const pair = (a, b) => `<span class="pair">${a ? `<i style="background:${esc(a)}"></i>` : ''}${b ? `<i style="background:${esc(b)}"></i>` : ''}</span>`;
+    const clusterOf = (id) => tok.colors.clusters.find((cl) => cl.members.includes(id));
+    const deTo = (v, id) => { const h = hexOf(id); const c = h ? colorMod.parse(h) : null; return v.lab && c ? Math.round(colorMod.deltaE2000(v.lab, colorMod.toLab(c)) * 100) / 100 : null; };
+    const visualWord = (vis) => T.cards.visual[vis] || vis;
+    // ---- one row per colour: tokens (used or not) + raw values + palette values + library-only raw values
+    const rows = [];
+    const ORDER = { twin: 0, near: 1, untokenized: 2, dead: 3, dark_missing: 4, mode_varying: 5, palette_overlap: 6, rare: 7, near_raw: 8, ok: 9, palette_ok: 10, dead_library: 11, library: 12 };
+    const twinsOf = new Map(); // token id -> raw values equal to it
+    for (const v of tok.colors.values) if (v.twinOf && ownHard(v) > 0) { if (!twinsOf.has(v.twinOf)) twinsOf.set(v.twinOf, []); twinsOf.get(v.twinOf).push(v); }
+    for (const d of declaredColors) {
+      const dead = d.refs.total === 0;
+      const twins = twinsOf.get(d.id) || [];
+      let status = 'ok', statusText = TC.status.ok, action = TC.action.none, issue = false;
+      if (dead && d.librarySet) { status = 'dead_library'; statusText = TC.status.dead_library; action = TC.action.keep_library; }
+      else if (dead && twins.length) { status = 'ok'; statusText = fmt(TC.status.twin, { token: twins.map((t) => t.value).join(', ') }); action = TC.action.none; }
+      else if (dead) { status = 'dead'; statusText = TC.status.dead; const card = cardBySource.get(d.id); action = fmt(TC.action.delete, { card: card ? card.id : '–' }); issue = true; }
+      else if (d.darkMissing) { status = 'dark_missing'; statusText = TC.status.dark_missing; action = TC.action.dark; issue = true; }
+      // tokens: only an unused one needs a decision ("keep" takes it out of the delete card); the rest have no row action
+      const c = status === 'dead' ? curationControls(d.id, { targets: [], actions: ['keep'], keepLabel: TC.keep_token }) : { attrs: ` data-ref="${esc(d.id)}"`, controls: '<span class="faint">—</span>' };
+      rows.push({ id: d.id, order: ORDER[status], uses: d.refs.total, issue, kind: 'token', html: `<tr class="row"${c.attrs} data-kind="token" data-issue="${issue ? 1 : 0}" data-occ="${d.refs.total}" data-screens="0" data-search="${esc(d.name + ' ' + (d.hex || ''))}">
+        <td>${d.hex ? swatch(d.hex) : ''}${d.darkHex ? swatch(d.darkHex) : ''}</td>
+        <td><div class="val mono">${esc(d.name)}</div><div class="meta"><span class="mono">${esc(d.hex || d.light || '–')}</span>${d.darkHex ? `<span class="mono faint">${esc(d.darkHex)}</span>` : ''}${d.rawVar ? `<span class="faint">← ${esc(d.rawVar)}</span>` : ''}</div></td>
+        <td><span class="pill ink">${esc(TC.kind.token)}</span><div class="small faint">${esc(TC.groups[d.role] || d.role)}</div></td>
+        <td class="r">${d.refs.total}</td>
+        <td><span class="pill ${status === 'ok' ? 'ok' : status === 'dead' ? 'bad' : status === 'dead_library' ? '' : 'warn'}">${esc(statusText)}</span></td>
+        <td class="small">${esc(action)}</td>
+        <td>${c.controls}</td></tr>` });
+    }
+    for (const v of tok.colors.values) {
+      const own = ownHard(v);
+      const isPalette = !v.hardcodedCount && v.where.includes('palette');
+      const libraryOnly = v.hardcodedCount > 0 && own === 0;
+      if (!(own > 0 || isPalette || libraryOnly)) continue; // values reached only through a token are the token's row
+      const m = mappingBySource.get(v.id);
+      const cluster = clusterOf(v.id);
+      const kind = libraryOnly ? 'library' : isPalette ? 'palette' : 'raw';
+      const count = libraryOnly ? v.hardcodedCount : isPalette ? ((v.whereCounts || {}).palette || v.count) : own;
+      let status = 'ok', statusText = '', action = TC.action.none, partner = null, issue = false;
+      if (libraryOnly) { status = 'library'; statusText = TC.status.library; }
+      else if (v.twinOf) { status = 'twin'; partner = v.twinOf; statusText = fmt(TC.status.twin, { token: nameOf(v.twinOf) }); const t = declaredById.get(v.twinOf); issue = true; action = t && t.modeVarying && inv.meta.css.darkStrategy !== 'none' ? fmt(TC.action.decide, { token: nameOf(v.twinOf) }) : fmt(TC.action.promote, { token: nameOf(v.twinOf) }); }
+      else if (cluster && cluster.dominant && declaredById.has(cluster.dominant)) { status = isPalette ? 'palette_overlap' : 'near'; partner = cluster.dominant; const de = deTo(v, cluster.dominant); statusText = fmt(isPalette ? TC.status.palette_overlap : TC.status.near, { token: nameOf(cluster.dominant), de: de == null ? '?' : de }); issue = true; const t = declaredById.get(cluster.dominant); action = isPalette ? TC.action.palette : (t && t.modeVarying && inv.meta.css.darkStrategy !== 'none') ? fmt(TC.action.decide, { token: nameOf(cluster.dominant) }) : fmt(TC.action.merge, { token: nameOf(cluster.dominant), visual: visualWord(m && m.visualChange ? m.visualChange : de != null && de < 1 ? 'none' : de != null && de < 2 ? 'subtle' : 'visible') }); }
+      else if (cluster && !isPalette) { status = 'near_raw'; partner = cluster.members.find((x) => x !== v.id) || null; statusText = fmt(TC.status.near_raw, { de: cluster.maxDeltaE }); issue = true; action = m && m.action === 'merge' && m.target ? fmt(TC.action.merge, { token: nameOf(m.target), visual: visualWord(m.visualChange) }) : TC.action.keep_rare; }
+      else if (isPalette) { status = 'palette_ok'; statusText = TC.status.palette_ok; action = TC.action.palette; }
+      else if (m && m.action === 'new-token') { status = 'untokenized'; statusText = fmt(TC.status.untokenized, { n: own }); action = fmt(TC.action.new_token, { name: nameOf(m.target) }); issue = true; }
+      else { status = own >= 3 ? 'untokenized' : 'rare'; statusText = fmt(status === 'rare' ? TC.status.rare : TC.status.untokenized, { n: own }); action = TC.action.keep_rare; issue = status === 'untokenized'; }
+      const c = curationControls(v.id, { targets: libraryOnly ? [] : colorTargets(v) });
+      const paletteNames = isPalette ? [...new Set((v.sites || []).map((st) => (st.cls || '').replace(/^.*?:(?=[^:]+$)/, '').replace(/^(bg|text|border|ring|fill|stroke|from|to|via|outline|accent|caret|decoration|shadow|placeholder|divide)-/, '')).filter(Boolean))].slice(0, 3).join(', ') : '';
+      rows.push({ id: v.id, order: ORDER[status], uses: count, issue, kind, html: `<tr class="row"${c.attrs} data-kind="${kind}" data-issue="${issue ? 1 : 0}" data-occ="${count}" data-screens="${v.routes.length}" data-screen-ids="${esc(v.routes.join(' '))}" data-search="${esc(v.value + ' ' + paletteNames + ' ' + v.routes.map(screenName).join(' '))}">
+        <td>${swatch(v.value)}</td>
+        <td><div class="val mono">${esc(v.value)} <button class="pill" data-copy="${esc(v.value)}">${esc(T.misc.copy)}</button></div><div class="meta">${paletteNames ? `<span class="mono faint">${esc(paletteNames)}</span>` : ''}${v.routes.length ? `<span>${v.routes.length} ${esc(T.misc.screens)}</span>` : ''}<span class="faint">${v.fileCount} ${esc(T.misc.files)}</span>${kind === 'raw' && v.vendoredCount ? `<span class="faint">${esc(fmt(TC.in_library, { n: v.vendoredCount }))}</span>` : ''}</div></td>
+        <td><span class="pill${kind === 'raw' ? ' warn' : ''}">${esc(TC.kind[kind])}</span></td>
+        <td class="r">${count}</td>
+        <td>${partner ? pair(v.value, hexOf(partner)) + ' ' : ''}<span class="pill ${status === 'twin' ? 'ok' : issue ? 'warn' : ''}">${esc(statusText)}</span></td>
+        <td class="small">${esc(action)}</td>
+        <td>${c.controls}</td></tr>` });
+    }
+    rows.sort((a, b) => a.order - b.order || b.uses - a.uses || (a.id < b.id ? -1 : 1));
+    const counts = { all: rows.length, issues: rows.filter((r) => r.issue).length, token: rows.filter((r) => r.kind === 'token').length, raw: rows.filter((r) => r.kind === 'raw').length, palette: rows.filter((r) => r.kind === 'palette').length, library: rows.filter((r) => r.kind === 'library').length };
+    const filterBar = `<div class="filters" data-filter-for="ctable-color">${['all', 'issues', 'token', 'raw', 'palette', 'library'].filter((k) => k === 'all' || counts[k]).map((k) => `<button type="button" class="chip${k === 'all' ? ' active' : ''}" data-show="${k}">${esc(TC.filters[k])} <b>${counts[k]}</b></button>`).join('')}</div>`;
+    const colorTable = rows.length ? `<div class="tablewrap"><table class="t ctable" id="ctable-color"><thead><tr>${TC.cols.map((c, i) => `<th${i === 3 ? ' class="r"' : ''}>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => r.html).join('')}</tbody></table></div>` : `<p class="muted">–</p>`;
     parts.push(`<section class="chapter" id="color"><div class="wrap">
-      <div class="band"><h2>${esc(T.color.h)}</h2>${chapterStats([[T.summary.tiles.colors, n(tok.colors.values.length, 'tokens.colors.values.length')], [T.chapter.declared, n(declaredColors.length, 'tokens.declared.color')], [T.summary.tiles.hardcoded, n(hardRows.length, 'tokens.colors.hardcoded')], [T.summary.axes.color, scores.color == null ? '–' : n(scores.color + '%', 'scores.color')]])}</div>
+      <div class="band"><h2>${esc(T.color.h)}</h2>${chapterStats([[T.summary.tiles.colors, n(tok.colors.values.length, 'tokens.colors.values.length')], [T.chapter.declared, n(declaredColors.length, 'tokens.declared.color')], [T.summary.tiles.hardcoded, n(hardcodedColors, 'tokens.colors.hardcoded')]])}</div>
       ${chapterSummary('color')}
-      <div class="part"><h3>${esc(T.chapter.declared)} <span class="n">${declaredColors.length}</span></h3><p class="help">${esc(T.color.declared_help)}</p>${declaredTable || `<p class="muted">–</p>`}</div>
-      <div class="part"><h3>${esc(T.chapter.used)} · ${esc(T.color.groups.hardcoded)} <span class="n">${hardRows.length}</span></h3>${hardRows.length ? `<div class="rows">${hardRows.map((v) => valueRow(v, 'hard')).join('')}</div>` : `<p class="muted">–</p>`}</div>
-      ${vendoredRows.length ? `<div class="part"><h3>${esc(T.chapter.used)} · ${esc(T.color.groups.vendored)} <span class="n">${vendoredRows.length}</span></h3><p class="help">${esc(T.color.vendored_help)}</p><div class="rows">${vendoredRows.map((v) => valueRow(v, 'vendored')).join('')}</div></div>` : ''}
-      ${paletteRows.length ? `<div class="part"><h3>${esc(T.chapter.used)} · ${esc(T.color.groups.palette)} <span class="n">${paletteRows.length}</span></h3><div class="rows">${paletteRows.map((v) => valueRow(v, 'palette')).join('')}</div></div>` : ''}
-      ${viaRows.length ? `<div class="part"><h3>${esc(T.chapter.used)} · ${esc(T.color.groups.via)} <span class="n">${viaRows.length}</span></h3><div class="tags">${viaRows.map((v) => `<span class="pill" title="${esc(v.viaTokens.map(nameOf).join(', '))}">${swatch(v.value)} <span class="mono">${esc(v.value)}</span> · ${v.count}</span>`).join('')}</div></div>` : ''}
-      ${clusterStrips}
+      <div class="part"><h3>${esc(TC.table_h)} <span class="n">${rows.length}</span></h3><p class="help">${esc(TC.table_help)}</p>${filterBar}${colorTable}<p class="small faint">${esc(TC.legend)}</p></div>
       ${findingsBlock(findingsFor((f) => f.axis === 'color' || f.axis === 'tokens'))}
       ${noChange('color', 'color')}
       ${decisionsBlock()}

@@ -124,7 +124,61 @@
     "twin": "{token}과 같은 색",
     "palette_note": "Tailwind 팔레트 색 {n}종을 직접 사용",
     "vendored_help": "이 프로젝트가 아니라 라이브러리(shadcn/ui 등)가 적은 값입니다. 세고 보여주되, 요청하지 않으면 건드리지 않습니다.",
-    "in_library": "라이브러리 파일 안 +{n}"
+    "in_library": "라이브러리 파일 안 +{n}",
+    "table_h": "모든 색, 표 하나",
+    "table_help": "앱에 나타나는 색마다 한 줄: 프로젝트 토큰과 직접 쓴 값을 함께 봅니다. 상태 열에서 무엇이 문제인지, 권장 열에서 무엇을 할 수 있는지 읽고 오른쪽에서 정하세요.",
+    "cols": [
+      "",
+      "색",
+      "출처",
+      "사용",
+      "상태",
+      "권장",
+      "결정"
+    ],
+    "kind": {
+      "token": "토큰",
+      "raw": "직접 씀",
+      "palette": "Tailwind 팔레트",
+      "library": "라이브러리 파일"
+    },
+    "status": {
+      "ok": "정상",
+      "twin": "{token}과 같은 값",
+      "near": "{token}과 닮음 (ΔE {de})",
+      "near_raw": "다른 직접 쓴 색과 닮음 (ΔE {de})",
+      "untokenized": "토큰 없음 · {n}곳",
+      "rare": "토큰 없음 · {n}곳",
+      "dead": "선언만, 안 쓰임",
+      "dead_library": "shadcn 기본 세트, 안 쓰임",
+      "dark_missing": "다크 값 없음",
+      "palette_overlap": "무채색 토큰과 겹침 (ΔE {de})",
+      "palette_ok": "팔레트 색",
+      "library": "라이브러리 파일 안에서만",
+      "mode_varying": "라이트·다크 다름"
+    },
+    "action": {
+      "promote": "{token}으로 바꾸기 — 화면 변화 없음",
+      "merge": "{token}으로 합치기 — {visual}",
+      "new_token": "토큰으로 등록 (제안 이름 {name})",
+      "keep_rare": "두거나, 오른쪽에서 토큰 고르기",
+      "delete": "삭제 (카드 {card})",
+      "keep_library": "유지 — 나중에 shadcn add가 기대함",
+      "dark": "다크 값 정하기",
+      "none": "—",
+      "decide": "판단 필요: {token}은 다크에서 달라짐",
+      "palette": "스케일이라 그대로 둬도 됨. 테마를 따라야 하면 토큰으로 합치기"
+    },
+    "filters": {
+      "all": "전체",
+      "issues": "살펴볼 것",
+      "token": "토큰",
+      "raw": "직접 쓴 값",
+      "palette": "팔레트",
+      "library": "라이브러리"
+    },
+    "legend": "색 칩: 라이트(토큰에 다크 값이 있으면 다크도). 붙어 있는 칩 두 개 = 눈으로 구분 안 되는 한 쌍.",
+    "keep_token": "유지"
   },
   "typography": {
     "h": "04 · 글자",

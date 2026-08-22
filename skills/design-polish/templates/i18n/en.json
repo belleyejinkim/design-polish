@@ -124,7 +124,61 @@
     "twin": "same as {token}",
     "palette_note": "{n} Tailwind palette colors used directly",
     "vendored_help": "Written by the library (shadcn/ui and the like), not by this project. Counted, shown, left alone unless you ask.",
-    "in_library": "+{n} in library files"
+    "in_library": "+{n} in library files",
+    "table_h": "Every colour, one table",
+    "table_help": "One row per colour the app shows: project tokens and values typed by hand, together. Read the Status column for what is wrong and the Action column for what to do; decide on the right.",
+    "cols": [
+      "",
+      "Colour",
+      "Comes from",
+      "Uses",
+      "Status",
+      "Action",
+      "Your decision"
+    ],
+    "kind": {
+      "token": "token",
+      "raw": "typed by hand",
+      "palette": "Tailwind palette",
+      "library": "library file"
+    },
+    "status": {
+      "ok": "fine",
+      "twin": "same as {token}",
+      "near": "looks like {token} (ΔE {de})",
+      "near_raw": "looks like another raw colour (ΔE {de})",
+      "untokenized": "no token · used {n} times",
+      "rare": "no token · used {n} times",
+      "dead": "declared, never used",
+      "dead_library": "unused shadcn base-set token",
+      "dark_missing": "no dark value",
+      "palette_overlap": "overlaps a neutral token (ΔE {de})",
+      "palette_ok": "palette colour",
+      "library": "only inside library files",
+      "mode_varying": "light/dark differ"
+    },
+    "action": {
+      "promote": "switch to {token} — nothing changes on screen",
+      "merge": "merge into {token} — {visual}",
+      "new_token": "register as a token (suggested name {name})",
+      "keep_rare": "leave, or pick a token on the right",
+      "delete": "remove (card {card})",
+      "keep_library": "keep — a later shadcn add expects it",
+      "dark": "give it a dark value",
+      "none": "—",
+      "decide": "decide: {token} changes in dark mode",
+      "palette": "fine as the scale; merge into a token only if it should follow the theme"
+    },
+    "filters": {
+      "all": "All",
+      "issues": "Needs attention",
+      "token": "Tokens",
+      "raw": "Typed by hand",
+      "palette": "Palette",
+      "library": "Library"
+    },
+    "legend": "Swatches: light (and dark when the token has one). Two touching swatches = a pair a viewer cannot tell apart.",
+    "keep_token": "keep"
   },
   "typography": {
     "h": "04 · Typography",
