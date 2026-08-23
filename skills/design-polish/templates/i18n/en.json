@@ -366,7 +366,9 @@
       "Specimens are rendered with the project's own compiled CSS; nothing is imitated.",
       "Unresolved values are listed, never estimated.",
       "This report was built offline; it makes no network requests."
-    ]
+    ],
+    "read_with": "Read with",
+    "read_with_text": "Code parsed with the project's {parser}; class values compiled by the project's {engine}. Dark theme strategy: {dark}."
   },
   "curation": {
     "keep": "Keep",

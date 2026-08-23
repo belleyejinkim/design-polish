@@ -118,13 +118,19 @@ function build(runDir, opts = {}) {
   const parts = [];
   const chapterStats = (items) => `<div class="stats">${items.map(([k, v]) => `<span>${esc(k)} <b>${v}</b></span>`).join('')}</div>`;
 
-  // cover
+  // cover — badges appear only when the run is limited (regex/css-only mode, no engine, specimens unavailable);
+  // the ordinary "everything worked" facts live in chapter 13 instead.
   const noModel = !narrative;
+  const coverWarnings = [
+    inv.meta.mode === 'css-only' ? fmt(T.cover.mode_css_only, { css: inv.meta.files.css, templates: inv.meta.templates || 0 }) : inv.meta.mode !== 'ast' ? T.cover.mode_regex : '',
+    inv.meta.css.engine === 'none' ? T.cover.no_engine : '',
+    specimens && specimens.status === 'failed' ? fmt(T.components.render_failed, { reason: specimens.reason }) : '',
+  ].filter(Boolean);
   parts.push(`<header class="cover"><div class="wrap">
     <h1>${esc(project)}</h1>
     <p class="sub">${esc(T.subtitle).replace(/\n/g, '<br>')}</p>
     <div class="meta"><span>${fmt(T.cover.scanned, { files: n(inv.meta.files.code, 'meta.files.code'), routes: n(inv.routes.filter((r) => r.kind === 'page').length, 'routes.pages'), classes: n(inv.classes.unique, 'classes.unique') })}</span><span>${esc(fmt(T.cover.generated, { date: inv.meta.generatedAt.slice(0, 10), run: runId }))}</span></div>
-    <div class="badges">${inv.meta.mode === 'ast' ? `<span class="badge">${esc(T.cover.mode_ast)}</span>` : inv.meta.mode === 'css-only' ? `<span class="badge warn">${esc(fmt(T.cover.mode_css_only, { css: inv.meta.files.css, templates: inv.meta.templates || 0 }))}</span>` : `<span class="badge warn">${esc(T.cover.mode_regex)}</span>`}${inv.meta.css.engine !== 'none' ? `<span class="badge">${esc(fmt(T.cover.css_engine, { engine: `${inv.meta.css.engine}${inv.meta.css.version ? ' ' + inv.meta.css.version : ''}` }))}</span>` : `<span class="badge warn">${esc(T.cover.no_engine)}</span>`}${inv.meta.css.darkStrategy !== 'none' ? `<span class="badge">${esc(fmt(T.cover.dark, { strategy: inv.meta.css.darkStrategy }))}</span>` : ''}${specimens && specimens.status === 'failed' ? `<span class="badge warn">${esc(fmt(T.components.render_failed, { reason: specimens.reason }))}</span>` : ''}</div>
+    ${coverWarnings.length ? `<div class="badges">${coverWarnings.map((w) => `<span class="badge warn">${esc(w)}</span>`).join('')}</div>` : ''}
   </div></header>`);
   if (noModel) parts.push(`<div class="banner"><div class="wrap">${esc(T.cover.no_model)}</div></div>`);
   // nav
@@ -490,6 +496,7 @@ function build(runDir, opts = {}) {
     parts.push(`<section class="chapter" id="method"><div class="wrap">
       <div class="band"><h2>${esc(T.method.h)}</h2></div>
       <dl class="kv"><dt>${esc(T.method.coverage)}</dt><dd>${esc(fmt(T.method.coverage_text, { scanned: f.scanned, listed: f.listed, source: f.listSource, failed: f.parseFailed.length, dynamic: inv.classes.dynamicSites.length, unresolved: inv.classes.unresolved.length }))}</dd>
+      <dt>${esc(T.method.read_with)}</dt><dd>${esc(fmt(T.method.read_with_text, { parser: inv.meta.parser && inv.meta.parser.version ? `TypeScript ${inv.meta.parser.version}` : '–', engine: inv.meta.css.engine === 'none' ? '–' : `${inv.meta.css.engine}${inv.meta.css.version ? ' ' + inv.meta.css.version : ''}`, dark: inv.meta.css.darkStrategy === 'none' ? '–' : inv.meta.css.darkStrategy }))}</dd>
       <dt>${esc(T.summary.score)}</dt><dd>${esc(T.method.score_formula)}</dd>
       <dt>${esc(T.typography.families)}</dt><dd>${esc(T.method.fonts)}${specimens && specimens.fonts && specimens.fonts.length ? ' ' + specimens.fonts.map((x) => `${x.url} (${x.status})`).join(', ') : ''}</dd>
       ${ver.length ? `<dt>${esc(T.method.verification)}</dt><dd><ul class="plain">${ver.map((c) => `<li>${c.passed === true ? '✓' : c.passed === false ? '✗' : '…'} ${esc(c.id || '')} ${esc(c.text || c.title || '')}${c.evidence ? ` <span class="faint">— ${esc(c.evidence)}</span>` : ''}</li>`).join('')}</ul></dd>` : ''}
