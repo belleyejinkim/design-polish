@@ -20,11 +20,6 @@
     chapters.forEach(function (c) { io.observe(c); });
   }
 
-  /* ---------- developer info toggle ---------- */
-  var devToggle = $('#devToggle');
-  try { if (localStorage.getItem('dp:dev') === '1') document.body.classList.add('dev'); } catch (e) {}
-  if (devToggle) { devToggle.checked = document.body.classList.contains('dev'); devToggle.addEventListener('change', function () { document.body.classList.toggle('dev', devToggle.checked); try { localStorage.setItem('dp:dev', devToggle.checked ? '1' : '0'); } catch (e) {} }); }
-
   /* ---------- search ---------- */
   var search = $('#search');
   if (search) {

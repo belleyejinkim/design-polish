@@ -48,8 +48,6 @@ button{font:inherit;color:inherit}
 .topnav .spacer{flex:1}
 .search{border:1px solid var(--hair-2);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;min-width:220px;outline:none}
 .search:focus{border-color:var(--ink-3)}
-.toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);white-space:nowrap;cursor:pointer}
-.toggle input{accent-color:var(--ink)}
 
 /* chapters */
 .chapter{padding:56px 0 8px;border-top:1px solid var(--hair)}
@@ -137,7 +135,6 @@ a.tile:hover{border-color:var(--hair-2);background:#FDFCF8}
 details.dev{margin-top:4px}
 details.dev summary{cursor:pointer;font-size:12.5px;color:var(--ink-3)}
 details.dev ul{margin:6px 0 0;padding-left:18px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
-body:not(.dev) .devonly{display:none}
 
 /* rows (curation) */
 .rows{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
@@ -284,7 +281,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     
   </div></header>
 <div class="banner"><div class="wrap">Inventory only. For diagnosis and proposals, run /design-polish in your agent.</div></div>
-<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"><label class="toggle"><input type="checkbox" id="devToggle"> Developer info</label></div></nav>
+<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"></div></nav>
 <main>
 <section class="chapter" id="summary"><div class="wrap">
     <div class="band"><h2>01 · Summary</h2></div>
@@ -593,27 +590,27 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F5</span><h4>7 Tailwind grays beside 17 neutral tokens</h4><span class="sev">medium</span></div>
       <div class="body"><p>7 grays come straight from Tailwind's palette (gray-100, gray-500…) although the project defines 17 neutral tokens of its own; the two ramps drift apart.</p><div class="ev"><span class="strip"><i style="background:#ffffff" title="#ffffff"></i><i style="background:#eff6ff" title="#eff6ff"></i><i style="background:#f9fafb" title="#f9fafb"></i><i style="background:#d1d5dc" title="#d1d5dc"></i><i style="background:#6a7282" title="#6a7282"></i><i style="background:#e5e7eb" title="#e5e7eb"></i><i style="background:#f3f4f6" title="#f3f4f6"></i></span><span class="small mono muted">#ffffff · #eff6ff · #f9fafb · #d1d5dc · #6a7282 · #e5e7eb and 1 more</span></div>
       <div class="foot"><span class="pill">Home</span><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">and 1 more</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ≥ 3 palette grays and ≥ 3 project neutral tokens</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/(dashboard)/orders/[id]/page.tsx:16</li><li>src/app/(dashboard)/dashboard/page.tsx:22</li><li>src/app/(dashboard)/dashboard/page.tsx:38</li><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/forms/settings-form.tsx:21</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ≥ 3 palette grays and ≥ 3 project neutral tokens</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/(dashboard)/orders/[id]/page.tsx:16</li><li>src/app/(dashboard)/dashboard/page.tsx:22</li><li>src/app/(dashboard)/dashboard/page.tsx:38</li><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/forms/settings-form.tsx:21</li></ul></details></div>
     </article><article class="fnd medium" id="F:NEAR-DUP:36dce8" data-search="2 look-alike grays (ΔE 0) NEAR-DUP">
       <div class="head"><span class="id">F7</span><h4>2 look-alike grays (ΔE 0)</h4><span class="sev">medium</span></div>
       <div class="body"><p>2 grays differ by at most ΔE 0 (indistinguishable by eye); 40 uses across 5 screens.</p><div class="ev"><span class="strip"><i style="background:#ffffff" title="#ffffff"></i><i style="background:#ffffff" title="#ffffff"></i></span><span class="small mono muted">--color-background · #ffffff</span></div>
       <div class="foot"><span class="pill">Home</span><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">and 1 more</span><span class="pill warn">?</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/(dashboard)/orders/[id]/page.tsx:16</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/(dashboard)/orders/[id]/page.tsx:16</li></ul></details></div>
     </article><article class="fnd medium" id="F:TOKEN-TWIN:6dd0fe" data-search="1 raw colors equal an existing token TOKEN-TWIN">
       <div class="head"><span class="id">F8</span><h4>1 raw colors equal an existing token</h4><span class="sev">medium</span></div>
       <div class="body"><p>1 hardcoded color values (5 uses) are the same color as a declared token; replacing them changes nothing visually.</p><div class="ev"><span class="strip"><i style="background:#1aa44d" title="#1aa44d"></i></span><span class="small mono muted">#1aa44d</span></div>
       <div class="foot"><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ΔE2000 &lt; 1</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/components/forms/settings-form.tsx:75</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ΔE2000 &lt; 1</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/components/forms/settings-form.tsx:75</li></ul></details></div>
     </article><article class="fnd medium" id="F:NEAR-DUP:98de36" data-search="2 look-alike grays (ΔE 0.63) NEAR-DUP">
       <div class="head"><span class="id">F10</span><h4>2 look-alike grays (ΔE 0.63)</h4><span class="sev">medium</span></div>
       <div class="body"><p>2 grays differ by at most ΔE 0.63 (indistinguishable by eye); 29 uses across 3 screens.</p><div class="ev"><span class="strip"><i style="background:#fafafa" title="#fafafa"></i><i style="background:#f9fafb" title="#f9fafb"></i></span><span class="small mono muted">--color-primary-foreground · #f9fafb</span></div>
       <div class="foot"><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span><span class="pill warn">?</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/forms/settings-form.tsx:21</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/forms/settings-form.tsx:21</li></ul></details></div>
     </article><article class="fnd medium" id="F:NEAR-DUP:222ae6" data-search="2 look-alike colors (ΔE 0) NEAR-DUP">
       <div class="head"><span class="id">F11</span><h4>2 look-alike colors (ΔE 0)</h4><span class="sev">medium</span></div>
       <div class="body"><p>2 colors differ by at most ΔE 0 (indistinguishable by eye); 13 uses across 2 screens.</p><div class="ev"><span class="strip"><i style="background:#1aa44d" title="#1aa44d"></i><i style="background:#1aa44d" title="#1aa44d"></i></span><span class="small mono muted">--color-brand · #1aa44d</span></div>
       <div class="foot"><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/components/forms/settings-form.tsx:75</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/components/forms/settings-form.tsx:75</li></ul></details></div>
     </article><article class="fnd low" id="F:DEAD-TOKEN:339143" data-search="4 declared tokens are never used DEAD-TOKEN">
       <div class="head"><span class="id">F12</span><h4>4 declared tokens are never used</h4><span class="sev">low</span></div>
       <div class="body"><p>4 tokens are declared but referenced nowhere; 2 belong to the shadcn/ui base set and are kept.</p><div class="ev"><span class="tags"><span class="pill mono">--color-chart-1</span><span class="pill mono">--color-chart-2</span><span class="pill mono">--color-legacy-blue</span><span class="pill mono">--color-promo-yellow</span></span></div>
@@ -623,7 +620,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F16</span><h4>2 look-alike grays (ΔE 1.07)</h4><span class="sev">low</span></div>
       <div class="body"><p>2 grays differ by at most ΔE 1.07; 48 uses across 1 screens.</p><div class="ev"><span class="strip"><i style="background:#f5f5f5" title="#f5f5f5"></i><i style="background:#f3f4f6" title="#f3f4f6"></i></span><span class="small mono muted">--color-accent · #f3f4f6</span></div>
       <div class="foot"><span class="pill">Dashboard</span><span class="pill warn">?</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:30</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: CIEDE2000 ≤ 2 single-linkage; dominant = yes</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:30</li></ul></details></div>
     </article></div></div>
       
       <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
@@ -663,12 +660,12 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F1</span><h4>Neighbors with different corner radii (8px / 8px / 6px)</h4><span class="sev">medium</span></div>
       <div class="body"><p>button and button and button sit in one row with radii 8 / 8 / 6px.</p><div class="ev"><div class="stage" data-html="&lt;div class=&quot;flex items-center gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Refresh&lt;/button&gt;&lt;/div&gt;"><iframe title="row" loading="lazy"></iframe></div></div>
       <div class="foot"><span class="pill">(dashboard) layout</span><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/components/shared/toolbar.tsx:12</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/components/shared/toolbar.tsx:12</li></ul></details></div>
     </article><article class="fnd medium" id="F:SIB-RADIUS:0f045f" data-search="Neighbors with different corner radii (6px / 8px) SIB-RADIUS">
       <div class="head"><span class="id">F9</span><h4>Neighbors with different corner radii (6px / 8px)</h4><span class="sev">medium</span></div>
       <div class="body"><p>text-field and button sit in one row with radii 6 / 8px.</p><div class="ev"><div class="stage" data-html="&lt;div class=&quot;flex gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-sm border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive&quot; data-slot=&quot;input&quot; placeholder=&quot;Your name&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&amp;gt;svg]:px-3&quot; data-slot=&quot;button&quot; data-dp-root&gt;Default&lt;/button&gt;&lt;/div&gt;"><iframe title="row" loading="lazy"></iframe></div></div>
       <div class="foot"><span class="pill">Settings</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/components/forms/settings-form.tsx:30</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/components/forms/settings-form.tsx:30</li></ul></details></div>
     </article></div></div>
       
     </div></section>
@@ -690,7 +687,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
             
           </div>
           <div></div>
@@ -702,7 +699,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>height</td><td>36px</td><td class="d">–</td></tr><tr><td>radius</td><td>8px</td><td class="d">6px</td></tr><tr><td>paddingX</td><td>16px</td><td class="d">12px</td></tr><tr><td>paddingY</td><td>8px</td><td class="d">6px</td></tr><tr><td>borderWidth</td><td>–</td><td class="d">1px</td></tr></table>
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50</div>
+            <div class="classes">rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:a9f418a98a96" data-visual="visible" selected>Button · variant=ghost</option><option value="sig:button:c5822cf013e4" data-visual="visible">Button · variant=default size=default</option><option value="sig:button:d35ce72f7bac" data-visual="visible">Button · variant=destructive</option><option value="sig:button:de01237ab567" data-visual="visible">Button · variant=outline size=sm</option><option value="sig:button:212301c593df" data-visual="visible">Button · kind=primary</option><option value="sig:button:666ca5fe81dc" data-visual="visible">Button · base</option><option value="sig:button:6e15a80516f7" data-visual="visible">Button · base</option><option value="sig:button:d4de4eb4b857" data-visual="visible">Button · size=sm</option></select></div><div class="impact"></div>
@@ -714,7 +711,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Design System</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
             
           </div>
           <div></div>
@@ -726,7 +723,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
             
           </div>
           <div></div>
@@ -738,7 +735,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
             
           </div>
           <div></div>
@@ -750,7 +747,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             <div class="small faint">1 class(es) could not be resolved: btn</div>
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span></div>
-            <div class="classes devonly">btn</div>
+            <div class="classes">btn</div>
             
           </div>
           <div></div>
@@ -762,7 +759,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>height</td><td>36px</td><td class="d">–</td></tr><tr><td>radius</td><td>8px</td><td class="d">∞</td></tr><tr><td>paddingX</td><td>16px</td><td class="d">–</td></tr><tr><td>paddingY</td><td>8px</td><td class="d">–</td></tr><tr><td>fontSize</td><td>14px</td><td class="d">–</td></tr></table>
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Dashboard</span></div>
-            <div class="classes devonly">rounded-full hover:bg-gray-200</div>
+            <div class="classes">rounded-full hover:bg-gray-200</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:a9f418a98a96" data-visual="visible" selected>Button · variant=ghost</option><option value="sig:button:c5822cf013e4" data-visual="visible">Button · variant=default size=default</option><option value="sig:button:d35ce72f7bac" data-visual="visible">Button · variant=destructive</option><option value="sig:button:de01237ab567" data-visual="visible">Button · variant=outline size=sm</option><option value="sig:button:212301c593df" data-visual="visible">Button · kind=primary</option><option value="sig:button:666ca5fe81dc" data-visual="visible">Button · base</option><option value="sig:button:6e15a80516f7" data-visual="visible">Button · base</option><option value="sig:button:d4de4eb4b857" data-visual="visible">Button · size=sm</option></select></div><div class="impact"></div>
@@ -774,7 +771,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>height</td><td>36px</td><td class="d">–</td></tr><tr><td>radius</td><td>8px</td><td class="d">10px</td></tr><tr><td>paddingX</td><td>16px</td><td class="d">18px</td></tr><tr><td>paddingY</td><td>8px</td><td class="d">18px</td></tr><tr><td>fontSize</td><td>14px</td><td class="d">–</td></tr><tr><td>bg</td><td>–</td><td class="d"><span class="sw" title="#1aa44d"><i style="background:#1aa44d"></i></span> #1aa44d</td></tr><tr><td>fg</td><td>–</td><td class="d"><span class="sw" title="#ffffff"><i style="background:#ffffff"></i></span> #ffffff</td></tr></table>
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span></div>
-            <div class="classes devonly">rounded-lg bg-brand p-[18px] text-white</div>
+            <div class="classes">rounded-lg bg-brand p-[18px] text-white</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:a9f418a98a96" data-visual="visible" selected>Button · variant=ghost</option><option value="sig:button:c5822cf013e4" data-visual="visible">Button · variant=default size=default</option><option value="sig:button:d35ce72f7bac" data-visual="visible">Button · variant=destructive</option><option value="sig:button:de01237ab567" data-visual="visible">Button · variant=outline size=sm</option><option value="sig:button:212301c593df" data-visual="visible">Button · kind=primary</option><option value="sig:button:666ca5fe81dc" data-visual="visible">Button · base</option><option value="sig:button:6e15a80516f7" data-visual="visible">Button · base</option><option value="sig:button:d4de4eb4b857" data-visual="visible">Button · size=sm</option></select></div><div class="impact"></div>
@@ -786,7 +783,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Order</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary underline-offset-4 hover:underline h-9 px-4 py-2 has-[&gt;svg]:px-3 text-[#d93025]</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary underline-offset-4 hover:underline h-9 px-4 py-2 has-[&gt;svg]:px-3 text-[#d93025]</div>
             
           </div>
           <div></div>
@@ -798,7 +795,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3 bg-[#222222] text-white hover:bg-[#333333]</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3 bg-[#222222] text-white hover:bg-[#333333]</div>
             
           </div>
           <div></div>
@@ -810,7 +807,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>height</td><td>36px</td><td class="d">–</td></tr><tr><td>radius</td><td>8px</td><td class="d">–</td></tr><tr><td>paddingX</td><td>16px</td><td class="d">–</td></tr><tr><td>paddingY</td><td>8px</td><td class="d">–</td></tr><tr><td>fg</td><td>–</td><td class="d"><span class="sw" title="#6a7282"><i style="background:#6a7282"></i></span> #6a7282</td></tr></table>
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">and 1 more</span></div>
-            <div class="classes devonly">text-sm text-gray-500 hover:text-gray-900 focus-visible:focus-ring</div>
+            <div class="classes">text-sm text-gray-500 hover:text-gray-900 focus-visible:focus-ring</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:a9f418a98a96" data-visual="visible" selected>Button · variant=ghost</option><option value="sig:button:c5822cf013e4" data-visual="visible">Button · variant=default size=default</option><option value="sig:button:d35ce72f7bac" data-visual="visible">Button · variant=destructive</option><option value="sig:button:de01237ab567" data-visual="visible">Button · variant=outline size=sm</option><option value="sig:button:212301c593df" data-visual="visible">Button · kind=primary</option><option value="sig:button:666ca5fe81dc" data-visual="visible">Button · base</option><option value="sig:button:6e15a80516f7" data-visual="visible">Button · base</option><option value="sig:button:d4de4eb4b857" data-visual="visible">Button · size=sm</option></select></div><div class="impact"></div>
@@ -822,7 +819,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Design System</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
             
           </div>
           <div></div>
@@ -834,7 +831,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">h-5 w-5 rounded border-gray-300</div>
+            <div class="classes">h-5 w-5 rounded border-gray-300</div>
             
           </div>
           <div></div>
@@ -846,7 +843,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary</div>
+            <div class="classes">peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary</div>
             
           </div>
           <div></div>
@@ -858,7 +855,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md</div>
+            <div class="classes">bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md</div>
             
           </div>
           <div></div>
@@ -870,7 +867,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">size-4 accent-brand</div>
+            <div class="classes">size-4 accent-brand</div>
             
           </div>
           <div></div>
@@ -882,7 +879,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">h-9 rounded-md border px-3 text-sm</div>
+            <div class="classes">h-9 rounded-md border px-3 text-sm</div>
             
           </div>
           <div></div>
@@ -894,7 +891,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm</div>
+            <div class="classes">border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm</div>
             
           </div>
           <div></div>
@@ -906,7 +903,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-sm border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive</div>
+            <div class="classes">file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-sm border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive</div>
             
           </div>
           <div></div>
@@ -918,7 +915,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Settings</span></div>
-            <div class="classes devonly">peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input</div>
+            <div class="classes">peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input</div>
             
           </div>
           <div></div>
@@ -930,7 +927,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Design System</span><span class="pill">Order</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-destructive text-white [a&amp;]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60</div>
+            <div class="classes">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-destructive text-white [a&amp;]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60</div>
             
           </div>
           <div></div>
@@ -942,7 +939,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Design System</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&amp;]:hover:bg-primary/90</div>
+            <div class="classes">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&amp;]:hover:bg-primary/90</div>
             
           </div>
           <div></div>
@@ -954,7 +951,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Design System</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&amp;]:hover:bg-secondary/90</div>
+            <div class="classes">inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&amp;]:hover:bg-secondary/90</div>
             
           </div>
           <div></div>
@@ -966,7 +963,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Dashboard</span></div>
-            <div class="classes devonly">rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700</div>
+            <div class="classes">rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700</div>
             
           </div>
           <div></div>
@@ -978,7 +975,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span></div>
-            <div class="classes devonly">inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-700</div>
+            <div class="classes">inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-700</div>
             
           </div>
           <div></div>
@@ -987,7 +984,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F2</span><h4>4 one-off Button looks</h4><span class="sev">high</span></div>
       <div class="body"><p>button: 31 distinct looks in 20 uses; 4 of them are one-offs outside the base component's variants.</p><div class="ev"><div class="spec" data-sig="sig:button:b5266f191a32"><div class="stage" data-html="&lt;button class=&quot;rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Refresh&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:32e93bae9614"><div class="stage" data-html="&lt;button class=&quot;rounded-full hover:bg-gray-200&quot; aria-label=&quot;remove&quot; data-dp-root&gt;×&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:3378061039bb"><div class="stage" data-html="&lt;button class=&quot;rounded-lg bg-brand p-[18px] text-white&quot; data-dp-root&gt;Create order&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:b25c6b038c7b"><div class="stage" data-html="&lt;button class=&quot;text-sm text-gray-500 hover:text-gray-900 focus-visible:focus-ring&quot; data-dp-root&gt;Sign out&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div></div>
       <div class="foot"><span class="pill">Home</span><span class="pill">Dashboard</span><span class="pill">Design System</span><span class="pill">Order</span><span class="pill">and 1 more</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ad-hoc looks ≥ 3 warn / ≥ 6 severe</summary><ul><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/shared/chip.tsx:7</li><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/layout.tsx:13</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ad-hoc looks ≥ 3 warn / ≥ 6 severe</summary><ul><li>src/app/(dashboard)/orders/[id]/page.tsx:23</li><li>src/components/shared/chip.tsx:7</li><li>src/app/(dashboard)/dashboard/page.tsx:46</li><li>src/app/layout.tsx:13</li></ul></details></div>
     </article><article class="fnd medium" id="F:DUP-IMPL:41d379" data-search="3 different Button implementations DUP-IMPL">
       <div class="head"><span class="id">F4</span><h4>3 different Button implementations</h4><span class="sev">medium</span></div>
       <div class="body"><p>button is built 3 different ways (Button, raw &lt;button&gt;, DynamicButton).</p><div class="ev"><div class="spec" data-sig="sig:button:022980f6c2ff"><div class="stage" data-html="&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9&quot; data-slot=&quot;button&quot; aria-label=&quot;Add&quot; data-dp-root&gt;+&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:32e93bae9614"><div class="stage" data-html="&lt;button class=&quot;rounded-full hover:bg-gray-200&quot; aria-label=&quot;remove&quot; data-dp-root&gt;×&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:button:212301c593df"><div class="stage"><div class="classes" style="padding:12px 14px">dynamic classes — look unknown<br>btn</div></div></div></div>
@@ -997,7 +994,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F6</span><h4>1 classes have no effect</h4><span class="sev">high</span></div>
       <div class="body"><p>1 utility-looking classes (rounded-card) match no generated or project CSS; they style nothing.</p><div class="ev"><span class="tags"><span class="pill mono">rounded-card</span></span></div>
       <div class="foot"></div>
-      <details class="dev devonly"><summary>Code locations · Rule: no Tailwind output and no project CSS rule for the class</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:49</li><li>src/components/shared/card.tsx:5</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: no Tailwind output and no project CSS rule for the class</summary><ul><li>src/app/(dashboard)/dashboard/page.tsx:49</li><li>src/components/shared/card.tsx:5</li></ul></details></div>
     </article><article class="fnd medium" id="F:DUP-IMPL:0be687" data-search="2 different Checkbox implementations DUP-IMPL">
       <div class="head"><span class="id">F13</span><h4>2 different Checkbox implementations</h4><span class="sev">medium</span></div>
       <div class="body"><p>checkbox is built 2 different ways (LegacyCheckbox, Checkbox).</p><div class="ev"><div class="spec" data-sig="sig:checkbox:8be46b2716d4"><div class="stage" data-html="&lt;input class=&quot;h-5 w-5 rounded border-gray-300&quot; type=&quot;checkbox&quot; data-dp-root&gt;" data-state="default"><iframe title="Checkbox" loading="lazy"></iframe></div></div><div class="spec" data-sig="sig:checkbox:a14c0597ec59"><div class="stage" data-html="&lt;button class=&quot;peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary&quot; data-slot=&quot;checkbox&quot; data-dp-root&gt;&lt;span class=&quot;grid place-content-center text-current transition-none&quot; data-slot=&quot;checkbox-indicator&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;16&quot; height=&quot;16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M20 6 9 17l-5-5&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/button&gt;" data-state="default"><iframe title="Checkbox" loading="lazy"></iframe></div></div></div>
@@ -1007,14 +1004,14 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F15</span><h4>1 control components are not used by any screen</h4><span class="sev">note</span></div>
       <div class="body"><p>1 components (OldButton) are defined but reachable from no route.</p>
       <div class="foot"></div>
-      <details class="dev devonly"><summary>Code locations · Rule: no import path from a route file</summary><ul><li>src/components/shared/unused/old-button.tsx:1</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: no import path from a route file</summary><ul><li>src/components/shared/unused/old-button.tsx:1</li></ul></details></div>
     </article></div></div>
       <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
     </div></section>
 <section class="chapter" id="relations"><div class="wrap">
       <div class="band"><h2>09 · Side by side</h2><div class="stats"><span>Side by side <b><span class="num" data-metric="relationships.mismatches">2</span></b></span></div></div>
       <p class="help">Controls that sit in one row or grid. Values are legal on their own; they should still match their neighbours.</p>
-      <div class="findings"><div class="relrow" data-search="Text field Button Settings"><div class="why"><b>corner radius: 6px / 8px</b> — Text field + Button</div><div class="stage" data-html="&lt;div class=&quot;flex gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-sm border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive&quot; data-slot=&quot;input&quot; placeholder=&quot;Your name&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&amp;gt;svg]:px-3&quot; data-slot=&quot;button&quot; data-dp-root&gt;Default&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Settings</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/components/forms/settings-form.tsx:30 · flex gap-2</li></ul></details></div><div class="relrow" data-search="Button Button Button Dashboard Order Settings"><div class="why"><b>corner radius: 8px / 8px / 6px</b> — Button + Button + Button</div><div class="stage" data-html="&lt;div class=&quot;flex items-center gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Refresh&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span><span class="pill">(dashboard) layout</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/components/shared/toolbar.tsx:12 · flex items-center gap-2</li></ul></details></div></div>
+      <div class="findings"><div class="relrow" data-search="Text field Button Settings"><div class="why"><b>corner radius: 6px / 8px</b> — Text field + Button</div><div class="stage" data-html="&lt;div class=&quot;flex gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-sm border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive&quot; data-slot=&quot;input&quot; placeholder=&quot;Your name&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&amp;gt;svg]:px-3&quot; data-slot=&quot;button&quot; data-dp-root&gt;Default&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Settings</span></div><details class="dev"><summary>Code locations</summary><ul><li>src/components/forms/settings-form.tsx:30 · flex gap-2</li></ul></details></div><div class="relrow" data-search="Button Button Button Dashboard Order Settings"><div class="why"><b>corner radius: 8px / 8px / 6px</b> — Button + Button + Button</div><div class="stage" data-html="&lt;div class=&quot;flex items-center gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;amp;_svg]:pointer-events-none [&amp;amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&amp;gt;svg]:px-2.5&quot; data-slot=&quot;button&quot; data-dp-root&gt;Small&lt;/button&gt;&lt;button class=&quot;rounded-[6px] border px-3 py-1.5 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Refresh&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Dashboard</span><span class="pill">Order</span><span class="pill">Settings</span><span class="pill">(dashboard) layout</span></div><details class="dev"><summary>Code locations</summary><ul><li>src/components/shared/toolbar.tsx:12 · flex items-center gap-2</li></ul></details></div></div>
     </div></section>
 <section class="chapter" id="proposal"><div class="wrap">
       <div class="band"><h2>10 · Proposed system</h2><div class="stats"><span>new <b><span class="num" data-metric="proposal.newTokens.length">0</span></b></span><span> <b>2-layer token architecture</b></span></div></div>
@@ -1084,7 +1081,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       
       </dl>
       <ul class="plain" style="margin-top:18px"><li>Numbers come from scripts, not from a language model.</li><li>Specimens are rendered with the project's own compiled CSS; nothing is imitated.</li><li>Unresolved values are listed, never estimated.</li><li>This report was built offline; it makes no network requests.</li></ul>
-      <footer>design-polish 3.0.0 · 2026-08-23T21:22:32.065Z · messy-next</footer>
+      <footer>design-polish 3.0.0 · 2026-08-23T21:26:50.435Z · messy-next</footer>
     </div></section>
 </main>
 <aside class="cart" id="cart"><div class="wrap"><span class="sum"></span><button class="btn send" type="button">Send decisions</button><button class="btn ghost copy" type="button">Copy</button><button class="btn ghost save" type="button">Save file</button><button class="btn ghost clear" type="button">Clear</button><span class="warn hidden"></span></div></aside><div class="toast" id="toast"></div>
@@ -2464,11 +2461,6 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     }, { rootMargin: '-15% 0px -75% 0px' });
     chapters.forEach(function (c) { io.observe(c); });
   }
-
-  /* ---------- developer info toggle ---------- */
-  var devToggle = $('#devToggle');
-  try { if (localStorage.getItem('dp:dev') === '1') document.body.classList.add('dev'); } catch (e) {}
-  if (devToggle) { devToggle.checked = document.body.classList.contains('dev'); devToggle.addEventListener('change', function () { document.body.classList.toggle('dev', devToggle.checked); try { localStorage.setItem('dp:dev', devToggle.checked ? '1' : '0'); } catch (e) {} }); }
 
   /* ---------- search ---------- */
   var search = $('#search');

@@ -135,7 +135,7 @@ function build(runDir, opts = {}) {
   if (noModel) parts.push(`<div class="banner"><div class="wrap">${esc(T.cover.no_model)}</div></div>`);
   // nav
   const navIds = ['summary', 'screens', 'color', 'typography', 'spacing', 'radius', 'shadow', 'components', 'relations', 'proposal', 'cards', 'delta', 'method'];
-  parts.push(`<nav class="topnav"><div class="wrap">${navIds.map((id) => `<a class="chip" href="#${id}">${esc(T.nav[id])}</a>`).join('')}<span class="spacer"></span><input id="search" class="search" type="search" placeholder="${esc(T.misc.search)}"><label class="toggle"><input type="checkbox" id="devToggle"> ${esc(T.dev.toggle)}</label></div></nav>`);
+  parts.push(`<nav class="topnav"><div class="wrap">${navIds.map((id) => `<a class="chip" href="#${id}">${esc(T.nav[id])}</a>`).join('')}<span class="spacer"></span><input id="search" class="search" type="search" placeholder="${esc(T.misc.search)}"></div></nav>`);
   parts.push('<main>');
 
   // 01 summary
@@ -210,7 +210,7 @@ function build(runDir, opts = {}) {
       <div class="head"><span class="id">F${f.num}</span><h4>${esc(title)}</h4><span class="sev">${esc(sev(f.severity))}</span></div>
       <div class="body"><p>${esc(explanation)}</p>${evidence ? `<div class="ev">${evidence}</div>` : ''}
       <div class="foot">${screenChips(f.screens)}${f.needsUserConfirmation ? `<span class="pill warn">?</span>` : ''}</div>
-      ${sites ? `<details class="dev devonly"><summary>${esc(T.dev.sites)} · ${esc(T.dev.basis)}: ${esc(f.basis)}</summary><ul>${sites}</ul></details>` : ''}</div>
+      ${sites ? `<details class="dev"><summary>${esc(T.dev.sites)} · ${esc(T.dev.basis)}: ${esc(f.basis)}</summary><ul>${sites}</ul></details>` : ''}</div>
     </article>`;
   };
   const findingsFor = (pred) => (findings ? findings.findings.filter(pred) : []);
@@ -404,7 +404,7 @@ function build(runDir, opts = {}) {
             ${s.adHoc ? diffRows(s) : ''}
             ${s.unresolvedClasses.length ? `<div class="small faint">${esc(fmt(T.components.unresolved, { n: s.unresolvedClasses.length }))}: ${esc(s.unresolvedClasses.join(' '))}</div>` : ''}
             <div class="tags small" style="margin-top:6px">${screenChips(s.routes, 4)}</div>
-            <div class="classes devonly">${esc(s.spelling)}</div>
+            <div class="classes">${esc(s.spelling)}</div>
             ${c.recoText ? `<div class="reco">${c.recoText}</div>` : ''}
           </div>
           ${s.adHoc ? c.controls : '<div></div>'}
@@ -427,7 +427,7 @@ function build(runDir, opts = {}) {
     parts.push(`<section class="chapter" id="relations"><div class="wrap">
       <div class="band"><h2>${esc(T.relations.h)}</h2>${chapterStats([[T.nav.relations, n(groups.length, 'relationships.mismatches')]])}</div>
       <p class="help">${esc(T.relations.help)}</p>
-      ${groups.length ? `<div class="findings">${groups.map((g) => { const sp = groupSpec.get(g.id); const what = [g.mismatch.radius ? fmt(T.relations.mismatch, { what: T.relations.radius, values: g.radiusPx.map((r) => r == null ? '?' : r === 'full' ? '∞' : r + 'px').join(' / ') }) : '', g.mismatch.height ? fmt(T.relations.mismatch, { what: T.relations.height, values: g.heightPx.map((r) => r == null ? '?' : r + 'px').join(' / ') }) : ''].filter(Boolean).join(' · '); return `<div class="relrow" data-search="${esc(g.memberTypes.map((t) => tl[t]).join(' ') + ' ' + g.routes.map(screenName).join(' '))}"><div class="why"><b>${esc(what)}</b> — ${esc(g.memberTypes.map((t) => tl[t]).join(' + '))}</div>${sp ? `<div class="stage" data-html="${esc(sp.html)}" data-state="default"><iframe title="row" loading="lazy"></iframe></div>` : ''}<div class="tags small">${screenChips([...g.routes, ...(g.layoutScope || [])], 5)}</div><details class="dev devonly"><summary>${esc(T.dev.sites)}</summary><ul><li>${esc(g.file)}:${g.line} · ${esc(g.containerClasses)}</li></ul></details></div>`; }).join('')}</div>` : `<p class="muted">${esc(T.relations.none)}</p>`}
+      ${groups.length ? `<div class="findings">${groups.map((g) => { const sp = groupSpec.get(g.id); const what = [g.mismatch.radius ? fmt(T.relations.mismatch, { what: T.relations.radius, values: g.radiusPx.map((r) => r == null ? '?' : r === 'full' ? '∞' : r + 'px').join(' / ') }) : '', g.mismatch.height ? fmt(T.relations.mismatch, { what: T.relations.height, values: g.heightPx.map((r) => r == null ? '?' : r + 'px').join(' / ') }) : ''].filter(Boolean).join(' · '); return `<div class="relrow" data-search="${esc(g.memberTypes.map((t) => tl[t]).join(' ') + ' ' + g.routes.map(screenName).join(' '))}"><div class="why"><b>${esc(what)}</b> — ${esc(g.memberTypes.map((t) => tl[t]).join(' + '))}</div>${sp ? `<div class="stage" data-html="${esc(sp.html)}" data-state="default"><iframe title="row" loading="lazy"></iframe></div>` : ''}<div class="tags small">${screenChips([...g.routes, ...(g.layoutScope || [])], 5)}</div><details class="dev"><summary>${esc(T.dev.sites)}</summary><ul><li>${esc(g.file)}:${g.line} · ${esc(g.containerClasses)}</li></ul></details></div>`; }).join('')}</div>` : `<p class="muted">${esc(T.relations.none)}</p>`}
     </div></section>`);
   }
 
@@ -472,10 +472,10 @@ function build(runDir, opts = {}) {
       const fd = delta.findings || { resolved: [], remaining: [], new: [] };
       const findingPills = `<span class="pill ok">${esc(fmt(T.delta.resolved, { n: fd.resolved.length }))}</span><span class="pill">${esc(fmt(T.delta.remaining, { n: fd.remaining.length }))}</span><span class="pill${fd.new.length ? ' warn' : ''}">${esc(fmt(T.delta.new, { n: fd.new.length }))}</span>`;
       const moved = (delta.occurrences && delta.occurrences.moved) || [];
-      const movedList = moved.length ? `<ul class="plain">${moved.slice(0, 40).map((m) => `<li><b>${esc(tl[m.type] || m.type)}</b>${m.label ? ` “${esc(m.label)}”` : ''} · ${esc((m.routes || []).map(screenName).join(', ') || (lang === 'ko' ? '화면 미상' : 'no screen'))} <span class="devonly muted mono">${esc(m.file)}:${m.line} · ${esc(m.from.slice(-8))} → ${esc(m.to.slice(-8))}</span></li>`).join('')}${moved.length > 40 ? `<li class="muted">+${moved.length - 40}</li>` : ''}</ul>` : `<p class="muted">${esc(T.delta.moved_none)}</p>`;
+      const movedList = moved.length ? `<ul class="plain">${moved.slice(0, 40).map((m) => `<li><b>${esc(tl[m.type] || m.type)}</b>${m.label ? ` “${esc(m.label)}”` : ''} · ${esc((m.routes || []).map(screenName).join(', ') || (lang === 'ko' ? '화면 미상' : 'no screen'))} <span class="muted mono">${esc(m.file)}:${m.line} · ${esc(m.from.slice(-8))} → ${esc(m.to.slice(-8))}</span></li>`).join('')}${moved.length > 40 ? `<li class="muted">+${moved.length - 40}</li>` : ''}</ul>` : `<p class="muted">${esc(T.delta.moved_none)}</p>`;
       const tokenRows = (delta.tokens || []).map((t) => `<tr><td class="mono">${esc(t.name)}</td><td>${t.axis === 'color' && t.light ? swatch(t.light) + ' ' : ''}${esc(t.light || '')}</td><td>${t.axis === 'color' && t.dark ? swatch(t.dark) + ' ' : ''}${esc(t.dark || '')}</td><td class="r">${esc(t.refs)}</td><td>${t.isNew ? `<span class="pill ok">${esc(T.delta.token_new)}</span>` : ''}</td></tr>`).join('');
       const removed = (delta.removedTokens || []).length ? `<p class="muted">${esc(fmt(T.delta.removed, { names: delta.removedTokens.join(', ') }))}</p>` : '';
-      const skipped = (delta.skipped || []).length ? `<ul class="plain">${delta.skipped.map((k) => `<li><span class="mono">${esc(k.cardId)}</span> ${k.file ? `<span class="devonly mono">${esc(k.file)}${k.line ? ':' + k.line : ''}</span> ` : ''}<span class="muted">${esc(k.reason)}</span></li>`).join('')}</ul>` : `<p class="muted">${esc(T.delta.skipped_none)}</p>`;
+      const skipped = (delta.skipped || []).length ? `<ul class="plain">${delta.skipped.map((k) => `<li><span class="mono">${esc(k.cardId)}</span> ${k.file ? `<span class="mono">${esc(k.file)}${k.line ? ':' + k.line : ''}</span> ` : ''}<span class="muted">${esc(k.reason)}</span></li>`).join('')}</ul>` : `<p class="muted">${esc(T.delta.skipped_none)}</p>`;
       body = `<p class="help">${esc(fmt(T.delta.conditions, { baseline: delta.baseline, same: delta.comparable && delta.comparable.sameScanner ? yes : no, filesBefore: delta.comparable ? delta.comparable.filesBefore : '–', filesAfter: delta.comparable ? delta.comparable.filesAfter : '–' }))}</p>`
         + (appliedRows ? `<div class="part"><h3>${esc(T.delta.applied_h)}</h3><ul class="plain">${appliedRows}</ul></div>` : '')
         + `<div class="part"><h3>${esc(T.delta.scores_h)}</h3><div class="tiles">${scoreTiles}</div></div>`

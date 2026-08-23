@@ -48,8 +48,6 @@ button{font:inherit;color:inherit}
 .topnav .spacer{flex:1}
 .search{border:1px solid var(--hair-2);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;min-width:220px;outline:none}
 .search:focus{border-color:var(--ink-3)}
-.toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);white-space:nowrap;cursor:pointer}
-.toggle input{accent-color:var(--ink)}
 
 /* chapters */
 .chapter{padding:56px 0 8px;border-top:1px solid var(--hair)}
@@ -137,7 +135,6 @@ a.tile:hover{border-color:var(--hair-2);background:#FDFCF8}
 details.dev{margin-top:4px}
 details.dev summary{cursor:pointer;font-size:12.5px;color:var(--ink-3)}
 details.dev ul{margin:6px 0 0;padding-left:18px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
-body:not(.dev) .devonly{display:none}
 
 /* rows (curation) */
 .rows{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
@@ -284,7 +281,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     
   </div></header>
 <div class="banner"><div class="wrap">Inventory only. For diagnosis and proposals, run /design-polish in your agent.</div></div>
-<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"><label class="toggle"><input type="checkbox" id="devToggle"> Developer info</label></div></nav>
+<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"></div></nav>
 <main>
 <section class="chapter" id="summary"><div class="wrap">
     <div class="band"><h2>01 · Summary</h2></div>
@@ -472,7 +469,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5</div>
             
           </div>
           <div></div>
@@ -484,7 +481,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
             
           </div>
           <div></div>
@@ -496,7 +493,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Home</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
+            <div class="classes">inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3</div>
             
           </div>
           <div></div>
@@ -508,7 +505,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary</div>
+            <div class="classes">peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary</div>
             
           </div>
           <div></div>
@@ -520,7 +517,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Dashboard</span><span class="pill">Settings</span></div>
-            <div class="classes devonly">file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-56</div>
+            <div class="classes">file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-56</div>
             
           </div>
           <div></div>
@@ -561,7 +558,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       
       </dl>
       <ul class="plain" style="margin-top:18px"><li>Numbers come from scripts, not from a language model.</li><li>Specimens are rendered with the project's own compiled CSS; nothing is imitated.</li><li>Unresolved values are listed, never estimated.</li><li>This report was built offline; it makes no network requests.</li></ul>
-      <footer>design-polish 3.0.0 · 2026-08-23T21:22:32.275Z · clean-shadcn</footer>
+      <footer>design-polish 3.0.0 · 2026-08-23T21:26:50.666Z · clean-shadcn</footer>
     </div></section>
 </main>
 <aside class="cart" id="cart"><div class="wrap"><span class="sum"></span><button class="btn send" type="button">Send decisions</button><button class="btn ghost copy" type="button">Copy</button><button class="btn ghost save" type="button">Save file</button><button class="btn ghost clear" type="button">Clear</button><span class="warn hidden"></span></div></aside><div class="toast" id="toast"></div>
@@ -1447,11 +1444,6 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     }, { rootMargin: '-15% 0px -75% 0px' });
     chapters.forEach(function (c) { io.observe(c); });
   }
-
-  /* ---------- developer info toggle ---------- */
-  var devToggle = $('#devToggle');
-  try { if (localStorage.getItem('dp:dev') === '1') document.body.classList.add('dev'); } catch (e) {}
-  if (devToggle) { devToggle.checked = document.body.classList.contains('dev'); devToggle.addEventListener('change', function () { document.body.classList.toggle('dev', devToggle.checked); try { localStorage.setItem('dp:dev', devToggle.checked ? '1' : '0'); } catch (e) {} }); }
 
   /* ---------- search ---------- */
   var search = $('#search');

@@ -37,8 +37,7 @@ Sticky nav with scroll-spy · search across values, tokens and screens · row cu
 with impact preview, persisted in `localStorage` under `dp:<runId>` · cart with size warnings (S ≤ 30, M ≤ 100
 places; two M cards or mixed safe/visible changes warn) · Send (local server) / Copy (clipboard, prefixed
 `design-polish:decisions v1 `) / Save (file) · lazy specimen iframes with the compiled `live.css` and simulated states
-(`:hover` → `[data-sim~="hover"]`, `disabled`, `data-state`, dark per the project's strategy) · developer-info toggle
-(`body.dev` shows `.devonly`) · severity filter · before/after side by side · print CSS · served mode: `/api/version`
+(`:hover` → `[data-sim~="hover"]`, `disabled`, `data-state`, dark per the project's strategy) · code locations (file:line, class strings) always visible, long lists inside `<details>` · severity filter · before/after side by side · print CSS · served mode: `/api/version`
 polling reloads the tab after a recheck.
 
 ## Specimens

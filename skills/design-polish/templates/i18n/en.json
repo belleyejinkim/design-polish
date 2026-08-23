@@ -394,7 +394,6 @@
     "warn_mixed": "Safe and visible changes are mixed; consider sending the safe ones first."
   },
   "dev": {
-    "toggle": "Developer info",
     "sites": "Code locations",
     "classes": "Classes",
     "basis": "Rule"

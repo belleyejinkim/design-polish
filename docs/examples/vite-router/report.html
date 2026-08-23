@@ -48,8 +48,6 @@ button{font:inherit;color:inherit}
 .topnav .spacer{flex:1}
 .search{border:1px solid var(--hair-2);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;min-width:220px;outline:none}
 .search:focus{border-color:var(--ink-3)}
-.toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);white-space:nowrap;cursor:pointer}
-.toggle input{accent-color:var(--ink)}
 
 /* chapters */
 .chapter{padding:56px 0 8px;border-top:1px solid var(--hair)}
@@ -137,7 +135,6 @@ a.tile:hover{border-color:var(--hair-2);background:#FDFCF8}
 details.dev{margin-top:4px}
 details.dev summary{cursor:pointer;font-size:12.5px;color:var(--ink-3)}
 details.dev ul{margin:6px 0 0;padding-left:18px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
-body:not(.dev) .devonly{display:none}
 
 /* rows (curation) */
 .rows{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
@@ -284,7 +281,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     
   </div></header>
 <div class="banner"><div class="wrap">Inventory only. For diagnosis and proposals, run /design-polish in your agent.</div></div>
-<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"><label class="toggle"><input type="checkbox" id="devToggle"> Developer info</label></div></nav>
+<nav class="topnav"><div class="wrap"><a class="chip" href="#summary">Summary</a><a class="chip" href="#screens">Screens</a><a class="chip" href="#color">Color</a><a class="chip" href="#typography">Type</a><a class="chip" href="#spacing">Spacing</a><a class="chip" href="#radius">Corners</a><a class="chip" href="#shadow">Shadows</a><a class="chip" href="#components">Components</a><a class="chip" href="#relations">Side by side</a><a class="chip" href="#proposal">Proposed system</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#delta">Before / after</a><a class="chip" href="#method">Method</a><span class="spacer"></span><input id="search" class="search" type="search" placeholder="Find a value, token or screen"></div></nav>
 <main>
 <section class="chapter" id="summary"><div class="wrap">
     <div class="band"><h2>01 · Summary</h2></div>
@@ -399,7 +396,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F2</span><h4>4 Tailwind grays beside 3 neutral tokens</h4><span class="sev">medium</span></div>
       <div class="body"><p>4 grays come straight from Tailwind's palette (gray-100, gray-500…) although the project defines 3 neutral tokens of its own; the two ramps drift apart.</p><div class="ev"><span class="strip"><i style="background:#ffffff" title="#ffffff"></i><i style="background:#d1d5dc" title="#d1d5dc"></i><i style="background:#f3f4f6" title="#f3f4f6"></i><i style="background:#f9fafb" title="#f9fafb"></i></span><span class="small mono muted">#ffffff · #d1d5dc · #f3f4f6 · #f9fafb</span></div>
       <div class="foot"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ≥ 3 palette grays and ≥ 3 project neutral tokens</summary><ul><li>src/pages/home.tsx:8</li><li>src/pages/reports.tsx:10</li><li>src/pages/reports.tsx:12</li><li>src/pages/home.tsx:10</li><li>src/pages/reports.tsx:12</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ≥ 3 palette grays and ≥ 3 project neutral tokens</summary><ul><li>src/pages/home.tsx:8</li><li>src/pages/reports.tsx:10</li><li>src/pages/reports.tsx:12</li><li>src/pages/home.tsx:10</li><li>src/pages/reports.tsx:12</li></ul></details></div>
     </article></div></div>
       
       <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
@@ -434,7 +431,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F4</span><h4>Neighbors with different corner radii (6px / 6px / 8px)</h4><span class="sev">medium</span></div>
       <div class="body"><p>text-field and button and button sit in one row with radii 6 / 6 / 8px.</p><div class="ev"><div class="stage" data-html="&lt;div class=&quot;flex items-end gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;&lt;/div&gt;"><iframe title="row" loading="lazy"></iframe></div></div>
       <div class="foot"><span class="pill">Reports</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/pages/reports.tsx:8</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: ≥ 2px difference in one row/grid</summary><ul><li>src/pages/reports.tsx:8</li></ul></details></div>
     </article></div></div>
       
     </div></section>
@@ -456,7 +453,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span><span class="pill">Participant</span></div>
-            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200</div>
+            <div class="classes">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent-soft text-accent hover:bg-blue-200</div>
             
           </div>
           <div></div>
@@ -468,7 +465,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span><span class="pill">Reports</span></div>
-            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700</div>
+            <div class="classes">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700</div>
             
           </div>
           <div></div>
@@ -480,7 +477,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             <table class="diff"><tr><th></th><th>base</th><th>one-off</th></tr><tr><td>radius</td><td>6px</td><td class="d">8px</td></tr><tr><td>borderWidth</td><td>–</td><td class="d">1px</td></tr><tr><td>bg</td><td><span class="sw" title="#dbeafe"><i style="background:#dbeafe"></i></span> #dbeafe</td><td class="d">–</td></tr><tr><td>fg</td><td><span class="sw" title="#2563eb"><i style="background:#2563eb"></i></span> #2563eb</td><td class="d">–</td></tr><tr><td>border</td><td>–</td><td class="d"><span class="sw" title="#d1d5dc"><i style="background:#d1d5dc"></i></span> #d1d5dc</td></tr></table>
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Reports</span></div>
-            <div class="classes devonly">h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50</div>
+            <div class="classes">h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span><select class="hidden" aria-label="Choose target"><option value="sig:button:96197a0beed8" data-visual="visible" selected>Button · variant=secondary</option><option value="sig:button:f39e1c92616e" data-visual="visible">Button · base</option><option value="sig:button:c5d8aca88559" data-visual="visible">Button · variant=ghost</option></select></div><div class="impact"></div>
@@ -492,7 +489,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Interviews this week</span></div>
-            <div class="classes devonly">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 text-ink-soft hover:bg-gray-100</div>
+            <div class="classes">inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 text-ink-soft hover:bg-gray-100</div>
             
           </div>
           <div></div>
@@ -504,7 +501,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Participant</span></div>
-            <div class="classes devonly">size-4 rounded-sm border-line accent-accent</div>
+            <div class="classes">size-4 rounded-sm border-line accent-accent</div>
             
           </div>
           <div class="ctl"><span class="seg" role="radiogroup"><label data-action="keep">Keep</label><label data-action="merge">Merge into</label><label data-action="leave" class="leave">Leave</label></span></div><div class="impact"></div>
@@ -516,7 +513,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
             
             
             <div class="tags small" style="margin-top:6px"><span class="pill">Reports</span></div>
-            <div class="classes devonly">h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent</div>
+            <div class="classes">h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent</div>
             
           </div>
           <div></div>
@@ -530,14 +527,14 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       <div class="head"><span class="id">F3</span><h4>1 Button looks with an unusual corner ratio</h4><span class="sev">low</span></div>
       <div class="body"><p>Most buttons round corners at 17% of their height; 1 looks deviate (KRDS reference: height × 0.125, max 12px).</p><div class="ev"><div class="spec" data-sig="sig:button:78525c92ceaa"><div class="stage" data-html="&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;" data-state="default"><iframe title="Button" loading="lazy"></iframe></div></div></div>
       <div class="foot"><span class="pill">Reports</span></div>
-      <details class="dev devonly"><summary>Code locations · Rule: |ratio − modal| &gt; 0.05</summary><ul><li>src/pages/reports.tsx:12</li></ul></details></div>
+      <details class="dev"><summary>Code locations · Rule: |ratio − modal| &gt; 0.05</summary><ul><li>src/pages/reports.tsx:12</li></ul></details></div>
     </article></div></div>
       <div class="part"><h3>Your decisions</h3><p class="muted small decisions-status">– undecided</p></div>
     </div></section>
 <section class="chapter" id="relations"><div class="wrap">
       <div class="band"><h2>09 · Side by side</h2><div class="stats"><span>Side by side <b><span class="num" data-metric="relationships.mismatches">1</span></b></span></div></div>
       <p class="help">Controls that sit in one row or grid. Values are legal on their own; they should still match their neighbours.</p>
-      <div class="findings"><div class="relrow" data-search="Text field Button Button Reports"><div class="why"><b>corner radius: 6px / 6px / 8px</b> — Text field + Button + Button</div><div class="stage" data-html="&lt;div class=&quot;flex items-end gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Reports</span></div><details class="dev devonly"><summary>Code locations</summary><ul><li>src/pages/reports.tsx:8 · flex items-end gap-2</li></ul></details></div></div>
+      <div class="findings"><div class="relrow" data-search="Text field Button Button Reports"><div class="why"><b>corner radius: 6px / 6px / 8px</b> — Text field + Button + Button</div><div class="stage" data-html="&lt;div class=&quot;flex items-end gap-2&quot; style=&quot;flex-wrap:nowrap&quot;&gt;&lt;input class=&quot;h-9 rounded-ctl border border-line px-3 text-sm text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-accent&quot; data-dp-root&gt;&lt;button class=&quot;inline-flex h-9 items-center justify-center rounded-ctl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50 bg-accent text-white hover:bg-blue-700&quot; data-dp-root&gt;New interview&lt;/button&gt;&lt;button class=&quot;h-9 rounded-lg border border-gray-300 px-4 text-sm hover:bg-gray-50&quot; data-dp-root&gt;Export CSV&lt;/button&gt;&lt;/div&gt;" data-state="default"><iframe title="row" loading="lazy"></iframe></div><div class="tags small"><span class="pill">Reports</span></div><details class="dev"><summary>Code locations</summary><ul><li>src/pages/reports.tsx:8 · flex items-end gap-2</li></ul></details></div></div>
     </div></section>
 <section class="chapter" id="proposal"><div class="wrap">
       <div class="band"><h2>10 · Proposed system</h2><div class="stats"><span>new <b><span class="num" data-metric="proposal.newTokens.length">0</span></b></span><span> <b>2-layer token architecture</b></span></div></div>
@@ -572,7 +569,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       
       </dl>
       <ul class="plain" style="margin-top:18px"><li>Numbers come from scripts, not from a language model.</li><li>Specimens are rendered with the project's own compiled CSS; nothing is imitated.</li><li>Unresolved values are listed, never estimated.</li><li>This report was built offline; it makes no network requests.</li></ul>
-      <footer>design-polish 3.0.0 · 2026-08-23T21:22:32.456Z · vite-router</footer>
+      <footer>design-polish 3.0.0 · 2026-08-23T21:26:50.859Z · vite-router</footer>
     </div></section>
 </main>
 <aside class="cart" id="cart"><div class="wrap"><span class="sum"></span><button class="btn send" type="button">Send decisions</button><button class="btn ghost copy" type="button">Copy</button><button class="btn ghost save" type="button">Save file</button><button class="btn ghost clear" type="button">Clear</button><span class="warn hidden"></span></div></aside><div class="toast" id="toast"></div>
@@ -1194,11 +1191,6 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     }, { rootMargin: '-15% 0px -75% 0px' });
     chapters.forEach(function (c) { io.observe(c); });
   }
-
-  /* ---------- developer info toggle ---------- */
-  var devToggle = $('#devToggle');
-  try { if (localStorage.getItem('dp:dev') === '1') document.body.classList.add('dev'); } catch (e) {}
-  if (devToggle) { devToggle.checked = document.body.classList.contains('dev'); devToggle.addEventListener('change', function () { document.body.classList.toggle('dev', devToggle.checked); try { localStorage.setItem('dp:dev', devToggle.checked ? '1' : '0'); } catch (e) {} }); }
 
   /* ---------- search ---------- */
   var search = $('#search');
