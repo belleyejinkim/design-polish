@@ -1,7 +1,7 @@
 {
   "lang": "en",
   "title": "{project} — design inventory",
-  "subtitle": "Every color, size, spacing, radius, shadow and form control in the code, at real size.",
+  "subtitle": "An inventory of every colour, text style, spacing, corner, shadow and form control this app actually uses, at real size, read from the code. It shows where they disagree, with evidence; pick what stays and your agent fixes only that, one revertible commit at a time.",
   "nav": {
     "summary": "Summary",
     "screens": "Screens",
@@ -71,7 +71,16 @@
         "a page of the app; every item lists the screens it appears on, so you can check it by eye"
       ]
     ],
-    "headline_default": "{project}: {looks} component looks across {types} types, {hardcoded} raw colors, {findings} findings."
+    "headline_default": "{project}: {looks} component looks across {types} types, {hardcoded} raw colors, {findings} findings.",
+    "tile_desc": {
+      "colors": "distinct colours the app shows",
+      "hardcoded": "colours typed as raw values, no token",
+      "looks": "distinct style combinations of controls",
+      "adhoc": "looks built in place instead of the base component",
+      "findings": "places where things disagree, found by scripts",
+      "cards": "proposed fixes you can pick and apply"
+    },
+    "top_findings_badge": "worth a look"
   },
   "screens": {
     "h": "02 · Screens",
@@ -403,5 +412,14 @@
     "search": "Find a value, token or screen",
     "copy": "Copy",
     "expand": "Show all"
+  },
+  "terms": {
+    "token": "a value defined once and used by name (a CSS variable like --color-brand); change one place, everything follows.",
+    "raw value": "a value typed where it is used (#1AA44D, 18px); it cannot be changed in one place.",
+    "look": "one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows.",
+    "screen": "a page of the app; every item lists the screens it appears on so you can check by eye.",
+    "one-off": "a look built in place with its own classes instead of the base component.",
+    "card": "one reviewable unit of change; picked cards apply as one commit each.",
+    "finding": "a place where things disagree, found by scripts, with counts and screens as evidence."
   }
 }

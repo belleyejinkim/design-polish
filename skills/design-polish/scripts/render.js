@@ -110,6 +110,10 @@ function build(runDir, opts = {}) {
     return { recoText, controls: `<div class="ctl">${seg}${select}</div><div class="impact"></div>`, attrs: ` data-id="${esc(id)}" data-target="${esc(recTarget)}" data-visual="${esc(rec ? rec.visualChange : 'visible')}" data-card="${esc(card ? card.id : '')}"` };
   }
 
+  // A word from the glossary gets a hover definition wherever it appears as a label.
+  const term = (word) => { const def = (T.terms || {})[word]; return def ? `<span class="term" tabindex="0" data-tip="${esc(def)}">${esc(word)}</span>` : esc(word); };
+  const termLabel = (label) => { for (const w of Object.keys(T.terms || {})) if (label.includes(w)) return label.split(w).map(esc).join(term(w)); return esc(label); };
+
   /* ---------- chapters ---------- */
   const parts = [];
   const chapterStats = (items) => `<div class="stats">${items.map(([k, v]) => `<span>${esc(k)} <b>${v}</b></span>`).join('')}</div>`;
@@ -141,25 +145,29 @@ function build(runDir, opts = {}) {
   const axisRows = ['color', 'typography', 'spacing', 'radius', 'shadow', 'component'].map((a) => { const v = scores[a]; const cls = v == null ? '' : v < 50 ? 'low' : v < 85 ? 'mid' : ''; return `<div class="axis"><span>${esc(T.summary.axes[a])}</span><span class="bar"><i class="${cls}" style="width:${v == null ? 0 : v}%"></i></span><span class="v">${v == null ? '–' : n(v, `scores.${a}`)}</span></div>`; }).join('');
   const topFindings = findings ? findings.findings.filter((f) => f.severity !== 'info').slice(0, 3) : [];
   const goodAxes = findings ? findings.okAxes : [];
+  const tile = (metric, value, key, href) => `<a class="tile" href="${href}"><b>${n(value, metric)}</b><span>${termLabel(T.summary.tiles[key])}</span><span class="desc">${esc((T.summary.tile_desc || {})[key] || '')}</span></a>`;
   parts.push(`<section class="chapter" id="summary"><div class="wrap">
     <div class="band"><h2>${esc(T.summary.h)}</h2></div>
     <p class="headline">${esc(headline)}</p>${narrative && narrative.lede ? `<p class="lede">${esc(narrative.lede)}</p>` : ''}
     <div class="summary-grid">
-      <div class="scorecard"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="${ringR}"/><circle class="fg" cx="60" cy="60" r="${ringR}" stroke-dasharray="${(circ * comp) / 100} ${circ}"/></svg><div class="val">${scores.composite == null ? '–' : n(scores.composite, 'scores.composite')}</div></div><div class="axes"><div class="caps">${esc(T.summary.score)}</div>${axisRows}<div class="small faint">${esc(T.summary.score_help)}</div></div></div>
-      <div>
-        <div class="tiles">
-          <div class="tile"><b>${n(inv.tokens.colors.values.length, 'tokens.colors.values.length')}</b><span>${esc(T.summary.tiles.colors)}</span></div>
-          <div class="tile"><b>${n(hardcodedColors, 'tokens.colors.hardcoded')}</b><span>${esc(T.summary.tiles.hardcoded)}</span></div>
-          <div class="tile"><b>${n(totalLooks, 'components.looks')}</b><span>${esc(T.summary.tiles.looks)}</span></div>
-          <div class="tile"><b>${n(adHocLooks, 'components.adhoc')}</b><span>${esc(T.summary.tiles.adhoc)}</span></div>
-          ${findings ? `<div class="tile"><b>${n(findings.findings.length, 'findings.length')}</b><span>${esc(T.summary.tiles.findings)}</span></div>` : ''}
-          ${cards.length ? `<div class="tile"><b>${n(cards.length, 'cards.length')}</b><span>${esc(T.summary.tiles.cards)}</span></div>` : ''}
-        </div>
-        ${topFindings.length ? `<div class="part"><h3>${esc(T.summary.top_findings)}</h3><ul class="plain">${topFindings.map((f) => `<li><a href="#${f.id}"><b>F${f.num}</b> ${esc((narrative && narrative.findings && narrative.findings[f.id] && narrative.findings[f.id].title) || ruleTitle(f))}</a> <span class="pill ${f.severity === 'high' ? 'bad' : f.severity === 'medium' ? 'warn' : ''}">${esc(sev(f.severity))}</span></li>`).join('')}</ul></div>` : ''}
-        <div class="good"><h4>${esc(T.summary.good)}</h4>${goodAxes.length ? goodAxes.map((a) => `<div>${esc(fmt(T.summary.good_axis, { axis: al[a.axis], score: a.score == null ? '–' : a.score, n: (inv.scores.weights || {})[a.axis] || 0 }))}</div>`).join('') : `<div>${esc(T.summary.good_none)}</div>`}</div>
+      <div class="scorecard">
+        <div class="caps">${esc(T.summary.score)}</div>
+        <div class="score-body"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="${ringR}"/><circle class="fg" cx="60" cy="60" r="${ringR}" stroke-dasharray="${(circ * comp) / 100} ${circ}"/></svg><div class="val">${scores.composite == null ? '–' : n(scores.composite, 'scores.composite')}</div></div><div class="axes">${axisRows}</div></div>
+        <div class="small faint">${esc(T.summary.score_help)}</div>
+      </div>
+      <div class="tiles">
+        ${tile('tokens.colors.values.length', inv.tokens.colors.values.length, 'colors', '#color')}
+        ${tile('tokens.colors.hardcoded', hardcodedColors, 'hardcoded', '#color')}
+        ${tile('components.looks', totalLooks, 'looks', '#components')}
+        ${tile('components.adhoc', adHocLooks, 'adhoc', '#components')}
+        ${findings ? tile('findings.length', findings.findings.length, 'findings', '#cards') : ''}
+        ${cards.length ? tile('cards.length', cards.length, 'cards', '#cards') : ''}
       </div>
     </div>
-    <div class="glossary">${T.summary.glossary.map(([k, v]) => `<div><b>${esc(k)}</b>${esc(v)}</div>`).join('')}</div>
+    <div class="panels">
+      <div class="panel"><h3>${esc(T.summary.top_findings)}${topFindings.length ? ` <span class="pill warn">${esc(T.summary.top_findings_badge)}</span>` : ''}</h3>${topFindings.length ? `<ul class="plain">${topFindings.map((f) => `<li><a href="#${f.id}"><b>F${f.num}</b> ${esc((narrative && narrative.findings && narrative.findings[f.id] && narrative.findings[f.id].title) || ruleTitle(f))}</a> <span class="pill ${f.severity === 'high' ? 'bad' : f.severity === 'medium' ? 'warn' : ''}">${esc(sev(f.severity))}</span></li>`).join('')}</ul>` : `<p class="muted">–</p>`}</div>
+      <div class="panel"><h3>${esc(T.summary.good)}</h3><ul class="plain">${goodAxes.length ? goodAxes.map((a) => `<li>${esc(fmt(T.summary.good_axis, { axis: al[a.axis], score: a.score == null ? '–' : a.score, n: (inv.scores.weights || {})[a.axis] || 0 }))}</li>`).join('') : `<li class="muted">${esc(T.summary.good_none)}</li>`}</ul></div>
+    </div>
   </div></section>`);
 
   // 02 screens

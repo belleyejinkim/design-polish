@@ -84,10 +84,11 @@ table.t{width:100%;border-collapse:collapse;font-size:14px;background:var(--card
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 
 /* summary */
-.summary-grid{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:28px;align-items:start}
+.summary-grid{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:16px;align-items:stretch}
 @media (max-width:860px){.summary-grid{grid-template-columns:1fr}}
-.scorecard{background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:22px;display:flex;gap:22px;align-items:center}
-.scorecard .axes{flex:1;min-width:0}
+.scorecard{background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.score-body{display:flex;gap:22px;align-items:center}
+.score-body .axes{flex:1;min-width:0}
 .ring{width:104px;height:104px;flex:none}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 .ring .bg{fill:none;stroke:var(--tint-2);stroke-width:10}
@@ -101,15 +102,22 @@ table.t{width:100%;border-collapse:collapse;font-size:14px;background:var(--card
 .axis .bar i{display:block;height:100%;background:var(--ink)}
 .axis .bar i.low{background:var(--red)}.axis .bar i.mid{background:var(--amber)}
 .axis .v{text-align:right;color:var(--ink-2)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.tile{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:14px 16px}
-.tile b{display:block;font-size:26px;font-weight:650;letter-spacing:-0.02em;line-height:1.1}
-.tile span{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:13px 15px;text-decoration:none;color:inherit;display:block}
+a.tile:hover{border-color:var(--hair-2);background:#FDFCF8}
+.tile>b{display:block;font-size:24px;font-weight:650;letter-spacing:-0.02em;line-height:1.1}
+.tile>span{display:block;font-size:12.5px;color:var(--ink);margin-top:4px;font-weight:600}
+.tile .term{display:inline}
+.tile .desc{font-weight:400;color:var(--ink-3);font-size:12px;margin-top:2px;line-height:1.45}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:760px){.panels{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:16px 20px}
+.panel>h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.panel>h3 .pill{letter-spacing:0;text-transform:none}
+.panel ul.plain{margin:0;padding-left:18px}
+.panel ul.plain li{margin:5px 0;font-size:14px}
 .good{background:var(--ok-bg);border:1px solid #CFE0D1;border-radius:8px;padding:14px 18px;font-size:14px;color:#2F5436}
 .good h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:6px}
-.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:22px}
-.glossary div{background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:12px 14px;font-size:13.5px;color:var(--ink-2)}
-.glossary b{color:var(--ink);display:block;margin-bottom:2px}
 
 /* findings */
 .findings{display:grid;gap:14px}
@@ -262,12 +270,16 @@ table.ctable td:nth-child(5) .pill{white-space:normal;line-height:1.35}
 table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
 .pair{display:inline-flex;vertical-align:middle;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
 .pair i{display:block;width:18px;height:22px}
+/* glossary terms: hover/focus definitions instead of a card block */
+.term{border-bottom:1px dotted var(--ink-3);cursor:help;position:relative}
+.term:hover::after,.term:focus::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 6px);z-index:40;background:var(--deep);color:#F4F2EA;font-size:12.5px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none;padding:8px 11px;border-radius:8px;width:max-content;max-width:260px;white-space:normal;word-break:keep-all;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.tile .term{border-bottom-color:var(--hair-2)}
 </style>
 </head>
 <body>
 <header class="cover"><div class="wrap">
     <h1>clean-shadcn</h1>
-    <p class="sub">Every color, size, spacing, radius, shadow and form control in the code, at real size.</p>
+    <p class="sub">An inventory of every colour, text style, spacing, corner, shadow and form control this app actually uses, at real size, read from the code. It shows where they disagree, with evidence; pick what stays and your agent fixes only that, one revertible commit at a time.</p>
     <div class="meta"><span><span class="num" data-metric="meta.files.code">12</span> code files · <span class="num" data-metric="routes.pages">3</span> screens · <span class="num" data-metric="classes.unique">102</span> distinct classes</span><span>Generated 2026-08-23 · run clean-shadcn</span></div>
     <div class="badges"><span class="badge">read with the project's TypeScript</span><span class="badge">values from the project's tailwind4 4.3.3</span><span class="badge">dark theme: class</span></div>
   </div></header>
@@ -278,21 +290,24 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
     <div class="band"><h2>01 · Summary</h2></div>
     <p class="headline">clean-shadcn: 5 component looks across 3 types, 0 raw colors, 1 findings.</p>
     <div class="summary-grid">
-      <div class="scorecard"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="314.1592653589793 314.1592653589793"/></svg><div class="val"><span class="num" data-metric="scores.composite">100</span></div></div><div class="axes"><div class="caps">Consistency score</div><div class="axis"><span>Color</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.color">100</span></span></div><div class="axis"><span>Type</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.typography">100</span></span></div><div class="axis"><span>Spacing</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.spacing">100</span></span></div><div class="axis"><span>Corners</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.radius">100</span></span></div><div class="axis"><span>Shadows</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.shadow">100</span></span></div><div class="axis"><span>Components</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.component">100</span></span></div><div class="small faint">Share of style occurrences that go through a token or the scale, weighted by count. Not an aesthetic score.</div></div></div>
-      <div>
-        <div class="tiles">
-          <div class="tile"><b><span class="num" data-metric="tokens.colors.values.length">17</span></b><span>distinct colors</span></div>
-          <div class="tile"><b><span class="num" data-metric="tokens.colors.hardcoded">0</span></b><span>raw colors</span></div>
-          <div class="tile"><b><span class="num" data-metric="components.looks">5</span></b><span>component looks</span></div>
-          <div class="tile"><b><span class="num" data-metric="components.adhoc">0</span></b><span>one-off looks</span></div>
-          <div class="tile"><b><span class="num" data-metric="findings.length">1</span></b><span>findings</span></div>
-          <div class="tile"><b><span class="num" data-metric="cards.length">1</span></b><span>cards</span></div>
-        </div>
-        
-        <div class="good"><h4>What is already consistent</h4><div>Color: 100% of 108 occurrences go through tokens or the scale. Nothing to change.</div><div>Typography: 100% of 23 occurrences go through tokens or the scale. Nothing to change.</div><div>Spacing: 100% of 60 occurrences go through tokens or the scale. Nothing to change.</div><div>Corners: 100% of 15 occurrences go through tokens or the scale. Nothing to change.</div><div>Shadows: 100% of 11 occurrences go through tokens or the scale. Nothing to change.</div></div>
+      <div class="scorecard">
+        <div class="caps">Consistency score</div>
+        <div class="score-body"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="314.1592653589793 314.1592653589793"/></svg><div class="val"><span class="num" data-metric="scores.composite">100</span></div></div><div class="axes"><div class="axis"><span>Color</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.color">100</span></span></div><div class="axis"><span>Type</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.typography">100</span></span></div><div class="axis"><span>Spacing</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.spacing">100</span></span></div><div class="axis"><span>Corners</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.radius">100</span></span></div><div class="axis"><span>Shadows</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.shadow">100</span></span></div><div class="axis"><span>Components</span><span class="bar"><i class="" style="width:100%"></i></span><span class="v"><span class="num" data-metric="scores.component">100</span></span></div></div></div>
+        <div class="small faint">Share of style occurrences that go through a token or the scale, weighted by count. Not an aesthetic score.</div>
+      </div>
+      <div class="tiles">
+        <a class="tile" href="#color"><b><span class="num" data-metric="tokens.colors.values.length">17</span></b><span>distinct colors</span><span class="desc">distinct colours the app shows</span></a>
+        <a class="tile" href="#color"><b><span class="num" data-metric="tokens.colors.hardcoded">0</span></b><span>raw colors</span><span class="desc">colours typed as raw values, no token</span></a>
+        <a class="tile" href="#components"><b><span class="num" data-metric="components.looks">5</span></b><span>component <span class="term" tabindex="0" data-tip="one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows.">look</span>s</span><span class="desc">distinct style combinations of controls</span></a>
+        <a class="tile" href="#components"><b><span class="num" data-metric="components.adhoc">0</span></b><span>one-off <span class="term" tabindex="0" data-tip="one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows.">look</span>s</span><span class="desc">looks built in place instead of the base component</span></a>
+        <a class="tile" href="#cards"><b><span class="num" data-metric="findings.length">1</span></b><span><span class="term" tabindex="0" data-tip="a place where things disagree, found by scripts, with counts and screens as evidence.">finding</span>s</span><span class="desc">places where things disagree, found by scripts</span></a>
+        <a class="tile" href="#cards"><b><span class="num" data-metric="cards.length">1</span></b><span><span class="term" tabindex="0" data-tip="one reviewable unit of change; picked cards apply as one commit each.">card</span>s</span><span class="desc">proposed fixes you can pick and apply</span></a>
       </div>
     </div>
-    <div class="glossary"><div><b>token</b>a named value defined once (a CSS variable like --color-brand) that the code refers to instead of typing the value</div><div><b>raw value</b>a value typed directly where it is used (#1AA44D, 18px); it cannot be changed in one place</div><div><b>look</b>one distinct combination of styles for a control; 47 buttons with 5 looks means 5 rows here</div><div><b>screen</b>a page of the app; every item lists the screens it appears on, so you can check it by eye</div></div>
+    <div class="panels">
+      <div class="panel"><h3>What stands out</h3><p class="muted">–</p></div>
+      <div class="panel"><h3>What is already consistent</h3><ul class="plain"><li>Color: 100% of 108 occurrences go through tokens or the scale. Nothing to change.</li><li>Typography: 100% of 23 occurrences go through tokens or the scale. Nothing to change.</li><li>Spacing: 100% of 60 occurrences go through tokens or the scale. Nothing to change.</li><li>Corners: 100% of 15 occurrences go through tokens or the scale. Nothing to change.</li><li>Shadows: 100% of 11 occurrences go through tokens or the scale. Nothing to change.</li></ul></div>
+    </div>
   </div></section>
 <section class="chapter" id="screens"><div class="wrap">
     <div class="band"><h2>02 · Screens</h2><div class="stats"><span>screens <b><span class="num" data-metric="routes.pages">3</span></b></span></div></div>
@@ -545,7 +560,7 @@ table.ctable td:nth-child(6){min-width:200px;color:var(--ink-2)}
       
       </dl>
       <ul class="plain" style="margin-top:18px"><li>Numbers come from scripts, not from a language model.</li><li>Specimens are rendered with the project's own compiled CSS; nothing is imitated.</li><li>Unresolved values are listed, never estimated.</li><li>This report was built offline; it makes no network requests.</li></ul>
-      <footer>design-polish 3.0.0 · 2026-08-23T20:53:44.579Z · clean-shadcn</footer>
+      <footer>design-polish 3.0.0 · 2026-08-23T21:11:39.164Z · clean-shadcn</footer>
     </div></section>
 </main>
 <aside class="cart" id="cart"><div class="wrap"><span class="sum"></span><button class="btn send" type="button">Send decisions</button><button class="btn ghost copy" type="button">Copy</button><button class="btn ghost save" type="button">Save file</button><button class="btn ghost clear" type="button">Clear</button><span class="warn hidden"></span></div></aside><div class="toast" id="toast"></div>
