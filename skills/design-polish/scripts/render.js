@@ -122,7 +122,7 @@ function build(runDir, opts = {}) {
   const noModel = !narrative;
   parts.push(`<header class="cover"><div class="wrap">
     <h1>${esc(project)}</h1>
-    <p class="sub">${esc(T.subtitle)}</p>
+    <p class="sub">${esc(T.subtitle).replace(/\n/g, '<br>')}</p>
     <div class="meta"><span>${fmt(T.cover.scanned, { files: n(inv.meta.files.code, 'meta.files.code'), routes: n(inv.routes.filter((r) => r.kind === 'page').length, 'routes.pages'), classes: n(inv.classes.unique, 'classes.unique') })}</span><span>${esc(fmt(T.cover.generated, { date: inv.meta.generatedAt.slice(0, 10), run: runId }))}</span></div>
     <div class="badges">${inv.meta.mode === 'ast' ? `<span class="badge">${esc(T.cover.mode_ast)}</span>` : inv.meta.mode === 'css-only' ? `<span class="badge warn">${esc(fmt(T.cover.mode_css_only, { css: inv.meta.files.css, templates: inv.meta.templates || 0 }))}</span>` : `<span class="badge warn">${esc(T.cover.mode_regex)}</span>`}${inv.meta.css.engine !== 'none' ? `<span class="badge">${esc(fmt(T.cover.css_engine, { engine: `${inv.meta.css.engine}${inv.meta.css.version ? ' ' + inv.meta.css.version : ''}` }))}</span>` : `<span class="badge warn">${esc(T.cover.no_engine)}</span>`}${inv.meta.css.darkStrategy !== 'none' ? `<span class="badge">${esc(fmt(T.cover.dark, { strategy: inv.meta.css.darkStrategy }))}</span>` : ''}${specimens && specimens.status === 'failed' ? `<span class="badge warn">${esc(fmt(T.components.render_failed, { reason: specimens.reason }))}</span>` : ''}</div>
   </div></header>`);

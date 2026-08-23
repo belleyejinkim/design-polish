@@ -1,7 +1,7 @@
 {
   "lang": "en",
   "title": "{project} — design inventory",
-  "subtitle": "This report is a complete inventory of the design elements this project uses. It diagnoses the patterns that break design consistency and the structural problems that make maintenance hard, and proposes how to fix them.",
+  "subtitle": "This report is a complete inventory of the design elements this project uses.\nIt diagnoses the patterns that break design consistency and the structural problems that make maintenance hard, and proposes how to fix them.",
   "nav": {
     "summary": "Summary",
     "screens": "Screens",
