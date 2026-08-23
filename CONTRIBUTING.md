@@ -41,3 +41,8 @@ zero-AI look, `--fresh` to re-scan.
 Template rules are in `skills/design-polish/references/report-spec.md`: one measure, paper/ink palette, no left accent
 bars, no remote assets, every number wrapped in `data-metric`.
 
+Report copy (i18n strings, template sentences, narrative) follows the clarity conventions in
+`skills/design-polish/references/narrative-rules.md` § "Clarity pass": Korean prose never uses the em dash (—) and
+prefers active verbs and 호응이 맞는 짧은 문장; English puts characters in subjects and actions in verbs
+(Williams & Bizup). Labels, badges and table cells may stay 개조식/terse.
+

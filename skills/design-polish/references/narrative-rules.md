@@ -65,6 +65,29 @@ Every key except `schema`, `run_id`, `lang`, `headline`, `lede` is optional. Unk
 13. `lang` matches the report language. Korean narrative uses plain Korean (합니다체 in the report), keeps English
     class names as they are, and avoids loanword jargon.
 
+## Clarity pass (required, after drafting)
+
+Draft the narrative freely, then revise it before `check.js`. If the machine has the `korean-clarity` /
+`english-clarity` skills installed (`~/.claude/skills/`), invoke the one matching `lang` and follow it. Without them,
+apply this distilled version:
+
+**Korean** (from 한국어 문장론 관례):
+1. 줄표(—)를 쓰지 않는다. 예외 없음. 마침표나 쉼표, 괄호, 콜론으로 푼다.
+2. 번역투를 걷어낸다: "~에 의해/~로부터/~에 있어서/~을 가지다", 불필요한 "~들"과 "~적".
+3. 이중피동을 홑피동으로(잊혀지다→잊히다), 행위자가 분명하면 능동으로 쓴다.
+4. 명사+하다 뭉치를 동사로 되돌린다: "검토가 필요함"→"검토해야 합니다".
+5. 문장이 길면 주어와 서술어만 이어 읽어 호응을 확인하고, 안 맞으면 문장을 나눈다.
+6. 의미가 겹치는 말을 지운다(미리 예약, 과반수 이상). 한 문서 안에서 어체를 섞지 않는다(리포트는 합니다체).
+7. 표의 셀·배지·라벨은 개조식(명사형)이 관행이므로 그대로 둔다. 도움말과 설명 문장만 서술형으로 쓴다.
+
+**English** (from Williams & Bizup, *Style*):
+1. Make the real character the subject and its action the verb: "the toolbar mixes corner radii", not
+   "a mixture of radii is present in the toolbar".
+2. Old information opens the sentence, new information closes it; the last words carry the stress.
+3. Cut throat-clearing and filler; prefer one word over a phrase (although, before, because).
+4. Keep a passive only when the actor is unknown or beside the point — never to soften responsibility.
+5. One idea per sentence; short before long.
+
 ## Korean example
 
 ```json

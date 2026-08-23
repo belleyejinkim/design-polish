@@ -22,11 +22,11 @@
     "mode_ast": "read with the project's TypeScript",
     "mode_regex": "regex mode — element attribution unavailable",
     "css_engine": "values from the project's {engine}",
-    "no_model": "Inventory only — diagnosis and proposals need an agent: run /design-polish",
+    "no_model": "Inventory only. For diagnosis and proposals, run /design-polish in your agent.",
     "generated": "Generated {date} · run {run}",
     "dark": "dark theme: {strategy}",
     "no_engine": "values not compiled — no Tailwind v4 engine found; looks are keyed by class names",
-    "mode_css_only": "CSS-only: no React/JSX code — values from {css} stylesheets ({templates} templates with <style>); components and screens not inventoried"
+    "mode_css_only": "CSS only: no React code — values from {css} stylesheets ({templates} templates); no components or screens"
   },
   "summary": {
     "h": "01 · Summary",
@@ -50,7 +50,7 @@
     },
     "top_findings": "What stands out",
     "good": "What is already consistent",
-    "good_axis": "{axis}: {score}% of {n} occurrences use tokens or the scale — no change proposed.",
+    "good_axis": "{axis}: {score}% of {n} occurrences go through tokens or the scale. Nothing to change.",
     "good_none": "No axis is fully consistent yet.",
     "glossary_h": "Four words used in this report",
     "glossary": [
@@ -165,7 +165,7 @@
       "delete": "remove (card {card})",
       "keep_library": "keep — a later shadcn add expects it",
       "dark": "give it a dark value",
-      "none": "—",
+      "none": "–",
       "decide": "decide: {token} changes in dark mode",
       "palette": "fine as the scale; merge into a token only if it should follow the theme"
     },
@@ -177,7 +177,7 @@
       "palette": "Palette",
       "library": "Library"
     },
-    "legend": "Swatches: light (and dark when the token has one). Two touching swatches = a pair a viewer cannot tell apart.",
+    "legend": "Swatches show the light value (and the dark one when the token has it). Two touching swatches are a pair a viewer cannot tell apart.",
     "keep_token": "keep"
   },
   "typography": {
@@ -273,7 +273,7 @@
     "new": "new",
     "existing": "existing",
     "layers": "{n}-layer token architecture",
-    "none": "No proposal yet — run /design-polish in your agent."
+    "none": "No proposal yet. Run /design-polish in your agent."
   },
   "cards": {
     "h": "11 · Cards",
@@ -301,7 +301,7 @@
       "untouched": "untouched",
       "applied": "applied"
     },
-    "none": "No cards yet — run /design-polish in your agent."
+    "none": "No cards yet. Run /design-polish in your agent."
   },
   "delta": {
     "h": "12 · Before / after",
@@ -351,7 +351,7 @@
     "coverage_text": "{scanned} of {listed} files scanned ({source}); {failed} failed to parse; {dynamic} dynamic class sites; {unresolved} unresolved classes.",
     "score_formula": "Score per axis = occurrences through tokens or the scale ÷ all occurrences. Composite = count-weighted mean. Components = occurrences that use one of the base component's looks ÷ all.",
     "verification": "Verification",
-    "fonts": "Specimens use the fonts installed on this machine; the project's web fonts are substituted when they cannot be embedded.",
+    "fonts": "Specimens use the fonts installed on this machine; web fonts that cannot be embedded get a close substitute.",
     "honesty": [
       "Numbers come from scripts, not from a language model.",
       "Specimens are rendered with the project's own compiled CSS; nothing is imitated.",

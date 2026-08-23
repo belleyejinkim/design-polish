@@ -1,6 +1,6 @@
 {
   "lang": "ko",
-  "title": "{project} — 디자인 인벤토리",
+  "title": "{project} 디자인 인벤토리",
   "subtitle": "코드 안의 모든 색·글자·여백·모서리·그림자와 폼 컴포넌트를 실물 크기로.",
   "nav": {
     "summary": "요약",
@@ -20,13 +20,13 @@
   "cover": {
     "scanned": "코드 파일 {files}개 · 화면 {routes}개 · 고유 클래스 {classes}개",
     "mode_ast": "프로젝트의 TypeScript로 읽음",
-    "mode_regex": "정규식 모드 — 요소 귀속 불가",
+    "mode_regex": "정규식 모드 (요소 연결 불가)",
     "css_engine": "값은 프로젝트의 {engine}가 계산",
-    "no_model": "인벤토리만 — 진단과 제안은 에이전트에서 /design-polish 를 실행하세요",
+    "no_model": "인벤토리만 담았습니다. 진단과 제안은 에이전트에서 /design-polish 를 실행하세요.",
     "generated": "{date} 생성 · 런 {run}",
     "dark": "다크 테마: {strategy}",
-    "no_engine": "값을 컴파일하지 못함 — Tailwind v4 엔진이 없어 모양은 클래스 이름으로만 구분",
-    "mode_css_only": "CSS만 조사 — React/JSX 코드 없음: 스타일시트 {css}개(템플릿 <style> {templates}개)에서 값만 셈, 컴포넌트·화면은 조사 안 함"
+    "no_engine": "값 계산 불가: Tailwind 엔진 없음 (모양은 클래스 이름으로 구분)",
+    "mode_css_only": "CSS만 조사: React 코드 없음 · 스타일시트 {css}개(템플릿 {templates}개)의 값만 셈 · 컴포넌트·화면 없음"
   },
   "summary": {
     "h": "01 · 요약",
@@ -50,7 +50,7 @@
     },
     "top_findings": "눈에 띄는 것",
     "good": "이미 잘 맞는 것",
-    "good_axis": "{axis}: {n}건 중 {score}%가 토큰·스케일 안 — 변경 제안 없음.",
+    "good_axis": "{axis}: {n}건 중 {score}%가 토큰이나 스케일을 거칩니다. 바꿀 것이 없습니다.",
     "good_none": "아직 완전히 일관된 축은 없습니다.",
     "glossary_h": "이 리포트의 네 단어",
     "glossary": [
@@ -83,7 +83,7 @@
       "고유 모양"
     ],
     "layout": "레이아웃",
-    "catalog": "카탈로그 페이지 — 따로 집계",
+    "catalog": "카탈로그 페이지 (따로 집계)",
     "none": "라우터를 찾지 못했습니다. 화면 대신 파일로 표시합니다."
   },
   "chapter": {
@@ -144,9 +144,9 @@
     },
     "status": {
       "ok": "정상",
-      "twin": "{token}과 같은 값",
-      "near": "{token}과 닮음 (ΔE {de})",
-      "near_raw": "다른 직접 쓴 색과 닮음 (ΔE {de})",
+      "twin": "같은 값: {token}",
+      "near": "닮은 색: {token} (ΔE {de})",
+      "near_raw": "직접 쓴 색끼리 닮음 (ΔE {de})",
       "untokenized": "토큰 없음 · {n}곳",
       "rare": "토큰 없음 · {n}곳",
       "dead": "선언만, 안 쓰임",
@@ -158,16 +158,16 @@
       "mode_varying": "라이트·다크 다름"
     },
     "action": {
-      "promote": "{token}으로 바꾸기 — 화면 변화 없음",
-      "merge": "{token}으로 합치기 — {visual}",
+      "promote": "{token}으로 바꿔도 화면은 그대로",
+      "merge": "{token}으로 합치기 ({visual})",
       "new_token": "토큰으로 등록 (제안 이름 {name})",
-      "keep_rare": "두거나, 오른쪽에서 토큰 고르기",
+      "keep_rare": "그대로 두거나 오른쪽에서 토큰 고르기",
       "delete": "삭제 (카드 {card})",
-      "keep_library": "유지 — 나중에 shadcn add가 기대함",
+      "keep_library": "유지 (shadcn add가 나중에 씀)",
       "dark": "다크 값 정하기",
-      "none": "—",
-      "decide": "판단 필요: {token}은 다크에서 달라짐",
-      "palette": "스케일이라 그대로 둬도 됨. 테마를 따라야 하면 토큰으로 합치기"
+      "none": "–",
+      "decide": "판단 필요: {token}의 다크 값이 다름",
+      "palette": "팔레트 스케일이라 그대로 둬도 됩니다. 테마를 따라야 하면 토큰으로 합치세요."
     },
     "filters": {
       "all": "전체",
@@ -177,7 +177,7 @@
       "palette": "팔레트",
       "library": "라이브러리"
     },
-    "legend": "색 칩: 라이트(토큰에 다크 값이 있으면 다크도). 붙어 있는 칩 두 개 = 눈으로 구분 안 되는 한 쌍.",
+    "legend": "색 칩은 라이트 값입니다(토큰에 다크 값이 있으면 다크도 함께). 붙어 있는 칩 두 개는 눈으로 구분하기 어려운 한 쌍입니다.",
     "keep_token": "유지"
   },
   "typography": {
@@ -238,8 +238,8 @@
     "state_removed": "제거됨",
     "diff_h": "모양 사이의 차이",
     "unresolved": "클래스 {n}개를 해석하지 못함",
-    "render_failed": "실물 렌더 불가({reason}) — 클래스만 표시",
-    "dynamic": "동적 클래스 — 모양 알 수 없음",
+    "render_failed": "실물 렌더 불가({reason}). 클래스만 표시합니다",
+    "dynamic": "동적 클래스: 모양을 알 수 없음",
     "tabs": {
       "default": "기본",
       "hover": "Hover",
@@ -273,7 +273,7 @@
     "new": "신설",
     "existing": "기존",
     "layers": "{n}계층 토큰 구조",
-    "none": "아직 제안이 없습니다 — 에이전트에서 /design-polish 를 실행하세요."
+    "none": "아직 제안이 없습니다. 에이전트에서 /design-polish 를 실행하세요."
   },
   "cards": {
     "h": "11 · 작업 카드",
@@ -301,7 +301,7 @@
       "untouched": "미결정",
       "applied": "적용됨"
     },
-    "none": "아직 카드가 없습니다 — 에이전트에서 /design-polish 를 실행하세요."
+    "none": "아직 카드가 없습니다. 에이전트에서 /design-polish 를 실행하세요."
   },
   "delta": {
     "h": "12 · 전후 비교",
@@ -348,10 +348,10 @@
   "method": {
     "h": "13 · 방법과 한계",
     "coverage": "범위",
-    "coverage_text": "파일 {listed}개 중 {scanned}개 스캔({source}); 파싱 실패 {failed}; 동적 클래스 {dynamic}곳; 미해석 클래스 {unresolved}개.",
+    "coverage_text": "파일 {listed}개 중 {scanned}개를 스캔했습니다({source}). 파싱 실패 {failed}건, 동적 클래스 {dynamic}곳, 미해석 클래스 {unresolved}개.",
     "score_formula": "축 점수 = 토큰·스케일을 거친 지정 ÷ 전체 지정. 종합 = 건수 가중 평균. 컴포넌트 = 기본 컴포넌트의 모양을 쓰는 지정 ÷ 전체.",
     "verification": "검증",
-    "fonts": "실물은 이 기기에 설치된 글꼴로 렌더됩니다. 내장할 수 없는 웹폰트는 대체됩니다.",
+    "fonts": "실물은 이 기기에 설치된 글꼴로 그립니다. 내장할 수 없는 웹폰트는 비슷한 글꼴로 대신합니다.",
     "honesty": [
       "숫자는 언어 모델이 아니라 스크립트가 셌습니다.",
       "실물은 프로젝트가 컴파일한 CSS로 렌더했습니다. 흉내 낸 것은 없습니다.",
@@ -368,8 +368,8 @@
     "impact": "화면 {screens}개의 {occ}곳",
     "impact_visual": "화면 변화: {v}",
     "sent": "결정을 에이전트에 보냈습니다",
-    "copied": "결정을 복사했습니다 — 에이전트 대화에 붙여넣으세요",
-    "saved": "decisions.json을 저장했습니다 — 에이전트에 전달하세요",
+    "copied": "결정을 복사했습니다. 에이전트 대화에 붙여넣으세요",
+    "saved": "decisions.json을 저장했습니다. 에이전트에 전달하세요",
     "none": "아직 결정이 없습니다"
   },
   "cart": {

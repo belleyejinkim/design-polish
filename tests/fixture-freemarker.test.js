@@ -49,7 +49,7 @@ test('cards make sense without components, and a token that will be promoted to 
   assert.ok(kinds.includes('register-tokens'));
   assert.ok(!kinds.includes('delete-dead-tokens'), '--brand is unused now but #1aa44d is promoted to it');
   const html = fs.readFileSync(path.join(runDir, 'report.html'), 'utf8');
-  assert.ok(/CSS-only|CSS만/.test(html));
+  assert.ok(/CSS.?only|CSS만/.test(html));
   const v = spawnSync(process.execPath, [path.join(SCRIPTS, 'verify.js'), runDir, '--quick'], { encoding: 'utf8' });
   assert.equal(v.status, 0, v.stdout.split('\n').filter((l) => l.startsWith('FAIL')).join('; '));
 });

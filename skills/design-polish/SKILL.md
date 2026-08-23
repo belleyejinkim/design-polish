@@ -81,6 +81,8 @@ Solo mode (no `Agent` tool, e.g. Codex): read `agents/scanner.md` and perform it
 3. Write `RUN_DIR/narrative.json` following `references/narrative-rules.md`: headline, lede, better screen names, type
    samples, chapter summaries, finding titles/explanations/causes, card titles/why, limits. **No digits anywhere** —
    numbers are rendered from JSON; if you need a quantity say "several", "most", "one row".
+   Then run the clarity pass from that file (Korean: no em dashes, active verbs, 호응 확인; English: characters as
+   subjects, old-before-new). If `~/.claude/skills/korean-clarity` / `english-clarity` exist, follow the matching one.
 4. `node "$S/check.js" narrative "$RUN_DIR/narrative.json"` must print OK; fix and repeat until it does.
 5. `node "$S/render.js" "$RUN_DIR" --lang $LANG` re-renders the report with your narrative.
 
