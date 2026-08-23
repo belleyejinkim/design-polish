@@ -1,7 +1,7 @@
 {
   "lang": "en",
   "title": "{project} — design inventory",
-  "subtitle": "Read from the code: every colour, text style, spacing, corner, shadow and form control this app uses, at real size. Each item carries its use count and the screens it appears on, so you can see where things drift apart — buttons with different corners, two grays no one can tell apart. Pick what stays and your agent fixes only that, one revertible commit at a time.",
+  "subtitle": "This report is a complete inventory of the design elements this project uses. It diagnoses the patterns that break design consistency and the structural problems that make maintenance hard, and proposes how to fix them.",
   "nav": {
     "summary": "Summary",
     "screens": "Screens",
