@@ -25,7 +25,10 @@ and fails when any differs. Template strings contain no numeric literals of thei
 Warm paper `#FBFAF7`, ink in three steps, graphite hairlines; saturation belongs only to the project's own colours and
 to severity marks. One measure (`--measure: 1120px`). Local font stack (Pretendard Variable → Inter → Noto Sans KR →
 system); no web fonts, no CDN, no fetch. `keep-all`, `text-wrap: pretty`, tabular numerals. Cards use a header band
-plus a full border and tinted background — never a left accent bar. The build fails on a second `max-width`, on
+plus a full border and tinted background — never a left accent bar. **One alignment line per card**: a card's title
+(caps), body and footnote are direct children of the card, all starting on the card's left padding line; never place a
+card's title or help text inside an inner column (a flex/grid child), where it would stand on a different line than
+the body. The build fails on a second `max-width`, on
 `border-left` accents and on remote URLs.
 
 ## Interaction (v1.0)
